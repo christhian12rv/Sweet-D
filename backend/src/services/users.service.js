@@ -25,6 +25,12 @@ exports.auth = async (email, password) => {
         return { status: 400, message: "Usuário inválido" };
 }
 
+exports.logout = async () => {
+    await jwt.sign("", "", {
+        expiresIn: 1
+    });
+}
+
 exports.findAll = async () => {
     const users = await UserModel.findAll();
     return users;

@@ -1,7 +1,5 @@
 const { validationResult } = require('express-validator');
 
-const UserModel = require("../models/User.model");
-
 const usersService = require("../services/users.service");
 
 exports.register = async (req, res) => {
@@ -24,6 +22,15 @@ exports.login = async (req, res) => {
         const { email, password } = req.body;
         const { status, auth, token, message } = await usersService.auth(email, password);
         res.status(status).json({ auth, token, message });
+    } catch (error) {
+        res.status(500).json({ message: "Houve um erro interno ao tentar logar usuário" });
+    }
+}
+
+exports.logout = async (req, res) => {
+    try {
+        await usersService.logout();
+        res.json({ message: "Você foi deslogado com sucesso" });
     } catch (error) {
         res.status(500).json({ message: "Houve um erro interno ao tentar logar usuário" });
     }

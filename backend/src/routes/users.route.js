@@ -10,9 +10,6 @@ router.get("/", usersController.find);
 router.post("/", usersValidator.create, usersController.register);
 
 router.post("/login", usersController.login);
-
-router.get("/teste", verifyJWT, (req, res) => {
-    console.log('a');
-})
+router.post("/logout", verifyJWT, usersController.logout);
 
 module.exports = router;
