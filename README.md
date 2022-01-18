@@ -98,13 +98,16 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ### Running the project
 
-First, create a database in mysql and change your database settings in the backend/src/configs/db.config.js file
+First, create a database in mysql and a .env file. Then change the file the .env file
    ```sh
-    HOST: "YOUR HOST",              // Example: localhost
-    USER: "YOUR USER",              // Example: root
-    PASSWORD: "YOUR PASSWORD",      // Example: 12345678
-    DB: "YOUR DB",                  // Example: sweetD
-    dialect: "mysql"
+  # Banco de dados
+  DB_HOST=your_mysql_host
+  DB_USER=your_mysql_user
+  DB_PASS=your_mysql_password
+  DB_NAME=your_mysql_database
+
+  #JWT
+  JWT_SECRET=your_jwt_secret_key
    ```
 
 To run the frontend and backend together, go to the /backend folder and run

@@ -19,6 +19,14 @@ exports.register = async (req, res) => {
     }
 }
 
+exports.login = async (req, res) => {
+    try {
+
+    } catch (error) {
+
+    }
+}
+
 exports.list = async (req, res) => {
     try {
         const users = await usersService.findAll();

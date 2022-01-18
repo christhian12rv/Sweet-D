@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const PORT = 9090;
+if (process.env.NODE_ENV !== "production")
+    require("dotenv").config();
 
 const cors = require("cors");
 const bodyParser = require("body-parser");
