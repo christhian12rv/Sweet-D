@@ -100,7 +100,7 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 First, create a database in mysql and a .env file in /backend. Then change the .env file
    ```sh
-  # Banco de dados
+  # Database
   DB_HOST=your_mysql_host
   DB_USER=your_mysql_user
   DB_PASS=your_mysql_password
