@@ -86,7 +86,7 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
    ```
 2. Go to the /backend folder and install the NPM packages
    ```sh
-   npm install
+   npm installa
    ```
 3. Go to the /frontend folder and install the NPM packages
    ```sh
