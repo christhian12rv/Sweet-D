@@ -1,0 +1,30 @@
+{
+  "name": "confeitaria",
+  "version": "1.0.0",
+  "description": "Website created with Nodejs, React and MySQL to manage a confectionery",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd ../frontend && npm start",
+    "server": "node ./src/index.js",
+    "server:nodemon": "nodemon ./src/index.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "mysql"
+  ],
+  "author": "Christhian Rezende Vieira",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.13.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
