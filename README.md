@@ -84,7 +84,11 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
    ```sh
    git clone https://github.com/christhian12rv/Confeitaria.git
    ```
-2. Install NPM packages
+2. Go to the /backend folder and install the NPM packages
+   ```sh
+   npm install
+   ```
+3. Go to the /frontend folder and install the NPM packages
    ```sh
    npm install
    ```
