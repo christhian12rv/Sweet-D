@@ -17,13 +17,12 @@ exports.auth = async (email, password) => {
     const user = await UserModel.findOne({ where: { email } })
     if (user) {
         if (!bcrypt.compareSync(password, user.password))
-            return res.status(400).json({ message: "Senha inválida" });
-        const token = jwt.sign({ user }, process.env.SECRET,);
-        return res.json({ auth: true, token: token });
-    } else
-        return res.status(400).json({ message: "Usuário inválido" });
+            return { status: 400, message: "Senha inválida" };
 
-    res.status(500).json({ message: 'Login inválido!' });
+        const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+        return { status: 200, auth: true, token, message: "Usuário logado com sucesso" };
+    } else
+        return { status: 400, message: "Usuário inválido" };
 }
 
 exports.findAll = async () => {
