@@ -98,7 +98,7 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ### Running the project
 
-First, create a database in mysql and a .env file. Then change the .env file
+First, create a database in mysql and a .env file in /backend. Then change the .env file
    ```sh
   # Banco de dados
   DB_HOST=your_mysql_host
