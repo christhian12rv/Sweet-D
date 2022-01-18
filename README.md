@@ -94,6 +94,15 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ### Running the project
 
+First, create a database in mysql and change your database settings in the backend/src/configs/db.config.js file
+   ```sh
+    HOST: "YOUR HOST",              // Example: localhost
+    USER: "YOUR USER",              // Example: root
+    PASSWORD: "YOUR PASSWORD",      // Example: 12345678
+    DB: "YOUR DB",                  // Example: sweetD
+    dialect: "mysql"
+   ```
+
 To run the frontend and backend together, go to the /backend folder and run
 
     $ npm run dev
