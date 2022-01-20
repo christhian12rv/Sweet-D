@@ -108,6 +108,9 @@ First, create a database in mysql and a .env file in /backend. Then change the .
 
   #JWT
   JWT_SECRET=your_jwt_secret_key
+
+  #SESSION
+  SESSION_SECRET=your_session_secret_key
    ```
 
 To run the frontend and backend together, go to the /backend folder and run
