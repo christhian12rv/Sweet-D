@@ -22,8 +22,9 @@ exports.create = async (req, res) => {
     }
 
     try {
-        const { name, description, price, storage, slug } = req.body;
-        const product = await productsService.create(name, description, price, storage, slug, req.files.photos);
+        const { name, description, price, storage, slug, extras } = req.body;
+        extras.forEach(r => console.log(r));
+        const product = await productsService.create(name, description, price, storage, slug, extras, req.files.photos);
         res.json({ product, message: "Produto criado com sucesso" });
     } catch (error) {
         res.status(500).json({ message: "Houve um erro interno ao tentar criar produto" });

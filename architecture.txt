@@ -1,0 +1,100 @@
+API
+    "/users" GET - Get Users
+        Empty params
+
+    "/users" POST - Create User
+        {
+            "name": "TestUser",
+            "password": "12345678",
+            "email": "test@user.com"
+        }
+
+    
+    "/users/login" POST - Login
+        {
+            "email": "test@user.com",
+            "password": "12345678"
+        }
+
+    
+    "/products" GET - Get Products
+        Empty params
+
+    "/products" POST - Create Products
+        Send a header x-access-token of Logged User Admin
+        files - "photos"
+        {
+            active: false,                      //DEFAULT IS TRUE
+            name: "TestProduct",
+            description: "TestDescription",
+            price: 10.01,
+            storage: 301,
+            slug: "test-product",
+            extras: ["extra1", "extra2"]
+        }
+
+    "/products" PUT - Update Product
+        Send a header x-access-token of Logged User Admin
+        files - "photos"
+        All parameters are optional
+        {
+            active: false,                      //DEFAULT IS TRUE
+            name: "TestProduct",
+            description: "TestDescription",
+            price: 10.01,
+            storage: 301,
+            slug: "test-product",
+            extras: ["extra1", "extra2"]
+        }
+
+    "/orders" GET - Get orders
+        Send a header x-access-token of Logged User
+        {
+            "userId": 2
+        }
+
+    "/orders" POST - Create order
+        Send a header x-access-token of Logged User
+        {
+            "userId": 1,
+            "products": [
+                {
+                    "id": 1,
+                    "extras": ["test1"],
+                    "quantity": 10
+                },
+                {
+                    "id": 2,
+                    "extras": ["test2"],
+                    "quantity": 1
+                }
+            ]
+        }
+
+    "/orders" PUT - Update a "finished" parameter of an order
+        Send a header x-access-token of Logged User
+        {
+            "orderId": 1,
+            "finished": true
+        }
+
+    "/cart" POST - Send a Product to cart
+        Send a header x-access-token of Logged User
+        {
+            "userId": 1,
+            "product": {
+                "id": 2,
+                "extras": ["test1"],
+                "quantity": 1
+            }
+        }
+
+    "/cart" PUT - Update a Product on cart
+        Send a header x-access-token of Logged User
+        {
+            "product": {
+                "id": 1,
+                "extras": ["test2"],
+                "quantity": 2
+            }
+        }

@@ -67,7 +67,23 @@ exports.create = [
                     if (product)
                         return Promise.reject("Já existe um Produto com o slug informado");
                 })
+        }),
+
+    body("extras")
+        .customSanitizer((value) => {
+            if (typeof value !== 'object')
+                return JSON.parse(value);
+            return value;
         })
+        .isArray()
+        .withMessage("O campo Extra é inválido"),
+
+    body("extras.*")
+        .trim()
+        .notEmpty()
+        .withMessage("Extra inválido")
+        .isString()
+        .withMessage("Extra inválido"),
 ]
 
 exports.update = [

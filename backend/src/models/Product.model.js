@@ -32,6 +32,10 @@ const Product = db.define('product', {
         type: Sequelize.STRING,
         allowNull: false
     },
+    extras: {
+        type: Sequelize.STRING(500),
+        allowNull: true
+    },
     active: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

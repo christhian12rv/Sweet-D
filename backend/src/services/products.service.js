@@ -13,7 +13,13 @@ exports.findAll = async () => {
     return products;
 }
 
-exports.create = async (name, description, price, storage, slug, photos) => {
+exports.create = async (name, description, price, storage, slug, extras, photos) => {
+    if (!photos.length || photos.length < 1) {
+        let arrayAuxPhotos = [];
+        arrayAuxPhotos.push(photos);
+        photos = arrayAuxPhotos;
+    }
+
     const uploadPath = __dirname + '/../public/img/product/';
     const photosArray = [];
     for (const photo of photos) {
@@ -37,7 +43,8 @@ exports.create = async (name, description, price, storage, slug, photos) => {
         photos: photosArray.join(","),
         price,
         storage,
-        slug
+        slug,
+        extras: extras.join(",")
     });
     return product;
 }
@@ -62,7 +69,7 @@ exports.update = async (body, photos) => {
         }
     }
 
-    const dataChange = { ...body, photos: photosArray.join(",") };
+    const dataChange = { ...body, ...(photosArray.length && { photos: photosArray.join(",") }) };
 
     const product = await ProductModel.update(dataChange, { where: { id: body.id } });
 
