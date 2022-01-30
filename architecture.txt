@@ -1,3 +1,34 @@
+PAGES
+	Home
+	{
+		Home
+		Produtos
+		Quem somos
+		Contato
+	}
+	Cart
+	Login
+	Register
+	Recovery password
+	Product
+	Quem somos
+	Contato
+	
+	USER
+		User settings - Email and password
+		View orders
+		
+	ADMIN
+		List products
+		Add products
+		Update products
+		On/Off products
+		Finish orders
+
+COR
+	Primary - Pastel - #fabca5
+	On finalize order - message of success
+
 API
     "/users" GET - Get Users
         Empty params

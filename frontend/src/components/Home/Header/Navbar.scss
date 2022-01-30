@@ -1,0 +1,91 @@
+@import "../../../sassStyles/variables";
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1em;
+    background-color: transparent;
+    width: 100%;
+    padding: 1em 2em;
+
+    ul {
+        display: flex;
+        flex-direction: row;
+        gap: 10%;
+        place-content: center;
+        align-items: center;
+        text-decoration: none;
+        list-style-type: none;
+
+        &:nth-child(2) {
+            width: auto;
+        }
+
+        &.center-ul {
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+
+        li {
+            color: $light;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            list-style-type: none;
+            cursor: pointer;
+
+            transition: all 0.25s ease;
+
+            &:hover {
+                color: $primaryColor;
+            }
+
+            &.logo-li {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5em;
+                align-items: center;
+                color: $primaryColor;
+
+                .logo {
+                    font-size: 4em;
+                }
+            }
+
+            &.login-li {
+                color: $primaryColor;
+                display: flex;
+                flex-direction: row;
+
+                &:hover {
+                    color: $light;
+                }
+
+                .login-icon {
+                    font-size: 1.5em;
+                    padding-bottom: 6px;
+                }
+            }
+
+            &.cart-li {
+                background-color: $primaryColor;
+                border-radius: 50%;
+                padding: 0.5em;
+
+                &:hover {
+                    background-color: $light;
+
+                    * {
+                        color: $primaryColor;
+                    }
+                }
+
+                .cart-icon {
+                    font-size: 1.5em;
+                }
+            }
+        }
+    }
+}
