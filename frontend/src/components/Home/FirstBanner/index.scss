@@ -1,0 +1,32 @@
+@import "../../../sassStyles/variables";
+
+.first-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    padding: 5em;
+    text-align: center;
+    background-image: url("../../../img/Home/dark-bg.jpg");
+
+    * {
+        color: $light;
+    }
+
+    .regions-div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5em;
+        justify-content: center;
+
+        h4 {
+            cursor: pointer;
+            transition: all 0.25s ease;
+
+            &:hover {
+                color: $primaryColor;
+            }
+        }
+    }
+}
