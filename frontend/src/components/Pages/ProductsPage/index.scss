@@ -1,0 +1,106 @@
+@import "../../../sassStyles/mixins";
+@import "../../../sassStyles/variables";
+
+.filter-div {
+    background-color: $light;
+    padding: 2em;
+
+    .inputs-filter {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1em;
+        margin-top: 0.5em;
+        width: 100%;
+
+        .input-text {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .price-range-div {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            gap: 1.5em;
+
+            .input-number {
+                width: 100px;
+            }
+
+            .range-slider {
+                max-width: 200px;
+            }
+        }
+    }
+}
+
+.products-div {
+    padding-bottom: 5em;
+    background-color: $light;
+
+    .paginate-div {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: fit-content;
+        margin: auto;
+        padding: 0.5em 0.75em;
+        border-radius: 3em;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+        .paginate {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1em;
+            text-decoration: none;
+            list-style-type: none;
+            @include transition(all 0.25s ease);
+
+            .paginate-item-li,
+            .previous,
+            .next,
+            .paginate-break {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                width: 40px !important;
+                height: 40px !important;
+                @include transition(all 0.25s ease);
+            }
+
+            .paginate-item-li {
+                &.paginate-active {
+                    background-color: $primaryColor;
+
+                    .paginate-page-link {
+                        color: $light;
+                    }
+                }
+                .paginate-page-link {
+                    color: $dark;
+                    font-weight: bold;
+                }
+            }
+
+            .paginate-item-li,
+            .previous,
+            .next,
+            .paginate-break {
+                a {
+                    cursor: pointer;
+                    @include transition(all 0.25s ease);
+
+                    &:hover {
+                        color: $primaryColor;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-@import "../../../sassStyles/variables";
+@import "../../../../sassStyles/variables";
 
 .first-banner {
     display: flex;
@@ -7,7 +7,7 @@
     width: 100%;
     padding: 5em;
     text-align: center;
-    background-image: url("../../../img/Home/dark-bg.jpg");
+    background-image: url("../../../../img/Home/dark-bg.jpg");
 
     * {
         color: $light;

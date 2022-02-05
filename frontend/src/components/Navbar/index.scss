@@ -8,10 +8,11 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1em;
-    background-color: transparent;
+    background-color: $light;
     width: 100%;
     padding: 1em 2em;
-    transition: all 0.5s ease;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    @include transition(all 0.5s ease);
 
     &.bottom {
         position: fixed;
@@ -54,7 +55,7 @@
         }
 
         li {
-            color: $light;
+            color: $dark;
             font-size: 1em;
             font-weight: bold;
             text-transform: uppercase;
@@ -68,25 +69,13 @@
                 color: $primaryColor;
             }
 
-            &.logo-li {
-                display: flex;
-                flex-direction: row;
-                gap: 0.5em;
-                align-items: center;
-                color: $primaryColor;
-
-                .logo {
-                    font-size: 4em;
-                }
-            }
-
             &.login-li {
                 color: $primaryColor;
                 display: flex;
                 flex-direction: row;
 
                 &:hover {
-                    color: $light;
+                    color: $dark;
                 }
 
                 .login-icon {
@@ -101,7 +90,7 @@
                 padding: 0.5em;
 
                 &:hover {
-                    background-color: $light;
+                    background-color: $dark;
 
                     * {
                         color: $primaryColor;
@@ -110,6 +99,30 @@
 
                 .cart-icon {
                     font-size: 1.5em;
+                }
+            }
+        }
+    }
+
+    &.home {
+        background-color: transparent !important;
+        border-bottom: none;
+
+        ul li {
+            color: $light;
+            &.login-li {
+                &:hover {
+                    color: $primaryColor;
+                }
+            }
+
+            &:hover {
+                color: $primaryColor;
+            }
+
+            &.cart-li {
+                &:hover {
+                    background-color: $light;
                 }
             }
         }

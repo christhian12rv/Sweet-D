@@ -1,0 +1,44 @@
+@import "../../../sassStyles/variables";
+
+.login {
+    display: flex;
+    flex-direction: row;
+    background-color: $light;
+    height: 100vh;
+
+    .first-div {
+        display: flex;
+        flex-direction: column;
+        padding: 2em 3em;
+        background: url("../../../img/Login/sweet-bg.jpg") center;
+        background-size: cover;
+
+        .logo-ul {
+            font-size: 1.2em;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 0 8em;
+
+            h1 {
+                text-align: center;
+                font-size: 2.3em;
+            }
+
+            p {
+                margin-top: 3em;
+                margin-left: 7em;
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+
+            * {
+                color: $light;
+            }
+        }
+    }
+}

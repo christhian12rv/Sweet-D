@@ -1,12 +1,12 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { IoMdCart } from "react-icons/io";
 
 import SquareButton from "../Buttons/SquareButton";
 
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./index.scss";
 
 import DonutImg from "../../img/donut-example.jpg";

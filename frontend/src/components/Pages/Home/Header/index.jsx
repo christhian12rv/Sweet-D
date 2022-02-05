@@ -1,7 +1,7 @@
 import React from "react";
 
 import TextDiv from "./TextDiv";
-import RoundedButton from "../../Buttons/RoundedButton";
+import RoundedButton from "../../../Buttons/RoundedButton";
 
 import "./index.scss";
 

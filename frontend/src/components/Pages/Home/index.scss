@@ -1,0 +1,7 @@
+@import "../../../sassStyles/variables";
+
+.products-card-content-home {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url("../../../img/Home/sweet-bg.jpg") center no-repeat;
+    background-size: cover;
+}

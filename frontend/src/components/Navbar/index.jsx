@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-import { GiWrappedSweet } from "react-icons/gi";
 import { BiLogInCircle } from "react-icons/bi";
 import { IoMdCart } from "react-icons/io";
 
 import "./index.scss";
+
+import Logo from "../Logo";
 
 const Navbar = () => {
     let listener = null;
@@ -29,13 +30,8 @@ const Navbar = () => {
     }, [scrollState]);
 
     return (
-        <nav className={scrollState + " navbar"}>
-            <ul>
-                <li className="logo-li">
-                    <GiWrappedSweet className="logo" />
-                    Sweet-D
-                </li>
-            </ul>
+        <nav className={scrollState + " navbar"} id="navbar">
+            <Logo />
 
             <ul className="center-ul">
                 <li>Home</li>
