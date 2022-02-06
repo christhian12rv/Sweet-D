@@ -1,7 +1,7 @@
 @import "../../../sassStyles/mixins";
 @import "../../../sassStyles/variables";
 
-.login {
+.register {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -52,7 +52,7 @@
                     text-align: center;
                     margin-top: auto;
                     margin-bottom: auto;
-                    font-size: 1.8em;
+                    font-size: 1.5em;
                     font-weight: bold;
                 }
 
@@ -69,15 +69,16 @@
             align-items: center;
             background-color: $light;
             gap: 1em;
-            padding: 4em;
+            padding: 4em 4em 3em 4em;
             flex-grow: 1;
 
-            .login-title {
+            .register-title {
                 color: $dark;
                 margin-top: 0.5em;
                 margin-bottom: 1em;
             }
 
+            .name-div,
             .email-div,
             .password-div {
                 width: 100%;
@@ -86,23 +87,6 @@
                     flex-grow: 1;
                     color: $secondaryColor;
                     font-size: 0.9em;
-                }
-
-                .password-row-div {
-                    display: flex;
-                    flex-direction: row;
-
-                    a {
-                        color: $secondaryColor;
-                        font-size: 0.9em;
-                        font-weight: bold;
-                        cursor: pointer;
-                        @include transition(all 0.25s ease);
-
-                        &:hover {
-                            color: $secondaryColorDark;
-                        }
-                    }
                 }
 
                 .input-div {
@@ -137,7 +121,7 @@
 }
 
 @include breakpoint-max(tablet) {
-    .login {
+    .register {
         padding: 1.5em;
     }
 }

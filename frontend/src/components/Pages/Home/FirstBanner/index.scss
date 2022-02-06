@@ -7,10 +7,11 @@
     width: 100%;
     padding: 5em;
     text-align: center;
-    background-image: url("../../../../img/Home/dark-bg.jpg");
+    background: url("../../../../img/Home/banner-bg.webp") center;
+    background-size: cover;
 
     * {
-        color: $light;
+        color: $dark;
     }
 
     .regions-div {
