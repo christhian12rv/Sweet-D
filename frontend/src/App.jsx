@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Layout from "./components/Pages/Layout";
 import Home from "./components/Pages/Home";
 import ProductsPage from "./components/Pages/ProductsPage";
 import Login from "./components/Pages/Login";
@@ -17,9 +16,9 @@ function App() {
                     path="/"
                     element={
                         <>
-                            <Navbar />
-                            <Home />
-                            <Footer />
+                            <Layout>
+                                <Home />
+                            </Layout>
                         </>
                     }
                 />
@@ -27,9 +26,9 @@ function App() {
                     path="/products"
                     element={
                         <>
-                            <Navbar />
-                            <ProductsPage />
-                            <Footer />
+                            <Layout>
+                                <ProductsPage />
+                            </Layout>
                         </>
                     }
                 />

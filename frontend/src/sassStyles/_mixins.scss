@@ -119,3 +119,10 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+@mixin filter($value) {
+    -webkit-filter: $value;
+    -moz-filter: $value;
+    -o-filter: $value;
+    filter: $value;
+}

@@ -1,44 +1,144 @@
+@import "../../../sassStyles/mixins";
 @import "../../../sassStyles/variables";
 
 .login {
     display: flex;
     flex-direction: row;
-    background-color: $light;
-    height: 100vh;
+    justify-content: center;
+    padding: 5em 8em;
+    background: url("../../../img/Login/background.jpg") no-repeat center;
+    background-size: cover;
+    min-height: 100vh;
 
-    .first-div {
+    .content {
+        position: relative;
         display: flex;
-        flex-direction: column;
-        padding: 2em 3em;
-        background: url("../../../img/Login/sweet-bg.jpg") center;
-        background-size: cover;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 1em;
+        overflow: hidden;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+        width: 100%;
 
-        .logo-ul {
-            font-size: 1.2em;
+        .donut-img {
+            position: absolute;
+            transform: rotateZ(180deg);
+            top: -50px;
+            right: -50px;
+            z-index: 999;
         }
 
-        .message {
+        .first-div {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            padding: 2em 3em;
             flex-grow: 1;
-            padding: 0 8em;
+            background: url("../../../img/Login/sweet-bg.jpg") center;
+            background-size: cover;
 
-            h1 {
-                text-align: center;
-                font-size: 2.3em;
-            }
+            .message {
+                display: flex;
+                flex-direction: column;
+                background-color: transparent;
+                flex-grow: 1;
+                padding: 0 1em;
 
-            p {
-                margin-top: 3em;
-                margin-left: 7em;
-                font-size: 1.2em;
-                font-weight: bold;
-            }
+                h1 {
+                    font-size: 2.3em;
+                }
 
-            * {
-                color: $light;
+                p {
+                    text-align: center;
+                    margin-top: auto;
+                    margin-bottom: auto;
+                    font-size: 1.3em;
+                    font-weight: bold;
+                }
+
+                * {
+                    color: $light;
+                }
             }
         }
+
+        .second-div {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            gap: 1em;
+            padding: 4em;
+            flex-grow: 1;
+
+            .login-title {
+                color: $dark;
+                margin-top: 0.5em;
+                margin-bottom: 1em;
+            }
+
+            .email-div,
+            .password-div {
+                width: 100%;
+
+                h5 {
+                    flex-grow: 1;
+                    color: $secondaryColor;
+                    font-size: 0.9em;
+                }
+
+                .password-row-div {
+                    display: flex;
+                    flex-direction: row;
+
+                    a {
+                        color: $secondaryColor;
+                        font-size: 0.9em;
+                        font-weight: bold;
+                        cursor: pointer;
+                        @include transition(all 0.25s ease);
+
+                        &:hover {
+                            color: $secondaryColorDark;
+                        }
+                    }
+                }
+
+                .input-div {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    border-bottom: 2px solid $primaryColor;
+                    @include transition(all 0.25s ease);
+
+                    &:hover,
+                    &:focus,
+                    &:active {
+                        border-color: $primaryColorDark;
+                    }
+
+                    .icon {
+                        color: $primaryColor;
+                        font-size: 1.2em;
+                    }
+
+                    .input-text {
+                        border: none;
+                        border-radius: 0;
+                        padding-left: 0.5em;
+                        width: 100%;
+                        font-size: 0.85em;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .login {
+        padding: 1.5em;
     }
 }
