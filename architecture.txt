@@ -1,5 +1,5 @@
 PAGES
-	Home
+	* Home
 	{
 		Home
 		Produtos
@@ -7,10 +7,10 @@ PAGES
 		Contato
 	}
 	Cart
-	Login
-	Register
-	Recovery password
-	Product
+	* Login
+	* Register
+	* Recovery password
+	* Products
 	Quem somos
 	Contato
 	

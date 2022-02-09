@@ -31,7 +31,7 @@ const Register = () => {
                 </div>
                 <div className="second-div">
                     <Logo />
-                    <h2 className="login-title">Registrar</h2>
+                    <h2 className="register-title">Registrar</h2>
                     <div className="name-div">
                         <h5>Nome</h5>
                         <div className="input-div">

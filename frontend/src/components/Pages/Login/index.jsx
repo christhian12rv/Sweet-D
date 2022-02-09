@@ -18,11 +18,6 @@ const Login = () => {
                 <div className="first-div">
                     <div className="message">
                         <h1>Olá!</h1>
-                        <p>
-                            Faça login para continuar
-                            <br />
-                            com seu acesso
-                        </p>
                     </div>
                 </div>
                 <div className="second-div">

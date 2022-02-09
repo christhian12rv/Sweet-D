@@ -10,6 +10,7 @@
     padding: 0.5em;
     width: 100%;
     font-size: 1em;
+    font-weight: bold;
     cursor: pointer;
     @include bkg-img-transition(
         linear-gradient(45deg, $primaryColor, $primaryColorDark),
