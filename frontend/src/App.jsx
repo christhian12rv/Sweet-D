@@ -9,6 +9,7 @@ import Register from "./components/Pages/Register";
 import RecoveryPassword from "./components/Pages/RecoveryPassword";
 import RecoveryPasswordChange from "./components/Pages/RecoveryPasswordChange";
 import Cart from "./components/Pages/Cart";
+import UserSettings from './components/Pages/User/Settings';
 
 import "./App.scss";
 
@@ -42,6 +43,16 @@ function App() {
                         <>
                             <Layout>
                                 <Cart />
+                            </Layout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/user/id/settings"
+                    element={
+                        <>
+                            <Layout>
+                                <UserSettings />
                             </Layout>
                         </>
                     }

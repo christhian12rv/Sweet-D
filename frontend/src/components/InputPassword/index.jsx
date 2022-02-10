@@ -2,11 +2,11 @@ import React from "react";
 
 import "./index.scss";
 
-const InputText = ({ placeholder, value, readOnly, className }) => {
+const InputText = ({ placeholder, value, readOnly }) => {
     return (
         <input
-            className={"input-text " + className}
-            type="text"
+            className="input-password"
+            type="password"
             placeholder={placeholder}
             value={value}
             readOnly={readOnly}

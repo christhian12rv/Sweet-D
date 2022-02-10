@@ -6,7 +6,7 @@ PAGES
 		Quem somos
 		Contato
 	}
-	Cart
+	*Cart
 	* Login
 	* Register
 	* Recovery password
