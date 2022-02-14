@@ -1,0 +1,161 @@
+@import "../../../../sassStyles/mixins";
+@import "../../../../sassStyles/variables";
+
+.user-settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 5em;
+    padding: 6em 0;
+    background-color: $light;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        flex-grow: 1;
+        padding-right: 3em;
+        overflow-x: hidden;
+
+        h2 {
+            font-size: 1.7em;
+            margin-bottom: 1em;
+        }
+
+        .table-content-div {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 2em;
+            width: 100%;
+
+            thead {
+                tr {
+                    th {
+                        color: $darkLighter;
+                        text-align: left;
+                        font-size: 0.95em;
+                        letter-spacing: 1px;
+
+                        &:not(:first-child) {
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            tbody {
+                padding-top: 1em;
+
+                tr {
+                    border-bottom: 1px solid $hrLine;
+
+                    td {
+                        &:not(:last-child) {
+                            padding: 1.5em 2em;
+                        }
+
+                        &:first-child {
+                            padding-left: 0;
+                        }
+
+                        &:not(:first-child) {
+                            text-align: center;
+                        }
+
+                        &.product {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 1em;
+
+                            h4 {
+                                font-size: 1em;
+                                max-width: 200px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            p {
+                                color: $darkLighter;
+                                margin: 0.3em 0;
+                                font-size: 0.9em;
+                                max-width: 200px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+
+                        &.quantity {
+                            .quantity-div {
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 1em;
+                            }
+                        }
+
+                        &.status {
+                            &.finished {
+                                div {
+                                    border-radius: 3em;
+                                    padding: 0.2em 1.5em;
+                                    background-color: rgb(203, 255, 203);
+                                    color: rgb(0, 104, 0);
+                                }
+                            }
+
+                            &.not-finished {
+                                div {
+                                    border-radius: 3em;
+                                    padding: 0.2em 1.5em;
+                                    background-color: rgb(253, 199, 199);
+                                    color: rgb(133, 1, 1);
+                                }
+                            }
+                        }
+
+                        h3 {
+                            font-size: 1em;
+                        }
+
+                        &.details {
+                            a {
+                                color: blue;
+                                cursor: pointer;
+                                @include transition(all 0.25s ease);
+
+                                &:hover {
+                                    color: rgb(0, 0, 100);
+                                }
+
+                                .icon {
+                                    margin-right: 0.3em;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .product-img {
+                width: 100px;
+            }
+        }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .user-settings {
+        flex-wrap: wrap;
+        padding: 6em 3em;
+
+        .content {
+            padding-right: 0;
+        }
+    }
+}

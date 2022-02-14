@@ -9,7 +9,9 @@ import Register from "./components/Pages/Register";
 import RecoveryPassword from "./components/Pages/RecoveryPassword";
 import RecoveryPasswordChange from "./components/Pages/RecoveryPasswordChange";
 import Cart from "./components/Pages/Cart";
-import UserSettings from './components/Pages/User/Settings';
+import UserSettings from "./components/Pages/User/Settings";
+import UserOrders from "./components/Pages/User/Orders";
+import OrderDetails from "./components/Pages/User/OrderDetails";
 
 import "./App.scss";
 
@@ -48,11 +50,31 @@ function App() {
                     }
                 />
                 <Route
-                    path="/user/id/settings"
+                    path="/user/settings"
                     element={
                         <>
                             <Layout>
                                 <UserSettings />
+                            </Layout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/user/orders"
+                    element={
+                        <>
+                            <Layout>
+                                <UserOrders />
+                            </Layout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/user/orders/:id"
+                    element={
+                        <>
+                            <Layout>
+                                <OrderDetails />
                             </Layout>
                         </>
                     }

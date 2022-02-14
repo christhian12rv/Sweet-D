@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import { BiLogInCircle } from "react-icons/bi";
 import { IoMdCart } from "react-icons/io";
+import { AiOutlineMenu } from "react-icons/ai";
 
 import "./index.scss";
 
@@ -10,6 +10,7 @@ import Logo from "../Logo";
 const Navbar = () => {
     let listener = null;
     const [scrollState, setScrollState] = useState("top");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState("");
 
     useEffect(() => {
         listener = document.addEventListener("scroll", e => {
@@ -29,9 +30,29 @@ const Navbar = () => {
         };
     }, [scrollState]);
 
+    const handleMobileWrapperClick = () => {
+        setMobileMenuOpen(mobileMenuOpen === "open" ? "" : "open");
+    };
+
     return (
         <nav className={scrollState + " navbar"} id="navbar">
             <Logo />
+
+            <div className={"mobile-wrapper " + mobileMenuOpen}>
+                <AiOutlineMenu
+                    className="icon"
+                    onClick={handleMobileWrapperClick}
+                />
+
+                <div className="collapsable">
+                    <ul className="center-ul">
+                        <li>Home</li>
+                        <li>Produtos</li>
+                        <li>Quem Somos</li>
+                        <li>Contato</li>
+                    </ul>
+                </div>
+            </div>
 
             <ul className="center-ul">
                 <li>Home</li>

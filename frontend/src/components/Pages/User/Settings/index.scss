@@ -9,33 +9,6 @@
     padding: 6em 0;
     background-color: $light;
 
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
-        padding: 0 12em 10em 12em;
-        border-right: 2px solid $hrLine;
-
-        .item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 1em;
-            color: $darkLighter;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.25s ease;
-
-            &.active {
-                color: $primaryColor;
-            }
-
-            &:not(.active):hover {
-                color: $primaryColorDark;
-            }
-        }
-    }
-
     .content {
         display: flex;
         flex-direction: column;
@@ -47,39 +20,54 @@
             margin-bottom: 1em;
         }
 
-        .item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 1em;
+        .account-content-div {
+            overflow-x: auto;
 
-            h3 {
-                font-size: 1em;
-            }
+            .item {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 1em;
 
-            .input-text,
-            .input-password {
-                background-color: $inputReadOnlyColor;
-                padding: 0.5em 0.8em;
-            }
+                h3 {
+                    font-size: 1em;
+                }
 
-            .input-text.name {
-                margin-left: 0.135em;
-            }
+                .input-text,
+                .input-password {
+                    background-color: $inputReadOnlyColor;
+                    padding: 0.5em 0.8em;
+                }
 
-            .input-text.email {
-                margin-left: 0.25em;
-            }
+                .input-text.name {
+                    margin-left: 0.135em;
+                }
 
-            p {
-                color: $primaryColorDark;
-                cursor: pointer;
-                @include transition(all 0.25s ease);
+                .input-text.email {
+                    margin-left: 0.25em;
+                }
 
-                &:hover {
-                    color: $primaryColorDarker;
+                p {
+                    color: $primaryColorDark;
+                    cursor: pointer;
+                    @include transition(all 0.25s ease);
+
+                    &:hover {
+                        color: $primaryColorDarker;
+                    }
                 }
             }
         }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .user-sidebar {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        padding: 0;
+        border: none;
     }
 }

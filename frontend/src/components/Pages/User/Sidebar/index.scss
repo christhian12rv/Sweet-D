@@ -1,0 +1,28 @@
+@import "../../../../sassStyles/variables";
+
+.user-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 0 2em 10em 3em;
+    border-right: 2px solid $hrLine;
+
+    .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1em;
+        color: $darkLighter;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        &.active {
+            color: $primaryColor;
+        }
+
+        &:not(.active):hover {
+            color: $primaryColorDark;
+        }
+    }
+}
