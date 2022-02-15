@@ -1,0 +1,213 @@
+@import "../../../../sassStyles/variables";
+
+.user-orders-order {
+    .user-orders-order-content {
+        .title {
+            span {
+                color: $darkLighter;
+            }
+        }
+    }
+}
+
+@import "../../../../sassStyles/mixins";
+@import "../../../../sassStyles/variables";
+
+.user-orders-order {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 5em;
+    padding: 6em 0;
+    background-color: $light;
+
+    .user-orders-order-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        flex-grow: 1;
+        overflow-x: hidden;
+
+        h2 {
+            font-size: 1.7em;
+            margin-bottom: 1em;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 6em;
+
+            .first-div {
+                flex-grow: 1;
+
+                .table-content-div {
+                    overflow-x: auto;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    border-spacing: 2em;
+                    width: 100%;
+
+                    thead {
+                        tr {
+                            th {
+                                color: $darkLighter;
+                                text-align: left;
+                                font-size: 0.95em;
+                                letter-spacing: 1px;
+
+                                &:not(:last-child) {
+                                    padding: 0 2em;
+                                }
+
+                                &:first-child {
+                                    padding-left: 0;
+                                }
+
+                                &:not(:first-child) {
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+
+                    tbody {
+                        padding-top: 1em;
+
+                        tr {
+                            border-bottom: 1px solid $hrLine;
+
+                            td {
+                                &:not(:last-child) {
+                                    padding: 1.5em 2em;
+                                }
+
+                                &:first-child {
+                                    padding-left: 0;
+                                }
+
+                                &:not(:first-child) {
+                                    text-align: center;
+                                }
+
+                                &.product {
+                                    display: flex;
+                                    flex-direction: row;
+                                    gap: 1em;
+
+                                    h5 {
+                                        max-width: 100px;
+
+                                        span {
+                                            color: $darkLighter;
+                                        }
+                                    }
+
+                                    h4 {
+                                        font-size: 1em;
+                                        max-width: 200px;
+                                    }
+
+                                    p {
+                                        color: $darkLighter;
+                                        margin: 0.3em 0;
+                                        font-size: 0.9em;
+                                        max-width: 200px;
+                                    }
+                                }
+
+                                &.quantity {
+                                    .quantity-div {
+                                        display: flex;
+                                        flex-direction: row;
+                                        justify-content: center;
+                                        align-items: center;
+                                        gap: 1em;
+                                    }
+                                }
+
+                                h3 {
+                                    font-size: 1em;
+                                }
+                            }
+                        }
+                    }
+
+                    .product-img {
+                        width: 100px;
+                    }
+                }
+            }
+
+            .second-div {
+                flex-grow: 1;
+                background-color: $primaryColorLight;
+                padding: 3em 5em 5em 5em;
+
+                .content {
+                    margin: auto;
+                }
+
+                hr {
+                    border: 2px solid #000;
+                    margin-bottom: 3em;
+                }
+
+                h4 {
+                    margin-top: 1.3em;
+                    margin-bottom: 0.8em;
+                    font-size: 1.2em;
+                }
+
+                h3,
+                h5 {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    font-size: 1em;
+
+                    span {
+                        &.lighter {
+                            flex-grow: 1;
+                            color: $darkLighter;
+                            letter-spacing: 1px;
+                        }
+
+                        &.to-right {
+                            font-size: 1em;
+                            margin-left: 10px;
+                        }
+
+                        &.status {
+                            &.finished {
+                                color: rgb(0, 104, 0);
+                            }
+
+                            &.not-finished {
+                                color: rgb(133, 1, 1);
+                            }
+                        }
+
+                        &.address {
+                            max-width: 150px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .user-orders-order {
+        flex-wrap: wrap;
+        padding: 6em 3em;
+
+        .content {
+            padding-right: 0;
+        }
+    }
+}

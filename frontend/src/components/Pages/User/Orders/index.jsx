@@ -9,7 +9,7 @@ import Donut from "../../../../img/donut-example.jpg";
 
 const Orders = () => {
     return (
-        <div className="user-settings">
+        <div className="user-orders">
             <UserSidebar active="orders" />
             <div className="content">
                 <h2>Pedidos</h2>

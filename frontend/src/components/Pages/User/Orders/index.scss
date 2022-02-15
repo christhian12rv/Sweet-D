@@ -1,7 +1,7 @@
 @import "../../../../sassStyles/mixins";
 @import "../../../../sassStyles/variables";
 
-.user-settings {
+.user-orders {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -38,6 +38,14 @@
                         text-align: left;
                         font-size: 0.95em;
                         letter-spacing: 1px;
+
+                        &:not(:last-child) {
+                            padding: 0 2em;
+                        }
+
+                        &:first-child {
+                            padding-left: 0;
+                        }
 
                         &:not(:first-child) {
                             text-align: center;
@@ -83,9 +91,6 @@
                                 margin: 0.3em 0;
                                 font-size: 0.9em;
                                 max-width: 200px;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
                             }
                         }
 
@@ -150,7 +155,7 @@
 }
 
 @include breakpoint-max(tablet) {
-    .user-settings {
+    .user-orders {
         flex-wrap: wrap;
         padding: 6em 3em;
 
