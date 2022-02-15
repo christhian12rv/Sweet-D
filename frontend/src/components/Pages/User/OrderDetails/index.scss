@@ -41,10 +41,7 @@
 
             .first-div {
                 flex-grow: 1;
-
-                .table-content-div {
-                    overflow-x: auto;
-                }
+                overflow-x: auto;
 
                 table {
                     border-collapse: collapse;
@@ -178,7 +175,6 @@
 
                         &.to-right {
                             font-size: 1em;
-                            margin-left: 10px;
                         }
 
                         &.status {
