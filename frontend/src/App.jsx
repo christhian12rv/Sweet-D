@@ -12,6 +12,10 @@ import Cart from "./components/Pages/Cart";
 import UserSettings from "./components/Pages/User/Settings";
 import UserOrders from "./components/Pages/User/Orders";
 import OrderDetails from "./components/Pages/User/OrderDetails";
+import AdminLayout from "./components/Pages/Admin/Layout";
+import Dashboard from "./components/Pages/Admin/Dashboard";
+import ListProducts from "./components/Pages/Admin/ListProducts";
+import ListUsers from "./components/Pages/Admin/ListUsers";
 
 import "./App.scss";
 
@@ -76,6 +80,40 @@ function App() {
                             <Layout>
                                 <OrderDetails />
                             </Layout>
+                        </>
+                    }
+                />
+
+                <Route
+                    path="/admin/dashboard"
+                    element={
+                        <>
+                            <AdminLayout
+                                activePage="1"
+                                title={"Painel de Controle"}
+                            >
+                                <Dashboard />
+                            </AdminLayout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/admin/products"
+                    element={
+                        <>
+                            <AdminLayout activePage="2" title="Produtos">
+                                <ListProducts />
+                            </AdminLayout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/admin/users"
+                    element={
+                        <>
+                            <AdminLayout activePage="4" title="Usuários">
+                                <ListUsers />
+                            </AdminLayout>
                         </>
                     }
                 />

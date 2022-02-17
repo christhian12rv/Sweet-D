@@ -1,0 +1,13 @@
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .first-statistics {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: stretch;
+        gap: 2em;
+    }
+}

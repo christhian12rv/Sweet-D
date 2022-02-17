@@ -1,0 +1,38 @@
+@import "../../../../sassStyles/mixins";
+@import "../../../../sassStyles/variables";
+
+.products-list-admin {
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+
+    .rdt_Table {
+        .product-img {
+            height: 60px;
+            padding-top: 3px;
+        }
+    }
+
+    .edit-product,
+    .view-product {
+        font-size: 2em;
+        cursor: pointer;
+        @include transition(all 0.25s ease);
+
+        &:hover {
+            color: $primaryColor;
+        }
+    }
+
+    .edit-column {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5em;
+    }
+
+    .rdt_TableRow {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}

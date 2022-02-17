@@ -1,0 +1,16 @@
+@import "../../../../../sassStyles/mixins";
+@import "../../../../../sassStyles/variables";
+
+.admin-footer {
+    margin-top: 3em;
+    color: $darkLighter;
+
+    .name {
+        color: $primaryColor;
+        @include transition(all 0.25s ease);
+
+        &:hover {
+            color: $primaryColorDark;
+        }
+    }
+}

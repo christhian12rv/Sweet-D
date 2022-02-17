@@ -1,0 +1,23 @@
+@import "../../../../sassStyles/variables";
+
+.admin-layout {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(245, 245, 245);
+
+    .sidebar-row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .second-row {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 1em 2em;
+
+        .children-content {
+            flex-grow: 1;
+        }
+    }
+}

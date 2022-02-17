@@ -1,0 +1,90 @@
+@import "../../../../../sassStyles/mixins";
+@import "../../../../../sassStyles/variables";
+
+.admin-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: $light;
+    width: fit-content;
+    padding: 1em 1em 1em 2em;
+    min-height: 100vh;
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+
+    .logo-ul {
+        font-size: 0.9em !important;
+        margin-bottom: 1em;
+    }
+
+    hr {
+        border: 0.5px thick $hrLine;
+    }
+
+    .title {
+        color: $lightDarker;
+        padding: 0 1em;
+        margin-top: 2em;
+        margin-bottom: 0.5em;
+        text-transform: uppercase;
+
+        p {
+            font-size: 0.9em;
+        }
+    }
+
+    .item {
+        padding: 0.6em 1em;
+        border-radius: 0.3em;
+        color: $darkLighter;
+        cursor: pointer;
+        @include transition(all 0.25s ease);
+
+        &.dashboard {
+            margin-bottom: 1em;
+        }
+
+        &.active {
+            color: $light;
+            background: linear-gradient(
+                45deg,
+                $primaryColorDark,
+                $primaryColor
+            );
+            box-shadow: $primaryColor 0px 0px 15px;
+        }
+
+        &:hover {
+            &.active {
+                box-shadow: $primaryColor 0px 0px 15px 2px;
+                @include transition(all 0.25s ease);
+            }
+
+            div {
+                transform: translateX(5px);
+                @include transition(all 0.25s ease);
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75em;
+            @include transition(all 0.25s ease);
+
+            .icon {
+                font-size: 1.1em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+        }
+    }
+}
+
+@include breakpoint(tablet) {
+    .admin-sidebar {
+        min-width: 275px;
+    }
+}

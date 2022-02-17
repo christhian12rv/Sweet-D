@@ -1,0 +1,20 @@
+@import "../../../../sassStyles/mixins";
+@import "../../../../sassStyles/variables";
+
+.users-list-admin {
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+
+    .edit-column {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5em;
+    }
+
+    .rdt_TableRow {
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
