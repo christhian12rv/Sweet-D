@@ -1,0 +1,46 @@
+@import "../../../../sassStyles/variables";
+
+.admin-add-product {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 6%;
+    row-gap: 1.5em;
+    background-color: $light;
+    padding: 2.5em 4em;
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+
+    .item {
+        &.name,
+        &.slug {
+            flex-basis: 100%;
+        }
+
+        &.price,
+        &.storage {
+            flex-basis: 47%;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 1em;
+
+            h5 {
+                color: $darkLighter;
+            }
+        }
+
+        h5 {
+            font-size: 0.9em;
+            margin-bottom: 0.25em;
+        }
+        .input-text,
+        .input-number,
+        .currency-input {
+            width: 100%;
+        }
+    }
+}

@@ -1,3 +1,5 @@
+@import "./sassStyles/variables";
+
 @font-face {
     font-family: "AndadaPro";
     src: url("./fonts/AndadaPro-Regular.ttf");
@@ -29,4 +31,20 @@ body {
 
 #root {
     height: 100%;
+}
+
+.currency-input {
+    color: $dark;
+    background-color: transparent;
+    border: 2px solid $primaryColor;
+    border-radius: 0.25em;
+    padding: 0.75em 1em;
+    text-decoration: none;
+    outline: none;
+    transition: all 0.25s ease;
+
+    &:hover,
+    &:focus {
+        border-color: $primaryColorDark;
+    }
 }

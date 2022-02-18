@@ -81,7 +81,6 @@ const ListUsers = () => {
                 columns={columns}
                 data={data}
                 pagination
-                responsive
                 noDataComponent={
                     <p style={{ padding: "1.5em 0", fontSize: "1.1em" }}>
                         Nenhum resultado encontrado

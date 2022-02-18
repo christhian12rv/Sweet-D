@@ -15,8 +15,9 @@ PAGES
 	Contato
 	
 	USER
-		User settings - Email and password
-		View orders
+		* User settings - Email and password
+		* View orders
+        * Order details
 		
 	ADMIN
 		List products

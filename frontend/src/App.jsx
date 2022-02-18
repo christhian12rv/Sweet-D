@@ -13,9 +13,12 @@ import UserSettings from "./components/Pages/User/Settings";
 import UserOrders from "./components/Pages/User/Orders";
 import OrderDetails from "./components/Pages/User/OrderDetails";
 import AdminLayout from "./components/Pages/Admin/Layout";
-import Dashboard from "./components/Pages/Admin/Dashboard";
-import ListProducts from "./components/Pages/Admin/ListProducts";
-import ListUsers from "./components/Pages/Admin/ListUsers";
+import AdminDashboard from "./components/Pages/Admin/Dashboard";
+import AdminListProducts from "./components/Pages/Admin/ListProducts";
+import AdminListUsers from "./components/Pages/Admin/ListUsers";
+import AdminListOrders from "./components/Pages/Admin/ListOrders";
+import AdminOrderDetails from "./components/Pages/Admin/OrderDetails";
+import AdminAddProduct from "./components/Pages/Admin/AddProduct";
 
 import "./App.scss";
 
@@ -92,7 +95,7 @@ function App() {
                                 activePage="1"
                                 title={"Painel de Controle"}
                             >
-                                <Dashboard />
+                                <AdminDashboard />
                             </AdminLayout>
                         </>
                     }
@@ -102,7 +105,20 @@ function App() {
                     element={
                         <>
                             <AdminLayout activePage="2" title="Produtos">
-                                <ListProducts />
+                                <AdminListProducts />
+                            </AdminLayout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/admin/products/add"
+                    element={
+                        <>
+                            <AdminLayout
+                                activePage="5"
+                                title="Adicionar Produto"
+                            >
+                                <AdminAddProduct />
                             </AdminLayout>
                         </>
                     }
@@ -112,7 +128,30 @@ function App() {
                     element={
                         <>
                             <AdminLayout activePage="4" title="Usuários">
-                                <ListUsers />
+                                <AdminListUsers />
+                            </AdminLayout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/admin/orders"
+                    element={
+                        <>
+                            <AdminLayout activePage="5" title="Pedidos">
+                                <AdminListOrders />
+                            </AdminLayout>
+                        </>
+                    }
+                />
+                <Route
+                    path="/admin/orders/:id"
+                    element={
+                        <>
+                            <AdminLayout
+                                activePage="5"
+                                title="Pedido #12345678"
+                            >
+                                <AdminOrderDetails />
                             </AdminLayout>
                         </>
                     }

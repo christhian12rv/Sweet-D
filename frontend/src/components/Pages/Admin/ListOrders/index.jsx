@@ -7,7 +7,7 @@ import "./index.scss";
 
 import Donut from "../../../../img/donut-example.jpg";
 
-const ListProducts = () => {
+const ListOrders = () => {
     const customStyles = {
         headCells: {
             style: {
@@ -18,34 +18,46 @@ const ListProducts = () => {
 
     const columns = [
         {
+            name: "#",
+            selector: row => row.id,
+            sortable: true,
+            minWidth: "fit-content",
+            maxWidth: "fit-content"
+        },
+        {
             name: "",
             selector: row => row.photo
         },
         {
-            name: "Nome",
-            selector: row => row.name,
+            name: "Produtos",
+            selector: row => row.products,
             sortable: true
         },
         {
-            name: "Preço",
-            selector: row => row.price,
+            name: "Total",
+            selector: row => row.total,
             sortable: true
         },
         {
-            name: "Quantidade",
-            selector: row => row.quantity,
+            name: "Usuário",
+            selector: row => row.user,
             sortable: true
+        },
+        {
+            name: "Finalizado",
+            selector: row => row.finish,
+            sortable: true,
+            right: true
         },
         {
             name: "",
-            selector: row => row.edit,
-            right: true
+            selector: row => row.details
         }
     ];
 
     const data = [
         {
-            id: 1,
+            id: <h5 className="id">1</h5>,
             photo: (
                 <img
                     src={Donut}
@@ -53,24 +65,24 @@ const ListProducts = () => {
                     className="product-img"
                 />
             ),
-            name: "Donut Doce",
-            price: "R$ 26,20",
-            quantity: "27",
-            edit: (
+            products: "Donut Doce, Bolo de chocolate, Pudim",
+            total: "R$ 26,20",
+            user: "christhian@gmail.com",
+            finish: (
                 <div className="edit-column">
-                    <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
                     <ToggleSlider
-                        barBackgroundColorActive="#b2ff59"
+                        barBackgroundColor="#a5d6a7"
+                        barBackgroundColorActive="#2e7d32"
                         barHeight={22}
                         barWidth={44}
                         handleSize={16}
                     />
                 </div>
-            )
+            ),
+            details: <h5 className="details-link">Detalhes</h5>
         },
         {
-            id: 1,
+            id: <h5 className="id">1</h5>,
             photo: (
                 <img
                     src={Donut}
@@ -78,24 +90,24 @@ const ListProducts = () => {
                     className="product-img"
                 />
             ),
-            name: "Donut Doce",
-            price: "R$ 26,20",
-            quantity: "27",
-            edit: (
+            products: "Donut Doce, Bolo de chocolate, Pudim",
+            total: "R$ 26,20",
+            user: "christhian@gmail.com",
+            finish: (
                 <div className="edit-column">
-                    <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
                     <ToggleSlider
-                        barBackgroundColorActive="#b2ff59"
+                        barBackgroundColor="#a5d6a7"
+                        barBackgroundColorActive="#2e7d32"
                         barHeight={22}
                         barWidth={44}
                         handleSize={16}
                     />
                 </div>
-            )
+            ),
+            details: <h5 className="details-link">Detalhes</h5>
         },
         {
-            id: 1,
+            id: <h5 className="id">1</h5>,
             photo: (
                 <img
                     src={Donut}
@@ -103,24 +115,24 @@ const ListProducts = () => {
                     className="product-img"
                 />
             ),
-            name: "Donut Doce",
-            price: "R$ 26,20",
-            quantity: "27",
-            edit: (
+            products: "Donut Doce, Bolo de chocolate, Pudim",
+            total: "R$ 26,20",
+            user: "christhian@gmail.com",
+            finish: (
                 <div className="edit-column">
-                    <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
                     <ToggleSlider
-                        barBackgroundColorActive="#b2ff59"
+                        barBackgroundColor="#a5d6a7"
+                        barBackgroundColorActive="#2e7d32"
                         barHeight={22}
                         barWidth={44}
                         handleSize={16}
                     />
                 </div>
-            )
+            ),
+            details: <h5 className="details-link">Detalhes</h5>
         },
         {
-            id: 1,
+            id: <h5 className="id">1</h5>,
             photo: (
                 <img
                     src={Donut}
@@ -128,46 +140,21 @@ const ListProducts = () => {
                     className="product-img"
                 />
             ),
-            name: "Donut Doce",
-            price: "R$ 26,20",
-            quantity: "27",
-            edit: (
+            products: "Donut Doce, Bolo de chocolate, Pudim",
+            total: "R$ 26,20",
+            user: "christhian@gmail.com",
+            finish: (
                 <div className="edit-column">
-                    <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
                     <ToggleSlider
-                        barBackgroundColorActive="#b2ff59"
+                        barBackgroundColor="#a5d6a7"
+                        barBackgroundColorActive="#2e7d32"
                         barHeight={22}
                         barWidth={44}
                         handleSize={16}
                     />
                 </div>
-            )
-        },
-        {
-            id: 1,
-            photo: (
-                <img
-                    src={Donut}
-                    alt="Foto do produto"
-                    className="product-img"
-                />
             ),
-            name: "Donut Doce",
-            price: "R$ 26,20",
-            quantity: "27",
-            edit: (
-                <div className="edit-column">
-                    <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
-                    <ToggleSlider
-                        barBackgroundColorActive="#b2ff59"
-                        barHeight={22}
-                        barWidth={44}
-                        handleSize={16}
-                    />
-                </div>
-            )
+            details: <h5 className="details-link">Detalhes</h5>
         }
     ];
 
@@ -178,7 +165,7 @@ const ListProducts = () => {
         selectAllRowsItemText: "Todos"
     };
     return (
-        <div className="products-list-admin">
+        <div className="orders-list-admin">
             <DataTable
                 columns={columns}
                 data={data}
@@ -196,4 +183,4 @@ const ListProducts = () => {
     );
 };
 
-export default ListProducts;
+export default ListOrders;
