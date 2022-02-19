@@ -1,9 +1,9 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const db = require("../db");
 
 const UserModel = require("./User.model");
 
-const Order = db.define('Order', {
+const Order = db.define("order", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -14,8 +14,8 @@ const Order = db.define('Order', {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'Users',
-            key: 'id'
+            model: "users",
+            key: "id"
         }
     },
     total: {
@@ -29,10 +29,10 @@ const Order = db.define('Order', {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
-})
+});
 
 Order.associate = function (models) {
-    Order.hasMany(models.User, { as: 'users' })
+    Order.hasMany(models.User, { as: "users" });
 };
 
 module.exports = Order;

@@ -11,27 +11,31 @@ exports.create = async (name, email, password) => {
         password: hashPassword
     });
     return user;
-}
+};
 
 exports.auth = async (email, password) => {
-    const user = await UserModel.findOne({ where: { email } })
+    const user = await UserModel.findOne({ where: { email } });
     if (user) {
         if (!bcrypt.compareSync(password, user.password))
-            return { status: 400, message: "Senha inválida" };
+            return { status: 400, msg: "Senha inválida" };
 
         const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-        return { status: 200, auth: true, token, message: "Usuário logado com sucesso" };
-    } else
-        return { status: 400, message: "Usuário inválido" };
-}
+        return {
+            status: 200,
+            auth: true,
+            token,
+            msg: "Usuário logado com sucesso"
+        };
+    } else return { status: 400, msg: "Usuário inválido" };
+};
 
 exports.logout = async () => {
     await jwt.sign("", "", {
         expiresIn: 1
     });
-}
+};
 
 exports.findAll = async () => {
     const users = await UserModel.findAll();
     return users;
-}
+};

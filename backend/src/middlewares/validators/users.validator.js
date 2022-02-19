@@ -6,13 +6,14 @@ exports.create = [
     body("name")
         .trim()
         .customSanitizer(value => {
-            return value.toLowerCase()
+            return value
+                .toLowerCase()
                 .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
-                .replace(/ Da /g, ' da ')
-                .replace(/ De /g, ' de ')
-                .replace(/ Do /g, ' do ')
-                .replace(/ Das /g, ' das ')
-                .replace(/ Dos /g, ' dos ');
+                .replace(/ Da /g, " da ")
+                .replace(/ De /g, " de ")
+                .replace(/ Do /g, " do ")
+                .replace(/ Das /g, " das ")
+                .replace(/ Dos /g, " dos ");
         })
         .notEmpty()
         .withMessage("O campo Nome é obrigatório")
@@ -22,17 +23,6 @@ exports.create = [
         .bail()
         .isLength({ min: 2 })
         .withMessage("O campo Nome deve conter no mínimo 2 caracteres"),
-
-    body("password")
-        .trim()
-        .notEmpty()
-        .withMessage("O campo Senha é obrigatório")
-        .bail()
-        .isString()
-        .withMessage("A Senha informada é inválida")
-        .bail()
-        .isLength({ min: 8 })
-        .withMessage("A Senha deve conter no mínimo 8 caracteres"),
 
     body("email")
         .trim()
@@ -50,9 +40,40 @@ exports.create = [
                 .catch(erro => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((user) => {
+                .then(user => {
                     if (user)
-                        return Promise.reject("Já existe um usuário cadastrado com o Email informado");
-                })
+                        return Promise.reject(
+                            "Já existe um usuário cadastrado com o Email informado"
+                        );
+                });
         }),
-]
+
+    body("password")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Senha é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("A Senha informada é inválida")
+        .bail()
+        .isLength({ min: 8 })
+        .withMessage("A Senha deve conter no mínimo 8 caracteres"),
+
+    body("confirmPassword")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Confirmar senha é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("A Senha do campo Confirmar Senha informada é inválida")
+        .bail()
+        .isLength({ min: 8 })
+        .withMessage("A Senha deve conter no mínimo 8 caracteres")
+        .bail()
+        .custom((value, { req }) => {
+            if (value !== req.body.password)
+                throw new Error("As senhas não correspondem");
+
+            return true;
+        })
+];

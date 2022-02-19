@@ -1,3 +1,4 @@
+@import "../../../../sassStyles/mixins";
 @import "../../../../sassStyles/variables";
 
 .admin-add-product {
@@ -13,7 +14,11 @@
 
     .item {
         &.name,
-        &.slug {
+        &.slug,
+        &.description,
+        &.extras,
+        &.photos,
+        &.add-product {
             flex-basis: 100%;
         }
 
@@ -39,8 +44,122 @@
         }
         .input-text,
         .input-number,
-        .currency-input {
+        .currency-input,
+        .text-area-box,
+        .text-area,
+        .react-tag-input,
+        .upload-photo {
             width: 100%;
+        }
+
+        &.description {
+            .text-area-box {
+                border: 2px solid $primaryColor;
+                border-radius: 0.25em;
+                min-height: 200px;
+                overflow: hidden;
+                @include transition(all 0.25s ease);
+
+                &:hover {
+                    border-color: $primaryColorDark;
+
+                    .ql-toolbar {
+                        border-color: $primaryColorDark;
+                    }
+                }
+
+                .ql-toolbar {
+                    border-top: none !important;
+                    border-right: none !important;
+                    border-left: none !important;
+                    border-bottom: 2px solid $primaryColor;
+                    @include transition(all 0.25s ease);
+                }
+
+                .text-area {
+                    border: none !important;
+                }
+            }
+        }
+
+        &.extras {
+            .react-tag-input {
+                border: 2px solid $primaryColor;
+                @include transition(all 0.25s ease);
+
+                &:hover {
+                    border-color: $primaryColorDark;
+                }
+            }
+        }
+
+        &.photos {
+            .photo-label {
+                color: $dark;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5em;
+                border: 2px solid $primaryColor;
+                border-radius: 0.25em;
+                padding: 0.5em 0.75em;
+                font-size: 0.9em;
+                transition: all 0.25s ease;
+                cursor: pointer;
+
+                &:hover {
+                    border-color: $primaryColorDark;
+                }
+
+                .icon {
+                    font-size: 1.1em;
+                }
+            }
+
+            .upload-photo {
+                opacity: 0;
+                position: absolute;
+                z-index: -1;
+            }
+
+            .group-photos {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2em;
+                margin: 1em 0 2em 0;
+
+                .photo-item {
+                    position: relative;
+                    height: 100px;
+                    cursor: pointer;
+
+                    .icon {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        font-size: 1.6em;
+                        color: $primaryColor;
+                        @include transition(all 0.25s ease);
+
+                        &:hover {
+                            color: $primaryColorDark;
+                        }
+                    }
+
+                    img {
+                        height: 100px;
+                    }
+                }
+            }
+        }
+
+        &.add-product {
+            .square-button {
+                width: fit-content !important;
+                padding-left: 2em !important;
+                padding-right: 2em !important;
+            }
         }
     }
 }

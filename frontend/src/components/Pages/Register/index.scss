@@ -51,7 +51,6 @@
                 }
 
                 p {
-                    text-align: center;
                     margin-top: auto;
                     margin-bottom: auto;
                     font-size: 1.5em;
@@ -109,7 +108,8 @@
                         font-size: 1.2em;
                     }
 
-                    .input-text {
+                    .input-text,
+                    .input-password {
                         border: none;
                         border-radius: 0;
                         padding-left: 0.5em;

@@ -2,7 +2,7 @@ import React from "react";
 
 import "./index.scss";
 
-const InputText = ({ placeholder, value, readOnly, className }) => {
+const InputText = ({ placeholder, value, readOnly, className, onChange }) => {
     return (
         <input
             className={"input-text " + className}
@@ -10,6 +10,7 @@ const InputText = ({ placeholder, value, readOnly, className }) => {
             placeholder={placeholder}
             value={value}
             readOnly={readOnly}
+            onChange={onChange}
         />
     );
 };

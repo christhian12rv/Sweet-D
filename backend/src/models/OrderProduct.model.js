@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const db = require("../db");
 
-const Order = db.define('OrderProduct', {
+const Order = db.define("orderProduct", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -12,16 +12,16 @@ const Order = db.define('OrderProduct', {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'Orders',
-            key: 'id'
+            model: "orders",
+            key: "id"
         }
     },
     productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'Products',
-            key: 'id'
+            model: "products",
+            key: "id"
         }
     },
     extras: {
@@ -44,6 +44,6 @@ const Order = db.define('OrderProduct', {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
-})
+});
 
 module.exports = Order;

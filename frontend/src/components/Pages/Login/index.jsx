@@ -1,16 +1,34 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { GoLock } from "react-icons/go";
 import { MdAlternateEmail } from "react-icons/md";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as LoginActions from "../../../store/actions/login";
+
 import Logo from "../../Logo";
 import InputText from "../../InputText";
+import InputPassword from "../../InputPassword";
 import RoundedButton from "../../Buttons/RoundedButton";
 
 import "./index.scss";
 
 import Donut from "../../../img/Login/Donut.png";
 
-const Login = () => {
+const Login = ({ email, password, login, updateInput }) => {
+    const navigate = useNavigate();
+    const toastId = React.useRef(null);
+
+    const handleInputChange = (e, stateProp) => {
+        updateInput(e.target.value, stateProp);
+    };
+
+    const handleLogin = async () => {
+        const response = await login(email, password, toastId);
+        if (response.type == "REDIRECT") navigate(response.to);
+    };
+
     return (
         <div className="login">
             <div className="content">
@@ -27,7 +45,10 @@ const Login = () => {
                         <h5>Email</h5>
                         <div className="input-div">
                             <MdAlternateEmail className="icon" />
-                            <InputText />
+                            <InputText
+                                value={email}
+                                onChange={e => handleInputChange(e, "email")}
+                            />
                         </div>
                     </div>
                     <div className="password-div">
@@ -37,15 +58,28 @@ const Login = () => {
                         </div>
                         <div className="input-div">
                             <GoLock className="icon" />
-                            <InputText />
+                            <InputPassword
+                                value={password}
+                                onChange={e => handleInputChange(e, "password")}
+                            />
                         </div>
                     </div>
-                    <RoundedButton>Login</RoundedButton>
-                    <RoundedButton>Não tem uma conta?</RoundedButton>
+                    <RoundedButton onClick={handleLogin}>Login</RoundedButton>
+                    <RoundedButton onClick={() => navigate("/register")}>
+                        Não tem uma conta?
+                    </RoundedButton>
                 </div>
             </div>
         </div>
     );
 };
 
-export default Login;
+const mapStateToProps = state => ({
+    email: state.login.email,
+    password: state.login.password
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(LoginActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
