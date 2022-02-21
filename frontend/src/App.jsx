@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer, Slide } from "react-toastify";
@@ -38,7 +39,7 @@ function App() {
                         path="/"
                         element={
                             <>
-                                <Layout>
+                                <Layout activePage={1}>
                                     <Home />
                                 </Layout>
                             </>
@@ -48,7 +49,7 @@ function App() {
                         path="/products"
                         element={
                             <>
-                                <Layout>
+                                <Layout activePage={2}>
                                     <ProductsPage />
                                 </Layout>
                             </>
@@ -178,7 +179,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route
-                        path="/recovery-password/:id"
+                        path="/recovery-password"
                         element={<RecoveryPassword />}
                     />
                     <Route

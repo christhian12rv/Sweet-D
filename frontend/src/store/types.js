@@ -1,0 +1,6 @@
+module.exports = {
+    LOGIN_FAIL: "LOGIN_FAIL",
+    LOGIN_SUCCESS: "LOGIN_SUCCESS",
+    REGISTER: "REGISTER",
+    UPDATE_INPUT: "UPDATE_INPUT"
+};

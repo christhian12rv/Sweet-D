@@ -1,9 +1,9 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const db = require("../db");
 
 const OrderModel = require("./Order.model");
 
-const User = db.define('user', {
+const User = db.define("user", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -30,10 +30,10 @@ const User = db.define('user', {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
-})
+});
 
 User.associate = function (models) {
-    User.belongsTo(models.Order, { foreignKey: 'userId', as: 'user' })
+    User.belongsTo(models.Order, { foreignKey: "userId", as: "user" });
 };
 
 module.exports = User;

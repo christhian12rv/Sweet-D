@@ -3,9 +3,13 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User.model");
 
 exports.verifyJWT = async (req, res, next) => {
-    const token = req.headers['x-access-token'];
+    const { token } = req.body;
     if (!token)
-        return res.status(401).json({ auth: false, message: 'Usuário não está logado' });
+        return res.json({
+            status: 401,
+            auth: false,
+            message: "Usuário não está logado"
+        });
     try {
         const userToken = await jwt.verify(token, process.env.JWT_SECRET);
         const user = await UserModel.findByPk(userToken.id);
@@ -13,6 +17,6 @@ exports.verifyJWT = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.status(500).json({ message: "Usuário inválido" });
+        res.json({ status: 500, message: "Usuário inválido" });
     }
 };

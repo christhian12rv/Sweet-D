@@ -39,7 +39,8 @@ const Register = ({
             confirmPassword,
             toastId
         );
-        if (response.type == "REDIRECT") navigate(response.to);
+        if (response && response.type)
+            if (response.type == "REDIRECT") navigate(response.to);
     };
 
     return (
@@ -118,10 +119,10 @@ const Register = ({
 };
 
 const mapStateToProps = state => ({
-    name: state.register.name,
-    email: state.register.email,
-    password: state.register.password,
-    confirmPassword: state.register.confirmPassword
+    name: state.register.input.name,
+    email: state.register.input.email,
+    password: state.register.input.password,
+    confirmPassword: state.register.input.confirmPassword
 });
 
 const mapDispatchToProps = dispatch =>

@@ -1,19 +1,32 @@
+import types from "../types";
+
 const INITIAL_STATE = {
-    email: "",
-    password: ""
+    input: {
+        email: "",
+        password: ""
+    },
+    user: {
+        id: null,
+        name: "",
+        email: "",
+        isAdmin: false,
+        auth: false
+    }
 };
 
 export default function login(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case "LOGIN":
+        case types.LOGIN_FAIL:
             return state;
-        case "UPDATE_INPUT":
+        case types.LOGIN_SUCCESS:
+            return { ...state, user: action.payload.user };
+        case types.UPDATE_INPUT:
             return {
                 ...state,
-                [action.stateProp]: action.value
+                input: {
+                    [action.payload.input.stateProp]: action.payload.input.value
+                }
             };
-        case "REDIRECT":
-            return state;
         default:
             return state;
     }

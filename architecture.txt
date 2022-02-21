@@ -26,6 +26,11 @@ PAGES
 		On/Off products
 		Finish orders
 
+    ---
+        Delete User Account
+        Create address
+    ---
+
 COR
 	Primary - Pastel - #fabca5
 	On finalize order - message of success

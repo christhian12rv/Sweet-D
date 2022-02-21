@@ -26,7 +26,10 @@ const Login = ({ email, password, login, updateInput }) => {
 
     const handleLogin = async () => {
         const response = await login(email, password, toastId);
-        if (response.type == "REDIRECT") navigate(response.to);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+            else if (response.type == "LOGIN_SUCCESS") navigate("/");
+        }
     };
 
     return (
@@ -75,8 +78,8 @@ const Login = ({ email, password, login, updateInput }) => {
 };
 
 const mapStateToProps = state => ({
-    email: state.login.email,
-    password: state.login.password
+    email: state.login.input.email,
+    password: state.login.input.password
 });
 
 const mapDispatchToProps = dispatch =>

@@ -36,21 +36,17 @@ export function register(name, email, password, confirmPassword, toastId) {
                     to: "/error/500"
                 };
         }
-
-        return {
-            type: "REGISTER",
-            name,
-            email,
-            password,
-            confirmPassword
-        };
     };
 }
 
 export function updateInput(value, stateProp) {
     return {
         type: "UPDATE_INPUT",
-        value,
-        stateProp
+        payload: {
+            input: {
+                value,
+                stateProp
+            }
+        }
     };
 }

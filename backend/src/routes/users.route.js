@@ -6,8 +6,9 @@ const { verifyJWT } = require("../middlewares/jwtVerify.middleware");
 
 const usersController = require("../controllers/users.controller");
 
-router.get("/", usersController.find);
+router.get("/", usersController.findAll);
 router.post("/", usersValidator.create, usersController.register);
+router.post("/get-user-auth", usersController.getUserAuth);
 
 router.post("/login", usersController.login);
 router.post("/logout", verifyJWT, usersController.logout);

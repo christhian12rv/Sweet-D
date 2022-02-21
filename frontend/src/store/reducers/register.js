@@ -1,21 +1,25 @@
+import types from "../types";
+
 const INITIAL_STATE = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
+    input: {
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+    }
 };
 
 export default function register(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case "REGISTER":
+        case types.REGISTER:
             return state;
-        case "UPDATE_INPUT":
+        case types.UPDATE_INPUT:
             return {
                 ...state,
-                [action.stateProp]: action.value
+                input: {
+                    [action.payload.input.stateProp]: action.payload.input.value
+                }
             };
-        case "REDIRECT":
-            return state;
         default:
             return state;
     }

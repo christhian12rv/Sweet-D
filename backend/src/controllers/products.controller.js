@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator');
+const { validationResult } = require("express-validator");
 
 const productsService = require("../services/products.service");
 
@@ -9,7 +9,7 @@ exports.find = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Houve um erro interno" });
     }
-}
+};
 
 exports.create = async (req, res) => {
     const errors = validationResult(req);
@@ -18,18 +18,29 @@ exports.create = async (req, res) => {
     }
 
     if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).json({ message: "O produto deve ter pelo menos 1 imagem" });
+        return res
+            .status(400)
+            .json({ message: "O produto deve ter pelo menos 1 imagem" });
     }
 
     try {
         const { name, description, price, storage, slug, extras } = req.body;
-        extras.forEach(r => console.log(r));
-        const product = await productsService.create(name, description, price, storage, slug, extras, req.files.photos);
+        const product = await productsService.create(
+            name,
+            description,
+            price,
+            storage,
+            slug,
+            extras,
+            req.files.photos
+        );
         res.json({ product, message: "Produto criado com sucesso" });
     } catch (error) {
-        res.status(500).json({ message: "Houve um erro interno ao tentar criar produto" });
+        res.status(500).json({
+            message: "Houve um erro interno ao tentar criar produto"
+        });
     }
-}
+};
 
 exports.update = async (req, res) => {
     const errors = validationResult(req);
@@ -43,11 +54,14 @@ exports.update = async (req, res) => {
         if (!productExists)
             return res.json(400).json({ message: "Produto inválido" });
 
-        const product = await productsService.update(req.body, (req.files && req.files.photos)
-            ? req.files.photos : null);
+        const product = await productsService.update(
+            req.body,
+            req.files && req.files.photos ? req.files.photos : null
+        );
         res.json({ product, message: "Produto alterado com sucesso" });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Houve um erro interno ao tentar alterar produto" });
+        res.status(500).json({
+            message: "Houve um erro interno ao tentar alterar produto"
+        });
     }
-}
+};

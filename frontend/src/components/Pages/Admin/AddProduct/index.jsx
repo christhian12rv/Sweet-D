@@ -35,7 +35,6 @@ const AddProduct = () => {
     const fileobj = [];
 
     const imageChangedHandler = event => {
-        console.log(imagePreview);
         let files = event.target.files;
         fileobj.push(files);
         let reader;
@@ -49,14 +48,11 @@ const AddProduct = () => {
                 setImagePreview([...new Set(imagePreview)]);
             };
         }
-
-        console.log(imagePreview);
     };
 
     const handleDeleteImagePreview = index => {
         imagePreview.splice(index, 1);
         setImagePreview([...new Set(imagePreview)]);
-        console.log(imagePreview);
     };
 
     return (
