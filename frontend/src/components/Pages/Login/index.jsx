@@ -77,13 +77,10 @@ const Login = ({ email, password, login, updateInput }) => {
     );
 };
 
-const mapStateToProps = state => {
-    console.log(state);
-    return {
-        email: state.login.input.email,
-        password: state.login.input.password
-    };
-};
+const mapStateToProps = state => ({
+    email: state.login.input.email,
+    password: state.login.input.password
+});
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators(LoginActions, dispatch);

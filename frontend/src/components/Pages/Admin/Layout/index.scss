@@ -1,9 +1,12 @@
+@import "../../../../sassStyles/mixins";
 @import "../../../../sassStyles/variables";
 
 .admin-layout {
+    position: relative;
     display: flex;
     flex-direction: row;
     background-color: rgb(245, 245, 245);
+    min-height: 100vh;
 
     .sidebar-row {
         display: flex;
@@ -18,6 +21,26 @@
 
         .children-content {
             flex-grow: 1;
+        }
+    }
+}
+
+@include breakpoint-max(desktop) {
+    .admin-layout {
+        .background-modal-sidebar-mobile {
+            z-index: 4;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.5);
+
+            &.show {
+                width: 100%;
+                height: 100%;
+            }
+
+            &.hide {
+                width: 0;
+                height: 0;
+            }
         }
     }
 }

@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const RequiredAuth = ({ isAdmin }) => {
+const RequiredAuth = ({ children, isAdmin }) => {
     const toastId = React.useRef(null);
     const navigate = useNavigate();
+
+    const [authVerified, setAuthVerified] = useState(false);
 
     const getUserAuth = async () => {
         const token = localStorage.getItem("user_token");
@@ -13,7 +15,6 @@ const RequiredAuth = ({ isAdmin }) => {
             token
         });
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 return {
@@ -24,11 +25,9 @@ const RequiredAuth = ({ isAdmin }) => {
                         : true,
                     auth: data.auth
                 };
-                break;
             case 401:
                 localStorage.removeItem("user_token");
                 return false;
-                break;
             default:
                 localStorage.removeItem("user_token");
                 return false;
@@ -40,22 +39,20 @@ const RequiredAuth = ({ isAdmin }) => {
         toast.dismiss();
 
         const userAuth = await getUserAuth();
-        console.log(userAuth);
         if (!userAuth || !userAuth.auth) {
             navigate("/login");
         } else if (userAuth.auth) {
-            console.log("asdf");
             if (!userAuth.isAdmin) {
                 toastId.current = toast.error(
                     "Você não está autorizado a acessar essa página",
                     { delay: delay }
                 );
                 navigate("/");
-            }
+            } else setAuthVerified(true);
         }
     }, []);
 
-    return <></>;
+    return <>{authVerified && children}</>;
 };
 
 export default RequiredAuth;

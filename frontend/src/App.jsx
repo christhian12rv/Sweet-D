@@ -60,10 +60,11 @@ function App() {
                         path="/cart"
                         element={
                             <>
-                                <RequiredAuth />
-                                <Layout>
-                                    <Cart />
-                                </Layout>
+                                <RequiredAuth>
+                                    <Layout>
+                                        <Cart />
+                                    </Layout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -81,10 +82,11 @@ function App() {
                         path="/user/settings"
                         element={
                             <>
-                                <RequiredAuth />
-                                <Layout>
-                                    <UserSettings />
-                                </Layout>
+                                <RequiredAuth>
+                                    <Layout>
+                                        <UserSettings />
+                                    </Layout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -92,10 +94,11 @@ function App() {
                         path="/user/orders"
                         element={
                             <>
-                                <RequiredAuth />
-                                <Layout>
-                                    <UserOrders />
-                                </Layout>
+                                <RequiredAuth>
+                                    <Layout>
+                                        <UserOrders />
+                                    </Layout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -103,10 +106,11 @@ function App() {
                         path="/user/orders/:id"
                         element={
                             <>
-                                <RequiredAuth />
-                                <Layout>
-                                    <OrderDetails />
-                                </Layout>
+                                <RequiredAuth>
+                                    <Layout>
+                                        <OrderDetails />
+                                    </Layout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -115,13 +119,14 @@ function App() {
                         path="/admin/dashboard"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout
-                                    activePage="1"
-                                    title={"Painel de Controle"}
-                                >
-                                    <AdminDashboard />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="1"
+                                        title={"Painel de Controle"}
+                                    >
+                                        <AdminDashboard />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -129,10 +134,14 @@ function App() {
                         path="/admin/products"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout activePage="2" title="Produtos">
-                                    <AdminListProducts />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="2"
+                                        title="Produtos"
+                                    >
+                                        <AdminListProducts />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -140,13 +149,14 @@ function App() {
                         path="/admin/products/add"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout
-                                    activePage="3"
-                                    title="Adicionar Produto"
-                                >
-                                    <AdminAddProduct />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="3"
+                                        title="Adicionar Produto"
+                                    >
+                                        <AdminAddProduct />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -154,10 +164,14 @@ function App() {
                         path="/admin/users"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout activePage="4" title="Usuários">
-                                    <AdminListUsers />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="4"
+                                        title="Usuários"
+                                    >
+                                        <AdminListUsers />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -165,10 +179,11 @@ function App() {
                         path="/admin/orders"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout activePage="5" title="Pedidos">
-                                    <AdminListOrders />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout activePage="5" title="Pedidos">
+                                        <AdminListOrders />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />
@@ -176,13 +191,14 @@ function App() {
                         path="/admin/orders/:id"
                         element={
                             <>
-                                <RequiredAuth isAdmin={true} />
-                                <AdminLayout
-                                    activePage="5"
-                                    title="Pedido #12345678"
-                                >
-                                    <AdminOrderDetails />
-                                </AdminLayout>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="5"
+                                        title="Pedido #12345678"
+                                    >
+                                        <AdminOrderDetails />
+                                    </AdminLayout>
+                                </RequiredAuth>
                             </>
                         }
                     />

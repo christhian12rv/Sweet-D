@@ -106,7 +106,7 @@ const AddProduct = () => {
 
             <div className="item photos">
                 <h5>Imagens</h5>
-                <label for="upload-photo" className="photo-label">
+                <label htmlFor="upload-photo" className="photo-label">
                     <MdOutlineFileUpload className="icon" />
                     Escolher Imagem
                 </label>

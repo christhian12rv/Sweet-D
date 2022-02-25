@@ -12,7 +12,7 @@ const Logo = () => {
         <ul className="logo-ul" onClick={() => navigate("/")}>
             <li className="logo-li">
                 <GiWrappedSweet className="logo" />
-                Sweet-D
+                <span>Sweet-D</span>
             </li>
         </ul>
     );

@@ -84,7 +84,7 @@
 
 @mixin bkg-img-transition($bkg1, $bkg2, $transTime: 0.5s) {
     position: relative;
-    z-index: 100;
+    z-index: 2;
     &:before,
     &:after {
         background-size: cover;

@@ -5,16 +5,17 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10em;
     background-color: $light;
 
     .content {
         text-align: center;
         padding: 5em 0;
+        flex-grow: 1;
 
         .account {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 1em;
             flex-grow: 1;
 
@@ -64,6 +65,7 @@
         .address {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 1em;
             flex-grow: 1;
 

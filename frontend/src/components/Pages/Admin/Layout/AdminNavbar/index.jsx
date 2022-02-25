@@ -1,13 +1,16 @@
 import React from "react";
-import { useState } from "react";
 
 import { MdOutlineFullscreen } from "react-icons/md";
 import { BsList } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as AdminNavbarActions from "../../../../../store/actions/adminNavbar";
+
 import "./index.scss";
 
-const AdminNavbar = ({ title }) => {
+const AdminNavbar = ({ title, sidebarOpen, toggleAdminSidebar }) => {
     const handleFullScreen = () => {
         const isInFullScreen =
             (document.fullScreenElement &&
@@ -50,10 +53,14 @@ const AdminNavbar = ({ title }) => {
         }
     };
 
+    const handleSidebarToggle = () => {
+        toggleAdminSidebar(!sidebarOpen);
+    };
+
     return (
         <div className={"admin-navbar"}>
             <div className="item">
-                <BsList className="icon" />
+                <BsList className="icon" onClick={handleSidebarToggle} />
             </div>
             <div className="item path">
                 <h5>{title}</h5>
@@ -74,4 +81,11 @@ const AdminNavbar = ({ title }) => {
     );
 };
 
-export default AdminNavbar;
+const mapStateToProps = state => ({
+    sidebarOpen: state.adminSidebar.open
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(AdminNavbarActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminNavbar);
