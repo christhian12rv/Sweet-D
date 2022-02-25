@@ -23,7 +23,7 @@ const Login = ({ email, password, login, updateInput }) => {
     const handleInputChange = (e, stateProp) => {
         updateInput(e.target.value, stateProp);
     };
-    console.log(password);
+
     const handleLogin = async () => {
         const response = await login(email, password, toastId);
         if (response && response.type) {

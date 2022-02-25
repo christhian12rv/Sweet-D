@@ -30,7 +30,6 @@ const Settings = ({
 }) => {
     const toastId = React.useRef(null);
     const navigate = useNavigate();
-    console.log(address);
 
     const [test, setTest] = useState("");
 

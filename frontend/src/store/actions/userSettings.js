@@ -83,7 +83,7 @@ export function updateAddress(userId, address, toastId) {
 
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();
-        console.log(data);
+
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });

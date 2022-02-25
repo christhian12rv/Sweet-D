@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as AdminNavbarActions from "../../../../../store/actions/adminNavbar";
+import * as LoginActions from "../../../../../store/actions/login";
 
 import { MdOutlineFullscreen } from "react-icons/md";
 import { BsList } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as AdminNavbarActions from "../../../../../store/actions/adminNavbar";
-
 import "./index.scss";
 
-const AdminNavbar = ({ title, sidebarOpen, toggleAdminSidebar }) => {
+const AdminNavbar = ({
+    title,
+    user,
+    sidebarOpen,
+    toggleAdminSidebar,
+    getUserAuth
+}) => {
+    const navigate = useNavigate();
+
+    useEffect(async () => {
+        await getUserAuth();
+    }, []);
+
     const handleFullScreen = () => {
         const isInFullScreen =
             (document.fullScreenElement &&
@@ -68,9 +82,16 @@ const AdminNavbar = ({ title, sidebarOpen, toggleAdminSidebar }) => {
             <div className="item" onClick={handleFullScreen}>
                 <MdOutlineFullscreen className="icon" />
             </div>
-            <div className="item user">
+            <div
+                className="item user"
+                onClick={() => navigate("/user/settings")}
+            >
                 <div>
-                    <h4>John Doe</h4>
+                    <h4>
+                        {user.name.substr(0, user.name.indexOf(" "))
+                            ? user.name.substr(0, user.name.indexOf(" "))
+                            : user.name}
+                    </h4>
                     <p>Admin</p>
                 </div>
                 <div>
@@ -82,10 +103,14 @@ const AdminNavbar = ({ title, sidebarOpen, toggleAdminSidebar }) => {
 };
 
 const mapStateToProps = state => ({
+    user: state.login.user,
     sidebarOpen: state.adminSidebar.open
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(AdminNavbarActions, dispatch);
+    bindActionCreators(
+        Object.assign({}, AdminNavbarActions, LoginActions),
+        dispatch
+    );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminNavbar);

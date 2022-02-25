@@ -224,7 +224,6 @@ exports.address = [
 
     body("postalCode")
         .custom((value, { req }) => {
-            console.log(value);
             return true;
         })
         .trim()
@@ -248,7 +247,6 @@ exports.address = [
                         "/json/unicode/"
                 )
                 .catch(erro => {
-                    console.log(erro);
                     return Promise.reject("Ocorreu um erro interno");
                 })
                 .then(response => {
