@@ -1,3 +1,4 @@
+import types from "../types";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -41,7 +42,7 @@ export function register(name, email, password, confirmPassword, toastId) {
 
 export function updateInput(value, stateProp) {
     return {
-        type: "UPDATE_INPUT",
+        type: types.UPDATE_INPUT_REGISTER,
         payload: {
             input: {
                 value,

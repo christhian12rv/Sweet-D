@@ -28,12 +28,16 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("email");
+        console.log(email);
+        console.log(password);
         const { status, auth, token, user, msg } = await usersService.auth(
             email,
             password
         );
         res.json({ status, auth, token, user, msg });
     } catch (error) {
+        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar logar usuário"
@@ -54,9 +58,16 @@ exports.logout = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
     try {
-        const user = await usersService.update();
-        res.json({ status: 200, user, msg: "Usuário alterado com sucesso" });
+        const { userId, data } = req.body;
+
+        const { status, user, msg } = await usersService.update(userId, data);
+        res.json({ status, user, msg });
     } catch (error) {
         res.json({
             status: 500,
@@ -78,17 +89,65 @@ exports.getUserAuth = async (req, res) => {
     const { token } = req.body;
 
     try {
-        const { user, status, auth, msg } = await usersService.getUserAuth(
-            token
-        );
+        const { user, address, status, auth, msg } =
+            await usersService.getUserAuth(token);
 
         return res.json({
             user,
+            address,
             status,
             auth,
             msg
         });
     } catch (error) {
+        console.log(error);
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno"
+        });
+    }
+};
+
+exports.updateAddress = async (req, res) => {
+    console.log(req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const {
+            userId,
+            address,
+            number,
+            postalCode,
+            city,
+            state,
+            district,
+            complement,
+            phone,
+            description
+        } = req.body;
+        const { newAddress, status, msg } = await usersService.updateAddress(
+            userId,
+            address,
+            number,
+            postalCode,
+            city,
+            state,
+            district,
+            complement,
+            phone,
+            description
+        );
+
+        return res.json({
+            address: newAddress,
+            status,
+            msg
+        });
+    } catch (error) {
+        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno"

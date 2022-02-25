@@ -11,12 +11,11 @@ const INITIAL_STATE = {
 
 export default function register(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case types.REGISTER:
-            return state;
-        case types.UPDATE_INPUT:
+        case types.UPDATE_INPUT_REGISTER:
             return {
                 ...state,
                 input: {
+                    ...state.input,
                     [action.payload.input.stateProp]: action.payload.input.value
                 }
             };

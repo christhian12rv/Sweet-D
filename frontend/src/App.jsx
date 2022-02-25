@@ -27,12 +27,13 @@ import AdminOrderDetails from "./components/Pages/Admin/OrderDetails";
 import AdminAddProduct from "./components/Pages/Admin/AddProduct";
 import Error404 from "./components/Pages/Error404";
 import Error500 from "./components/Pages/Error500";
+import RequiredAuth from "./components/RequiredAuth";
 
 import "./App.scss";
 
 function App() {
     return (
-        <div className="App">
+        <div className="App" id="app">
             <Provider store={store}>
                 <Routes>
                     <Route
@@ -59,6 +60,7 @@ function App() {
                         path="/cart"
                         element={
                             <>
+                                <RequiredAuth />
                                 <Layout>
                                     <Cart />
                                 </Layout>
@@ -79,6 +81,7 @@ function App() {
                         path="/user/settings"
                         element={
                             <>
+                                <RequiredAuth />
                                 <Layout>
                                     <UserSettings />
                                 </Layout>
@@ -89,6 +92,7 @@ function App() {
                         path="/user/orders"
                         element={
                             <>
+                                <RequiredAuth />
                                 <Layout>
                                     <UserOrders />
                                 </Layout>
@@ -99,6 +103,7 @@ function App() {
                         path="/user/orders/:id"
                         element={
                             <>
+                                <RequiredAuth />
                                 <Layout>
                                     <OrderDetails />
                                 </Layout>
@@ -110,6 +115,7 @@ function App() {
                         path="/admin/dashboard"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout
                                     activePage="1"
                                     title={"Painel de Controle"}
@@ -123,6 +129,7 @@ function App() {
                         path="/admin/products"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout activePage="2" title="Produtos">
                                     <AdminListProducts />
                                 </AdminLayout>
@@ -133,8 +140,9 @@ function App() {
                         path="/admin/products/add"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout
-                                    activePage="5"
+                                    activePage="3"
                                     title="Adicionar Produto"
                                 >
                                     <AdminAddProduct />
@@ -146,6 +154,7 @@ function App() {
                         path="/admin/users"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout activePage="4" title="Usuários">
                                     <AdminListUsers />
                                 </AdminLayout>
@@ -156,6 +165,7 @@ function App() {
                         path="/admin/orders"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout activePage="5" title="Pedidos">
                                     <AdminListOrders />
                                 </AdminLayout>
@@ -166,6 +176,7 @@ function App() {
                         path="/admin/orders/:id"
                         element={
                             <>
+                                <RequiredAuth isAdmin={true} />
                                 <AdminLayout
                                     activePage="5"
                                     title="Pedido #12345678"

@@ -263,23 +263,31 @@
 
 @include breakpoint(desktop) {
     .navbar {
-        &.bottom {
-            position: fixed;
-            background-color: $light;
-            padding: 0.25em 2em;
-            border-bottom: 1px solid rgb(228, 228, 228);
+        &.home {
+            &.bottom {
+                position: fixed;
+                background-color: $light;
+                padding: 0.25em 2em;
+                border-bottom: 1px solid rgb(228, 228, 228);
 
-            ul li {
-                color: $dark;
-                &.login-li {
+                ul li {
+                    color: $dark;
+
                     &:hover {
-                        color: $dark;
+                        color: $primaryColor;
                     }
-                }
 
-                &.cart-li {
-                    &:hover {
-                        background-color: $dark;
+                    &.login-li {
+                        color: $primaryColor;
+                        &:hover {
+                            color: $primaryColorDark;
+                        }
+                    }
+
+                    &.cart-li {
+                        &:hover {
+                            background-color: $dark;
+                        }
                     }
                 }
             }

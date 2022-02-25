@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/User.model");
+const AddressModel = require("../models/Address.model");
 
 exports.create = async (name, email, password) => {
     const hashPassword = bcrypt.hashSync(password, 10);
@@ -43,6 +44,14 @@ exports.logout = async () => {
     });
 };
 
+exports.update = async (userId, data) => {
+    await UserModel.update(data, {
+        where: { id: userId }
+    });
+    const user = await UserModel.findByPk(userId);
+    return { status: 200, user, msg: "Usuário alterado com sucesso" };
+};
+
 exports.findAll = async () => {
     const users = await UserModel.findAll();
     return users;
@@ -68,10 +77,64 @@ exports.getUserAuth = async token => {
             msg: "Usuário não está logado"
         };
 
+    const address = await AddressModel.findOne({ where: { userId: user.id } });
+
     return {
         user,
+        address,
         status: 200,
         auth: true,
         msg: "Usuário está logado"
     };
+};
+
+exports.updateAddress = async (
+    userId,
+    address,
+    number,
+    postalCode,
+    city,
+    state,
+    district,
+    complement,
+    phone,
+    description
+) => {
+    const addressExists = await AddressModel.findOne({ where: { userId } });
+    let newAddress;
+    if (addressExists) {
+        await AddressModel.update(
+            {
+                userId,
+                address,
+                number,
+                postalCode,
+                city,
+                state,
+                district,
+                complement,
+                phone,
+                description
+            },
+            {
+                where: { userId }
+            }
+        );
+        newAddress = await AddressModel.findOne({ where: { userId } });
+    } else {
+        newAddress = await AddressModel.create({
+            userId,
+            address,
+            number,
+            postalCode,
+            city,
+            state,
+            district,
+            complement,
+            phone,
+            description
+        });
+    }
+
+    return { newAddress, status: 200, msg: "Endereço atualizado com sucesso" };
 };

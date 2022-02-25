@@ -29,6 +29,7 @@ PAGES
     ---
         Delete User Account
         Create address
+        Recovery Password
     ---
 
 COR

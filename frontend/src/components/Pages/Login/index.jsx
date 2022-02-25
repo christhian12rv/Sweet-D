@@ -23,7 +23,7 @@ const Login = ({ email, password, login, updateInput }) => {
     const handleInputChange = (e, stateProp) => {
         updateInput(e.target.value, stateProp);
     };
-
+    console.log(password);
     const handleLogin = async () => {
         const response = await login(email, password, toastId);
         if (response && response.type) {
@@ -77,10 +77,13 @@ const Login = ({ email, password, login, updateInput }) => {
     );
 };
 
-const mapStateToProps = state => ({
-    email: state.login.input.email,
-    password: state.login.input.password
-});
+const mapStateToProps = state => {
+    console.log(state);
+    return {
+        email: state.login.input.email,
+        password: state.login.input.password
+    };
+};
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators(LoginActions, dispatch);

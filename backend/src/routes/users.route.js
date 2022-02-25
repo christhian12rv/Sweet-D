@@ -8,7 +8,16 @@ const usersController = require("../controllers/users.controller");
 
 router.get("/", usersController.findAll);
 router.post("/", usersValidator.create, usersController.register);
+router.put("/", verifyJWT, usersValidator.update, usersController.update);
+
 router.post("/get-user-auth", usersController.getUserAuth);
+
+router.post(
+    "/address",
+    verifyJWT,
+    usersValidator.address,
+    usersController.updateAddress
+);
 
 router.post("/login", usersController.login);
 router.post("/logout", verifyJWT, usersController.logout);

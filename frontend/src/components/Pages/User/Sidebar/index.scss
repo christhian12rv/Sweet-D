@@ -4,26 +4,118 @@
 .user-sidebar {
     display: flex;
     flex-direction: column;
+    background-color: $primaryColor;
     gap: 1em;
-    padding: 0 2em 10em 3em;
-    border-right: 2px solid $hrLine;
+    padding-top: 3em;
+    padding-left: 1em;
+    overflow: hidden;
+    min-width: 250px;
+
+    .user-panel {
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+
+        .icon {
+            font-size: 3em;
+            background-color: $light;
+            width: 100px;
+            height: 100px;
+            padding: 0.3em;
+            border-radius: 50%;
+        }
+    }
 
     .item {
+        position: relative;
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 1em;
+        padding: 0.8em 5em 0.8em 2em;
         color: $darkLighter;
         font-size: 0.9em;
+        border-radius: 1em;
         cursor: pointer;
         transition: all 0.25s ease;
 
         &.active {
+            background-color: $light;
             color: $primaryColor;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: -30px;
+                right: -25px;
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                background-color: $light;
+            }
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0px;
+                right: -25px;
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                background-color: $light;
+            }
+
+            .selector-border-top {
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: -80px;
+                    right: -2px;
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    border-bottom-left-radius: 0%;
+                    background-color: $primaryColor;
+                }
+            }
+
+            .selector-border-bottom {
+                position: absolute;
+                z-index: 1;
+                bottom: 0;
+                right: 0;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    bottom: -80px;
+                    right: -2px;
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    border-top-left-radius: 0%;
+                    background-color: $primaryColor;
+                }
+            }
         }
 
         &:not(.active):hover {
-            color: $primaryColorDark;
+            color: $light;
+        }
+
+        h3 {
+            z-index: 2;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 1em;
         }
     }
 }

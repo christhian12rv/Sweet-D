@@ -131,7 +131,9 @@ const Navbar = ({ activePage, name, isAdmin, auth, getUserAuth, logout }) => {
                             className="login-li user-logged"
                             onClick={handleDropdownOpen}
                         >
-                            {name}
+                            {name.substr(0, name.indexOf(" "))
+                                ? name.substr(0, name.indexOf(" "))
+                                : name}
                             <GoPerson className="person-icon" />
 
                             <div

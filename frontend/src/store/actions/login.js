@@ -1,3 +1,4 @@
+import types from "../types";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -7,7 +8,6 @@ export function login(email, password, toastId) {
             email,
             password
         });
-
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();
 
@@ -16,7 +16,7 @@ export function login(email, password, toastId) {
             case 200:
                 localStorage.setItem("user_token", data.token);
                 dispatch({
-                    type: "LOGIN_SUCCESS",
+                    type: types.LOGIN_SUCCESS,
                     payload: {
                         user: { ...data.user, auth: data.auth }
                     }
@@ -78,7 +78,7 @@ export function getUserAuth() {
         switch (data.status) {
             case 200:
                 dispatch({
-                    type: "LOGIN_SUCCESS",
+                    type: types.LOGIN_SUCCESS,
                     payload: {
                         user: {
                             id: data.user.id,
@@ -86,14 +86,33 @@ export function getUserAuth() {
                             email: data.user.email,
                             isAdmin: data.user.isAdmin,
                             auth: data.auth
-                        }
+                        },
+                        ...(data.address && {
+                            address: {
+                                address: data.address.address,
+                                number: data.address.number,
+                                postalCode: data.address.postalCode,
+                                city: data.address.city,
+                                state: data.address.state,
+                                district: data.address.district,
+                                complement: data.address.complement
+                                    ? data.address.complement
+                                    : "",
+                                phone: data.address.phone
+                                    ? data.address.phone
+                                    : "",
+                                description: data.address.description
+                                    ? data.address.description
+                                    : ""
+                            }
+                        })
                     }
                 });
                 break;
             case 401:
                 localStorage.removeItem("user_token");
                 dispatch({
-                    type: "LOGIN_FAIL",
+                    type: types.LOGIN_FAIL,
                     payload: {
                         user: {
                             id: null,
@@ -101,6 +120,17 @@ export function getUserAuth() {
                             email: "",
                             isAdmin: false,
                             auth: false
+                        },
+                        address: {
+                            address: "",
+                            number: "",
+                            postalCode: "",
+                            city: "",
+                            state: "",
+                            district: "",
+                            complement: "",
+                            phone: "",
+                            description: ""
                         }
                     }
                 });
@@ -120,7 +150,7 @@ export function getUserAuth() {
 
 export function updateInput(value, stateProp) {
     return {
-        type: "UPDATE_INPUT",
+        type: types.UPDATE_INPUT_LOGIN,
         payload: {
             input: {
                 value,

@@ -2,8 +2,12 @@ import React from "react";
 
 import "./SquareButton.scss";
 
-const SquareButton = ({ children }) => {
-    return <button className="square-button">{children}</button>;
+const SquareButton = ({ children, onClick }) => {
+    return (
+        <button className="square-button" onClick={onClick}>
+            {children}
+        </button>
+    );
 };
 
 export default SquareButton;

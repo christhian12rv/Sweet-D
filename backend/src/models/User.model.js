@@ -36,4 +36,8 @@ User.associate = function (models) {
     User.belongsTo(models.Order, { foreignKey: "userId", as: "user" });
 };
 
+User.associate = function (models) {
+    User.hasMany(models.Address, { foreignKey: "userId", sourceKey: "id" });
+};
+
 module.exports = User;
