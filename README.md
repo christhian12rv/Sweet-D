@@ -72,15 +72,6 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ####
 
-#### Cloudinary
-
-[Cloudinary](https://cloudinary.com/) is a SaaS technology company headquartered in Santa Clara, California, with offices in Israel, England, Poland, and Singapore. The company provides cloud-based image and video management services. It enables users to upload, store, manage, manipulate, and deliver images and video for websites and apps.
-
--   #### Requisites
-    Create a [Cloudinary](https://cloudinary.com/) account, go to "Media Library" and create a "Products" folder. The necessary keys for put on .env file its located on "Dashboard".
-
-####
-
 #### MySQL
 
 -   #### MySQL Installation
@@ -98,6 +89,15 @@ After your check if MySQL was successful installed, you should be able to run th
 Then, type your password for access mysql. Then create a "sweet-d" database with following command.
 
     $ CREATE DATABASE `sweet-d`;
+
+####
+
+#### Cloudinary
+
+[Cloudinary](https://cloudinary.com/) is a SaaS technology company headquartered in Santa Clara, California, with offices in Israel, England, Poland, and Singapore. The company provides cloud-based image and video management services. It enables users to upload, store, manage, manipulate, and deliver images and video for websites and apps.
+
+-   #### Requisites
+    Create a [Cloudinary](https://cloudinary.com/) account, go to "Media Library" and create a "Products" folder. The necessary keys for put on .env file its located on "Dashboard".
 
 ####
 
