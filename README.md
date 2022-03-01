@@ -21,45 +21,42 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 This project is a Website created with **Nodejs**, **React** and **MySQL** to manage a confectionery.
 The architecture used in the project is the **MVCS (Models Views Controllers Services)**
 
-
-
 ### Built With
 
-* [NodeJS](https://nodejs.org/en/)
-* [Express](https://expressjs.com/)
-* [MySQL](https://mysql.com/)
-* [React](https://reactjs.org/)
-
-
+-   [NodeJS](https://nodejs.org/en/)
+-   [Express](https://expressjs.com/)
+-   [MySQL](https://mysql.com/)
+-   [React](https://reactjs.org/)
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Prerequisites
 
 #### Node
-- #### Node installation on Windows
 
-  Just go on [official Node.js website](https://nodejs.org/) and download the installer.
-Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
+-   #### Node installation on Windows
 
-- ##### Node installation on Ubuntu
+    Just go on [official Node.js website](https://nodejs.org/) and download the installer.
+    Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
 
-  You can install nodejs and npm easily with apt install, just run the following commands.
+-   ##### Node installation on Ubuntu
 
-      $ sudo apt install nodejs
-      $ sudo apt install npm
+    You can install nodejs and npm easily with apt install, just run the following commands.
 
-- ##### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
+        $ sudo apt install nodejs
+        $ sudo apt install npm
+
+-   ##### Other Operating Systems
+    You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
 
 If the installation was successful, you should be able to run the following command.
 
@@ -75,43 +72,50 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 
 ####
 
+#### Cloudinary
 
+[Cloudinary](https://cloudinary.com/) is a SaaS technology company headquartered in Santa Clara, California, with offices in Israel, England, Poland, and Singapore. The company provides cloud-based image and video management services. It enables users to upload, store, manage, manipulate, and deliver images and video for websites and apps.
 
+-   #### Requisites
+    Create a [Cloudinary](https://cloudinary.com/) account, go to "Media Library" and create a "Products" folder. The necessary keys for put on .env file its located on "Dashboard".
 
 ### Installation
 
 1. Clone the repo
-   ```sh
-   git clone https://github.com/christhian12rv/Confeitaria.git
-   ```
+    ```sh
+    git clone https://github.com/christhian12rv/Confeitaria.git
+    ```
 2. Go to the /backend folder and install the NPM packages
-   ```sh
-   npm install
-   ```
+    ```sh
+    npm install
+    ```
 3. Go to the /frontend folder and install the NPM packages
-   ```sh
-   npm install
-   ```
-
-
-
+    ```sh
+    npm install
+    ```
 
 ### Running the project
 
 First, create a database in mysql and a .env file in /backend. Then change the .env file
-   ```sh
-  # Database
-  DB_HOST=your_mysql_host
-  DB_USER=your_mysql_user
-  DB_PASS=your_mysql_password
-  DB_NAME=your_mysql_database
 
-  #JWT
-  JWT_SECRET=your_jwt_secret_key
+```sh
+# Database
+DB_HOST=your_mysql_host
+DB_USER=your_mysql_user
+DB_PASS=your_mysql_password
+DB_NAME=your_mysql_database
 
-  #SESSION
-  SESSION_SECRET=your_session_secret_key
-   ```
+#JWT
+JWT_SECRET=your_jwt_secret_key
+
+#SESSION
+SESSION_SECRET=your_session_secret_key
+
+#CLOUDINARY
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
 To run the frontend and backend together, go to the /backend folder and run
 
@@ -129,16 +133,14 @@ Or go to the /backend folder and run
 
     $ npm run client
 
-
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 Coming soon...
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
