@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CurrencyInput from "react-currency-input-field";
 import { useQuill } from "react-quilljs";
@@ -13,6 +13,7 @@ import * as AddProductActions from "../../../../store/actions/addProduct";
 
 import InputText from "../../../InputText";
 import SquareButton from "../../../Buttons/SquareButton";
+import ModalLoading from "../../../ModalLoading";
 
 import "./index.scss";
 
@@ -25,12 +26,17 @@ const AddProduct = ({
     extras,
     photos,
     updateInput,
-    addProduct
+    addProduct,
+    clearState
 }) => {
     const toastId = React.useRef(null);
     const navigate = useNavigate();
 
     const [modalShow, setModalShow] = useState(false);
+
+    useEffect(() => {
+        clearState();
+    }, []);
 
     const modules = {
         toolbar: [
@@ -113,15 +119,7 @@ const AddProduct = ({
 
     return (
         <div className="admin-add-product">
-            <div
-                className={
-                    "modal-promise-container " + (modalShow ? "show" : "")
-                }
-            >
-                <div className="loader-container">
-                    <div className="loader"></div>
-                </div>
-            </div>
+            <ModalLoading modalShow={modalShow} />
             <form onSubmit={handleAddProduct}>
                 <div className="item name">
                     <h5>Nome</h5>

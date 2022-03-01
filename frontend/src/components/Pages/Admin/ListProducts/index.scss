@@ -6,6 +6,7 @@
 
     .rdt_Table {
         .product-img {
+            width: 60px;
             height: 60px;
             padding-top: 3px;
         }
@@ -33,6 +34,11 @@
     .rdt_TableRow {
         &:hover {
             background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .id {
+            font-size: 1.2em;
+            font-weight: bold;
         }
     }
 }

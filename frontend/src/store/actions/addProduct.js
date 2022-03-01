@@ -32,10 +32,12 @@ export function addProduct(
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
+                dispatch({
+                    type: types.CLEAR_STATE_ADD_PRODUCT
+                });
                 return {
                     type: "REDIRECT",
                     to: "/admin/products"
@@ -50,16 +52,28 @@ export function addProduct(
                 break;
             case 401:
                 toastId.current = toast.error(data.msg, { delay: delay });
+                dispatch({
+                    type: types.CLEAR_STATE_ADD_PRODUCT
+                });
                 return {
                     type: "REDIRECT",
                     to: "/"
                 };
             default:
+                dispatch({
+                    type: types.CLEAR_STATE_ADD_PRODUCT
+                });
                 return {
                     type: "REDIRECT",
                     to: "/error/500"
                 };
         }
+    };
+}
+
+export function clearState() {
+    return {
+        type: types.CLEAR_STATE_ADD_PRODUCT
     };
 }
 

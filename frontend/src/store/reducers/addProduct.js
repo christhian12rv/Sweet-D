@@ -13,7 +13,6 @@ const INITIAL_STATE = {
 };
 
 export default function addProduct(state = INITIAL_STATE, action) {
-    console.log(action);
     switch (action.type) {
         case types.UPDATE_INPUT_ADD_PRODUCT:
             return {
@@ -23,6 +22,9 @@ export default function addProduct(state = INITIAL_STATE, action) {
                     [action.payload.input.stateProp]: action.payload.input.value
                 }
             };
+
+        case types.CLEAR_STATE_ADD_PRODUCT:
+            return { ...INITIAL_STATE };
         default:
             return state;
     }
