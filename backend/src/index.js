@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const sequelize = require("./db");
 const fileUpload = require("express-fileupload");
 const session = require("express-session");
+const cloudinary = require("cloudinary").v2;
 
 const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
@@ -37,6 +38,12 @@ sequelize
         console.log("Conectado ao MySQL");
     })
     .catch(error => console.log(error));
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 app.use("/users", usersRoute);
 app.use("/products", productsRoute);

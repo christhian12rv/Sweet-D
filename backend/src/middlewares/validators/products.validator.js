@@ -17,19 +17,40 @@ exports.create = [
         .isLength({ min: 2 })
         .withMessage("O campo Nome deve conter no mínimo 2 caracteres"),
 
-    body("description")
+    body("slug")
         .trim()
+        .toLowerCase()
         .notEmpty()
-        .withMessage("O campo Descrição é obrigatório")
+        .withMessage("O campo Slug é obrigatório")
         .bail()
         .isString()
-        .withMessage("O Descrição informado é inválido")
+        .withMessage("O Slug informado é inválido")
         .bail()
         .isLength({ min: 2 })
-        .withMessage("O campo Descrição deve conter no mínimo 2 caracteres"),
+        .withMessage("O Slug deve conter no mínimo 2 caracteres")
+        .bail()
+        .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+        .withMessage(
+            "O Slug informado é inválido. Um Slug deve ser todo em caracteres minúsculos e não pode conter nenhum caractere especial, exceto hífens"
+        )
+        .custom((value, { req }) => {
+            return ProductModel.findOne({ where: { slug: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(product => {
+                    if (product)
+                        return Promise.reject(
+                            "Já existe um Produto com o slug informado"
+                        );
+                });
+        }),
 
     body("price")
         .trim()
+        .customSanitizer(value => {
+            return value.replace(",", ".");
+        })
         .notEmpty()
         .withMessage("O campo Preço é obrigatório")
         .bail()
@@ -44,35 +65,21 @@ exports.create = [
         .isInt()
         .withMessage("O Estoque informado é inválido"),
 
-    body("slug")
+    body("description")
         .trim()
-        .toLowerCase()
         .notEmpty()
-        .withMessage("O campo Slug é obrigatório")
+        .withMessage("O campo Descrição é obrigatório")
         .bail()
         .isString()
-        .withMessage("O Slug informado é inválido")
+        .withMessage("O Descrição informado é inválido")
         .bail()
         .isLength({ min: 2 })
-        .withMessage("O Slug deve conter no mínimo 2 caracteres")
-        .bail()
-        .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-        .withMessage("O Slug informado é inválido. Um Slug deve ser todo em caracteres minúsculos e não pode conter nenhum caractere especial, exceto hífens")
-        .custom((value, { req }) => {
-            return ProductModel.findOne({ where: { slug: value } })
-                .catch(erro => {
-                    return Promise.reject("Ocorreu um erro interno");
-                })
-                .then((product) => {
-                    if (product)
-                        return Promise.reject("Já existe um Produto com o slug informado");
-                })
-        }),
+        .withMessage("O campo Descrição deve conter no mínimo 2 caracteres"),
 
     body("extras")
-        .customSanitizer((value) => {
-            if (typeof value !== 'object')
-                return JSON.parse(value);
+        .optional()
+        .customSanitizer(value => {
+            if (typeof value !== "object") return JSON.parse(value);
             return value;
         })
         .isArray()
@@ -83,8 +90,8 @@ exports.create = [
         .notEmpty()
         .withMessage("Extra inválido")
         .isString()
-        .withMessage("Extra inválido"),
-]
+        .withMessage("Extra inválido")
+];
 
 exports.update = [
     body("id")
@@ -98,10 +105,9 @@ exports.update = [
                 .catch(erro => {
                     return Promise.reject("Ocorreu um erro interno: " + erro);
                 })
-                .then((product) => {
-                    if (!product)
-                        return Promise.reject("Produto inválido");
-                })
+                .then(product => {
+                    if (!product) return Promise.reject("Produto inválido");
+                });
         }),
 
     body("name")
@@ -163,15 +169,19 @@ exports.update = [
         .withMessage("O Slug deve conter no mínimo 2 caracteres")
         .bail()
         .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-        .withMessage("O Slug informado é inválido. Um Slug deve ser todo em caracteres minúsculos e não pode conter nenhum caractere especial, exceto hífens")
+        .withMessage(
+            "O Slug informado é inválido. Um Slug deve ser todo em caracteres minúsculos e não pode conter nenhum caractere especial, exceto hífens"
+        )
         .custom((value, { req }) => {
             return ProductModel.findOne({ where: { slug: value } })
                 .catch(erro => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((product) => {
+                .then(product => {
                     if (product)
-                        return Promise.reject("Slug igual ao do produto ou já existe outro produto com o slug informado");
-                })
+                        return Promise.reject(
+                            "Slug igual ao do produto ou já existe outro produto com o slug informado"
+                        );
+                });
         })
-]
+];

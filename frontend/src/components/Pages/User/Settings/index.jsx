@@ -95,7 +95,9 @@ const Settings = ({
         updateInput(e.target.value, stateProp, isAddress);
     };
 
-    const handleUserUpdate = async () => {
+    const handleUserUpdate = async e => {
+        e.preventDefault();
+
         const response = await update(
             id,
             { [fieldToChange.textField]: input[fieldToChange.textField] },
@@ -130,7 +132,8 @@ const Settings = ({
         setModalIsOpen(true);
     };
 
-    const handleAddressUpdate = async () => {
+    const handleAddressUpdate = async e => {
+        e.preventDefault();
         const response = await updateAddress(id, address, toastId);
 
         if (response && response.type)
@@ -180,116 +183,120 @@ const Settings = ({
                 </div>
                 <div className="address">
                     <h2>Endereço</h2>
-                    <div className="address-content-div">
-                        <div className="item">
-                            <h3>* Endereço</h3>
-                            <InputText
-                                value={address.address}
-                                className="address-input"
-                                placeholder="Endereço"
-                                onChange={e =>
-                                    handleInputChange(e, "address", true)
-                                }
-                            ></InputText>
+                    <form onSubmit={handleAddressUpdate}>
+                        <div className="address-content-div">
+                            <div className="item">
+                                <h3>* Endereço</h3>
+                                <InputText
+                                    value={address.address}
+                                    className="address-input"
+                                    placeholder="Endereço"
+                                    onChange={e =>
+                                        handleInputChange(e, "address", true)
+                                    }
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>* Número</h3>
+                                <InputText
+                                    value={address.number}
+                                    className="number"
+                                    placeholder="Número"
+                                    onChange={e =>
+                                        handleInputChange(e, "number", true)
+                                    }
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>* Bairro</h3>
+                                <InputText
+                                    value={address.district}
+                                    className="district"
+                                    placeholder="Bairro"
+                                    onChange={e =>
+                                        handleInputChange(e, "district", true)
+                                    }
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>* CEP</h3>
+                                <BrazilMaskComponent
+                                    format="cep"
+                                    value={address.postalCode}
+                                    className="postal-code brazil-mask-component"
+                                    placeholder="CEP"
+                                    onChange={e =>
+                                        handleInputChange(e, "postalCode", true)
+                                    }
+                                />
+                            </div>
+                            <div className="item">
+                                <h3>* Cidade</h3>
+                                <InputText
+                                    value={address.city}
+                                    className="city"
+                                    placeholder="Cidade"
+                                    onChange={e =>
+                                        handleInputChange(e, "city", true)
+                                    }
+                                    readOnly={true}
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>* Estado</h3>
+                                <InputText
+                                    value={address.state}
+                                    className="state"
+                                    placeholder="Estado"
+                                    onChange={e =>
+                                        handleInputChange(e, "state", true)
+                                    }
+                                    readOnly={true}
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>Complemento</h3>
+                                <InputText
+                                    value={address.complement}
+                                    className="complement"
+                                    placeholder="Complemento"
+                                    onChange={e =>
+                                        handleInputChange(e, "complement", true)
+                                    }
+                                ></InputText>
+                            </div>
+                            <div className="item">
+                                <h3>Telefone</h3>
+                                <TelefoneBrasileiroInput
+                                    value={address.phone}
+                                    className="phone"
+                                    placeholder="(00) 90000-0000"
+                                    temDDD
+                                    separaDDD
+                                    onChange={e =>
+                                        handleInputChange(e, "phone", true)
+                                    }
+                                ></TelefoneBrasileiroInput>
+                            </div>
+                            <div className="item item-description">
+                                <h3>Descrição</h3>
+                                <TextArea
+                                    value={address.description}
+                                    className="description"
+                                    rows={5}
+                                    placeholder="Descrição..."
+                                    onChange={e =>
+                                        handleInputChange(
+                                            e,
+                                            "description",
+                                            true
+                                        )
+                                    }
+                                ></TextArea>
+                            </div>
                         </div>
-                        <div className="item">
-                            <h3>* Número</h3>
-                            <InputText
-                                value={address.number}
-                                className="number"
-                                placeholder="Número"
-                                onChange={e =>
-                                    handleInputChange(e, "number", true)
-                                }
-                            ></InputText>
-                        </div>
-                        <div className="item">
-                            <h3>* Bairro</h3>
-                            <InputText
-                                value={address.district}
-                                className="district"
-                                placeholder="Bairro"
-                                onChange={e =>
-                                    handleInputChange(e, "district", true)
-                                }
-                            ></InputText>
-                        </div>
-                        <div className="item">
-                            <h3>* CEP</h3>
-                            <BrazilMaskComponent
-                                format="cep"
-                                value={address.postalCode}
-                                className="postal-code brazil-mask-component"
-                                placeholder="CEP"
-                                onChange={e =>
-                                    handleInputChange(e, "postalCode", true)
-                                }
-                            />
-                        </div>
-                        <div className="item">
-                            <h3>* Cidade</h3>
-                            <InputText
-                                value={address.city}
-                                className="city"
-                                placeholder="Cidade"
-                                onChange={e =>
-                                    handleInputChange(e, "city", true)
-                                }
-                                readOnly={true}
-                            ></InputText>
-                        </div>
-                        <div className="item">
-                            <h3>* Estado</h3>
-                            <InputText
-                                value={address.state}
-                                className="state"
-                                placeholder="Estado"
-                                onChange={e =>
-                                    handleInputChange(e, "state", true)
-                                }
-                                readOnly={true}
-                            ></InputText>
-                        </div>
-                        <div className="item">
-                            <h3>Complemento</h3>
-                            <InputText
-                                value={address.complement}
-                                className="complement"
-                                placeholder="Complemento"
-                                onChange={e =>
-                                    handleInputChange(e, "complement", true)
-                                }
-                            ></InputText>
-                        </div>
-                        <div className="item">
-                            <h3>Telefone</h3>
-                            <TelefoneBrasileiroInput
-                                value={address.phone}
-                                className="phone"
-                                placeholder="(00) 90000-0000"
-                                temDDD
-                                separaDDD
-                                onChange={e =>
-                                    handleInputChange(e, "phone", true)
-                                }
-                            ></TelefoneBrasileiroInput>
-                        </div>
-                        <div className="item item-description">
-                            <h3>Descrição</h3>
-                            <TextArea
-                                value={address.description}
-                                className="description"
-                                rows={5}
-                                placeholder="Descrição..."
-                                onChange={e =>
-                                    handleInputChange(e, "description", true)
-                                }
-                            ></TextArea>
-                        </div>
-                    </div>
-                    <SquareButton onClick={handleAddressUpdate}>
-                        Atualizar
-                    </SquareButton>
+                        <SquareButton submit={true}>Atualizar</SquareButton>
+                    </form>
                 </div>
             </div>
 
@@ -301,6 +308,7 @@ const Settings = ({
                 confirmButton={true}
                 confirmButtonText="Atualizar"
                 confirmButtonOnClick={handleUserUpdate}
+                form={true}
             >
                 <div className="user-settings-field-change-div">
                     <h3 className="modal-title">Mudar {fieldToChange.text}</h3>

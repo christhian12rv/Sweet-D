@@ -17,7 +17,8 @@ const ModalApp = ({
     cancelButton,
     confirmButton,
     confirmButtonText,
-    confirmButtonOnClick
+    confirmButtonOnClick,
+    form
 }) => {
     const closeModal = () => {
         setIsOpen(false);
@@ -37,15 +38,35 @@ const ModalApp = ({
             style={{ overlay: { zIndex: 999999999 } }}
         >
             <MdClose className="close-icon" onClick={closeModal} />
-            {children}
-            <div className="buttons-row">
-                {cancelButton && <CancelButton onClick={handleCancelButton} />}
-                {confirmButton && (
-                    <ConfirmButton onClick={confirmButtonOnClick}>
-                        {confirmButtonText}
-                    </ConfirmButton>
-                )}
-            </div>
+            {form ? (
+                <form onSubmit={confirmButtonOnClick}>
+                    {children}
+                    <div className="buttons-row">
+                        {cancelButton && (
+                            <CancelButton onClick={handleCancelButton} />
+                        )}
+                        {confirmButton && (
+                            <ConfirmButton submit={true}>
+                                {confirmButtonText}
+                            </ConfirmButton>
+                        )}
+                    </div>
+                </form>
+            ) : (
+                <>
+                    {children}
+                    <div className="buttons-row">
+                        {cancelButton && (
+                            <CancelButton onClick={handleCancelButton} />
+                        )}
+                        {confirmButton && (
+                            <ConfirmButton onClick={confirmButtonOnClick}>
+                                {confirmButtonText}
+                            </ConfirmButton>
+                        )}
+                    </div>
+                </>
+            )}
         </Modal>
     );
 };

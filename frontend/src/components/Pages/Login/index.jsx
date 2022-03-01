@@ -24,7 +24,8 @@ const Login = ({ email, password, login, updateInput }) => {
         updateInput(e.target.value, stateProp);
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async e => {
+        e.preventDefault();
         const response = await login(email, password, toastId);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
@@ -44,33 +45,40 @@ const Login = ({ email, password, login, updateInput }) => {
                 <div className="second-div">
                     <Logo />
                     <h2 className="login-title">Login</h2>
-                    <div className="email-div">
-                        <h5>Email</h5>
-                        <div className="input-div">
-                            <MdAlternateEmail className="icon" />
-                            <InputText
-                                value={email}
-                                onChange={e => handleInputChange(e, "email")}
-                            />
+
+                    <form onSubmit={handleLogin}>
+                        <div className="email-div">
+                            <h5>Email</h5>
+                            <div className="input-div">
+                                <MdAlternateEmail className="icon" />
+                                <InputText
+                                    value={email}
+                                    onChange={e =>
+                                        handleInputChange(e, "email")
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="password-div">
-                        <div className="password-row-div">
-                            <h5>Senha</h5>
-                            <a>Esqueceu sua senha?</a>
+                        <div className="password-div">
+                            <div className="password-row-div">
+                                <h5>Senha</h5>
+                                <a>Esqueceu sua senha?</a>
+                            </div>
+                            <div className="input-div">
+                                <GoLock className="icon" />
+                                <InputPassword
+                                    value={password}
+                                    onChange={e =>
+                                        handleInputChange(e, "password")
+                                    }
+                                />
+                            </div>
                         </div>
-                        <div className="input-div">
-                            <GoLock className="icon" />
-                            <InputPassword
-                                value={password}
-                                onChange={e => handleInputChange(e, "password")}
-                            />
-                        </div>
-                    </div>
-                    <RoundedButton onClick={handleLogin}>Login</RoundedButton>
-                    <RoundedButton onClick={() => navigate("/register")}>
-                        Não tem uma conta?
-                    </RoundedButton>
+                        <RoundedButton submit={true}>Login</RoundedButton>
+                        <RoundedButton onClick={() => navigate("/register")}>
+                            Não tem uma conta?
+                        </RoundedButton>
+                    </form>
                 </div>
             </div>
         </div>

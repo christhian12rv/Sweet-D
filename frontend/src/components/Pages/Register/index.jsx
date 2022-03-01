@@ -31,7 +31,8 @@ const Register = ({
         updateInput(e.target.value, stateProp);
     };
 
-    const handleRegister = async () => {
+    const handleRegister = async e => {
+        e.preventDefault();
         const response = await register(
             name,
             email,
@@ -64,54 +65,58 @@ const Register = ({
                 <div className="second-div">
                     <Logo />
                     <h2 className="register-title">Registrar</h2>
-                    <div className="name-div">
-                        <h5>Nome</h5>
-                        <div className="input-div">
-                            <GoPerson className="icon" />
-                            <InputText
-                                value={name}
-                                onChange={e => handleInputChange(e, "name")}
-                            />
+                    <form onSubmit={handleRegister}>
+                        <div className="name-div">
+                            <h5>Nome</h5>
+                            <div className="input-div">
+                                <GoPerson className="icon" />
+                                <InputText
+                                    value={name}
+                                    onChange={e => handleInputChange(e, "name")}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="email-div">
-                        <h5>Email</h5>
-                        <div className="input-div">
-                            <MdAlternateEmail className="icon" />
-                            <InputText
-                                value={email}
-                                onChange={e => handleInputChange(e, "email")}
-                            />
+                        <div className="email-div">
+                            <h5>Email</h5>
+                            <div className="input-div">
+                                <MdAlternateEmail className="icon" />
+                                <InputText
+                                    value={email}
+                                    onChange={e =>
+                                        handleInputChange(e, "email")
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="password-div">
-                        <h5>Senha</h5>
-                        <div className="input-div">
-                            <GoLock className="icon" />
-                            <InputPassword
-                                value={password}
-                                onChange={e => handleInputChange(e, "password")}
-                            />
+                        <div className="password-div">
+                            <h5>Senha</h5>
+                            <div className="input-div">
+                                <GoLock className="icon" />
+                                <InputPassword
+                                    value={password}
+                                    onChange={e =>
+                                        handleInputChange(e, "password")
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="password-div">
-                        <h5>Confirmar senha</h5>
-                        <div className="input-div">
-                            <GoLock className="icon" />
-                            <InputPassword
-                                value={confirmPassword}
-                                onChange={e =>
-                                    handleInputChange(e, "confirmPassword")
-                                }
-                            />
+                        <div className="password-div">
+                            <h5>Confirmar senha</h5>
+                            <div className="input-div">
+                                <GoLock className="icon" />
+                                <InputPassword
+                                    value={confirmPassword}
+                                    onChange={e =>
+                                        handleInputChange(e, "confirmPassword")
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <RoundedButton onClick={handleRegister}>
-                        Registrar
-                    </RoundedButton>
-                    <RoundedButton onClick={() => navigate("/login")}>
-                        Já tem uma conta?
-                    </RoundedButton>
+                        <RoundedButton submit={true}>Registrar</RoundedButton>
+                        <RoundedButton onClick={() => navigate("/login")}>
+                            Já tem uma conta?
+                        </RoundedButton>
+                    </form>
                 </div>
             </div>
         </div>

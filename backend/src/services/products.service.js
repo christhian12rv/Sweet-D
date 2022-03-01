@@ -1,77 +1,95 @@
-const { v4: uuidv4 } = require('uuid');
-var path = require('path');
+const { v4: uuidv4 } = require("uuid");
+var path = require("path");
+const datauri = require("datauri");
+const cloudinary = require("cloudinary").v2;
 
 const ProductModel = require("../models/Product.model");
 
-exports.findByPk = async (id) => {
+exports.findByPk = async id => {
     const product = await ProductModel.findByPk(id);
     return product;
-}
+};
 
 exports.findAll = async () => {
     const products = await ProductModel.findAll();
     return products;
-}
+};
 
-exports.create = async (name, description, price, storage, slug, extras, photos) => {
+exports.create = async (
+    name,
+    description,
+    price,
+    storage,
+    slug,
+    extras,
+    photos
+) => {
     if (!photos.length || photos.length < 1) {
         let arrayAuxPhotos = [];
         arrayAuxPhotos.push(photos);
         photos = arrayAuxPhotos;
     }
 
-    const uploadPath = __dirname + '/../public/img/product/';
-    const photosArray = [];
+    let photosNames = [];
+
+    const uploadPath = __dirname + "/../public/img/product/";
     for (const photo of photos) {
-        await new Promise((resolve) => {
+        await new Promise(resolve => {
             const imageName = uuidv4() + path.extname(photo.name);
             const imagePath = uploadPath + imageName;
-            photo.mv(imagePath, function (error) {
-                if (error)
-                    throw error;
+            photo.mv(imagePath, async error => {
+                if (error) throw error;
                 else {
-                    photosArray.push(imageName);
+                    const cloudinaryResponse = await cloudinary.uploader.upload(
+                        imagePath,
+                        { folder: "Products/" }
+                    );
+                    photosNames.push(cloudinaryResponse.secure_url);
                 }
                 resolve(true);
             });
-        })
+        });
     }
 
     const product = await ProductModel.create({
         name,
-        description,
-        photos: photosArray.join(","),
+        ...(description && { description }),
+        photos: JSON.stringify(photosNames),
         price,
         storage,
         slug,
-        extras: extras.join(",")
+        ...(extras && { extras: JSON.stringify(extras) })
     });
     return product;
-}
+};
 
 exports.update = async (body, photos) => {
     const photosArray = [];
     if (photos) {
-        const uploadPath = __dirname + '/../public/img/product/';
+        const uploadPath = __dirname + "/../public/img/product/";
         for (const photo of photos) {
-            await new Promise((resolve) => {
+            await new Promise(resolve => {
                 const imageName = uuidv4() + path.extname(photo.name);
                 const imagePath = uploadPath + imageName;
                 photo.mv(imagePath, function (error) {
-                    if (error)
-                        throw error;
+                    if (error) throw error;
                     else {
                         photosArray.push(imageName);
                     }
                     resolve(true);
                 });
-            })
+            });
         }
     }
 
-    const dataChange = { ...body, ...(photosArray.length && { photos: photosArray.join(",") }) };
+    const dataChange = {
+        ...body,
+        ...(photosArray.length && { photos: photosArray.join(",") })
+    };
 
-    const product = await ProductModel.update(dataChange, { where: { id: body.id } });
+    const product = await ProductModel.update(dataChange, {
+        where: { id: body.id }
+    });
 
     return product;
-}
+};

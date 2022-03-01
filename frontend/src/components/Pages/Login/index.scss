@@ -76,6 +76,16 @@
             padding: 4em;
             flex-grow: 1;
 
+            form {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                align-items: center;
+                background-color: $light;
+                gap: 1em;
+                width: 100%;
+            }
+
             .login-title {
                 color: $dark;
                 margin-top: 0.5em;

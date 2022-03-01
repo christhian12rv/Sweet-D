@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const db = require("../db");
 
-const Product = db.define('product', {
+const Product = db.define("product", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -17,8 +17,8 @@ const Product = db.define('product', {
         allowNull: false
     },
     photos: {
-        type: Sequelize.STRING(5000),
-        allowNull: false
+        type: Sequelize.TEXT,
+        allowNull: true
     },
     price: {
         type: Sequelize.FLOAT,
@@ -43,6 +43,6 @@ const Product = db.define('product', {
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
-})
+});
 
 module.exports = Product;

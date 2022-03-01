@@ -5,6 +5,10 @@
     src: url("./fonts/AndadaPro-Regular.ttf");
 }
 
+:root {
+    --toastify-z-index: 9999999999;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

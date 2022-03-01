@@ -7,20 +7,25 @@ exports.find = async (req, res) => {
         const products = await productsService.findAll();
         res.json({ products });
     } catch (error) {
-        res.status(500).json({ message: "Houve um erro interno" });
+        res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
 
 exports.create = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.json({ status: 400, errors: errors.array() });
     }
 
     if (!req.files || Object.keys(req.files).length === 0) {
-        return res
-            .status(400)
-            .json({ message: "O produto deve ter pelo menos 1 imagem" });
+        return res.json({
+            status: 400,
+            errors: [
+                {
+                    msg: "O produto deve ter pelo menos 1 imagem"
+                }
+            ]
+        });
     }
 
     try {
@@ -34,10 +39,12 @@ exports.create = async (req, res) => {
             extras,
             req.files.photos
         );
-        res.json({ product, message: "Produto criado com sucesso" });
+        res.json({ status: 200, product, msg: "Produto criado com sucesso" });
     } catch (error) {
-        res.status(500).json({
-            message: "Houve um erro interno ao tentar criar produto"
+        console.log(error);
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar criar produto"
         });
     }
 };
@@ -52,16 +59,17 @@ exports.update = async (req, res) => {
         const { id } = req.body;
         const productExists = productsService.findByPk(id);
         if (!productExists)
-            return res.json(400).json({ message: "Produto inválido" });
+            return res.json(400).json({ msg: "Produto inválido" });
 
         const product = await productsService.update(
             req.body,
             req.files && req.files.photos ? req.files.photos : null
         );
-        res.json({ product, message: "Produto alterado com sucesso" });
+        res.json({ product, msg: "Produto alterado com sucesso" });
     } catch (error) {
-        res.status(500).json({
-            message: "Houve um erro interno ao tentar alterar produto"
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar alterar produto"
         });
     }
 };
