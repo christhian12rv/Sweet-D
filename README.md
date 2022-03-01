@@ -86,9 +86,7 @@ After your check if MySQL was successful installed, you should be able to run th
 
     $ mysql -u "your_user" -p
 
-Then, type your password for access mysql. Then create a "sweet-d" database with following command.
-
-    $ CREATE DATABASE `sweet-d`;
+Then, type your password for access mysql and it's ready to use.
 
 ####
 
