@@ -79,6 +79,28 @@ If you need to update `npm`, you can make it using `npm`! Cool right? After runn
 -   #### Requisites
     Create a [Cloudinary](https://cloudinary.com/) account, go to "Media Library" and create a "Products" folder. The necessary keys for put on .env file its located on "Dashboard".
 
+####
+
+#### MySQL
+
+-   #### MySQL Installation
+    Go to [MYSQL Community Downloads](https://dev.mysql.com/downloads/mysql/) and download and install the MySQL for your system. [Configure](https://dev.mysql.com/doc/) MySQL based on your system.
+
+If the installation was successful, you should be able to run the following command.
+
+    $ mysql --version
+    mysql  Ver 8.0.28-0ubuntu0.20.04.3 for Linux on x86_64 ((Ubuntu))
+
+After your check if MySQL was successful installed, you should be able to run the following command replacing "your_user" with your previously created user without quotes (Default is root).
+
+    $ mysql -u "your_user" -p
+
+Then, type your password for access mysql. Then create a "sweet-d" database with following command.
+
+    $ CREATE DATABASE `sweet-d`;
+
+####
+
 ### Installation
 
 1. Clone the repo
