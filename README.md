@@ -103,7 +103,7 @@ Then, type your password for access mysql and it's ready to use.
 
 1. Clone the repo
     ```sh
-    git clone https://github.com/christhian12rv/Confeitaria.git
+    git clone https://github.com/christhian12rv/Sweet-D.git
     ```
 2. Go to the /backend folder and install the NPM packages
     ```sh
