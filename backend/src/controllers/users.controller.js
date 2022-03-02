@@ -3,6 +3,29 @@ const { validationResult } = require("express-validator");
 
 const usersService = require("../services/users.service");
 
+exports.findAll = async (req, res) => {
+    try {
+        let { limit, page, columnSort, directionSort } = req.query;
+        columnSort =
+            columnSort == "undefined" || columnSort == "null"
+                ? undefined
+                : columnSort;
+        directionSort =
+            directionSort == "undefined" || directionSort == "null"
+                ? undefined
+                : directionSort;
+        const { totalRows, users } = await usersService.findAll(
+            parseInt(limit),
+            parseInt(page),
+            columnSort,
+            directionSort
+        );
+        res.json({ status: 200, totalRows, users });
+    } catch (error) {
+        res.json({ status: 500, msg: "Houve um erro interno" });
+    }
+};
+
 exports.register = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,15 +92,6 @@ exports.update = async (req, res) => {
             status: 500,
             msg: "Houve um erro interno ao tentar mudar dados do usuário"
         });
-    }
-};
-
-exports.findAll = async (req, res) => {
-    try {
-        const users = await usersService.findAll();
-        res.json({ status: 200, users });
-    } catch (error) {
-        res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
 

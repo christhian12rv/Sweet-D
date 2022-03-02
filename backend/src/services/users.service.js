@@ -4,6 +4,26 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../models/User.model");
 const AddressModel = require("../models/Address.model");
 
+exports.findAll = async (
+    limit = -1,
+    page = 1,
+    columnSort = "id",
+    directionSort = "asc",
+    search = ""
+) => {
+    const result = await UserModel.findAndCountAll({
+        limit,
+        offset: limit * (page - 1),
+        order: [[columnSort, directionSort]],
+        where: {
+            name: {
+                [Op.like]: "%" + search + "%"
+            }
+        }
+    });
+    return { totalRows: result.count, users: result.rows };
+};
+
 exports.create = async (name, email, password) => {
     const hashPassword = bcrypt.hashSync(password, 10);
     const user = await UserModel.create({
@@ -50,11 +70,6 @@ exports.update = async (userId, data) => {
     });
     const user = await UserModel.findByPk(userId);
     return { status: 200, user, msg: "Usuário alterado com sucesso" };
-};
-
-exports.findAll = async () => {
-    const users = await UserModel.findAll();
-    return users;
 };
 
 exports.getUserAuth = async token => {

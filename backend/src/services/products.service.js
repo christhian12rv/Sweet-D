@@ -2,6 +2,8 @@ const { v4: uuidv4 } = require("uuid");
 var path = require("path");
 const datauri = require("datauri");
 const cloudinary = require("cloudinary").v2;
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const ProductModel = require("../models/Product.model");
 
@@ -14,12 +16,18 @@ exports.findAll = async (
     limit = -1,
     page = 1,
     columnSort = "id",
-    directionSort = "asc"
+    directionSort = "asc",
+    search = ""
 ) => {
     const result = await ProductModel.findAndCountAll({
         limit,
         offset: limit * (page - 1),
-        order: [[columnSort, directionSort]]
+        order: [[columnSort, directionSort]],
+        where: {
+            name: {
+                [Op.like]: "%" + search + "%"
+            }
+        }
     });
     return { totalRows: result.count, products: result.rows };
 };

@@ -1,5 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as ListUsersActions from "../../../../store/actions/listProducts";
 
 import "./index.scss";
 

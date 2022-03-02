@@ -22,7 +22,8 @@ exports.findByPk = async (req, res) => {
 
 exports.findAll = async (req, res) => {
     try {
-        let { limit, page, columnSort, directionSort } = req.query;
+        let { limit, page, columnSort, directionSort, search } = req.query;
+        console.log(search);
         columnSort =
             columnSort == "undefined" || columnSort == "null"
                 ? undefined
@@ -35,10 +36,12 @@ exports.findAll = async (req, res) => {
             parseInt(limit),
             parseInt(page),
             columnSort,
-            directionSort
+            directionSort,
+            search
         );
         res.json({ status: 200, totalRows, products });
     } catch (error) {
+        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };

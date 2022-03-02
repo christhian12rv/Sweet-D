@@ -1,7 +1,7 @@
 import types from "../types";
 import axios from "axios";
 
-export function getProducts(limit, page, columnSort, directionSort) {
+export function getProducts(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
             "/products?limit=" +
@@ -11,7 +11,9 @@ export function getProducts(limit, page, columnSort, directionSort) {
                 "&columnSort=" +
                 columnSort +
                 "&directionSort=" +
-                directionSort
+                directionSort +
+                "&search=" +
+                search
         );
 
         const data = response.data;
@@ -73,6 +75,18 @@ export function handleUpdateActive(active) {
                     type: "REDIRECT",
                     to: "/error/500"
                 };
+        }
+    };
+}
+
+export function updateInput(value, stateProp) {
+    return {
+        type: types.UPDATE_INPUT_LIST_PRODUCTS,
+        payload: {
+            input: {
+                value,
+                stateProp
+            }
         }
     };
 }

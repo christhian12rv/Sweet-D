@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { MdEditNote, MdHome } from "react-icons/md";
+import { MdEditNote, MdHome, MdSearch } from "react-icons/md";
 import { ToggleSlider } from "react-toggle-slider";
 
 import { connect } from "react-redux";
@@ -10,6 +10,8 @@ import * as ListProductsActions from "../../../../store/actions/listProducts";
 
 import "./index.scss";
 
+import InputText from "../../../InputText";
+import SquareButton from "../../../Buttons/SquareButton";
 import ModalLoading from "../../../ModalLoading";
 
 const ListProducts = ({
@@ -19,9 +21,12 @@ const ListProducts = ({
     totalRows,
     getProducts,
     columnSort,
-    directionSort
+    directionSort,
+    search,
+    updateInput
 }) => {
     const navigate = useNavigate();
+    const searchInput = useRef(null);
     let isSorting = false;
     const [isLoading, setIsLoading] = useState(false);
 
@@ -51,6 +56,12 @@ const ListProducts = ({
             selector: row => row.name,
             sortable: true,
             nameOnDB: "name"
+        },
+        {
+            name: "Slug",
+            selector: row => row.slug,
+            sortable: true,
+            nameOnDB: "slug"
         },
         {
             name: "Preço",
@@ -88,6 +99,7 @@ const ListProducts = ({
                 />
             ),
             name: product.name,
+            slug: product.slug,
             price: "R$ " + price,
             quantity: product.storage,
             edit: (
@@ -124,7 +136,8 @@ const ListProducts = ({
             newLimit,
             newPage,
             columnSort,
-            directionSort
+            directionSort,
+            search
         );
         setIsLoading(false);
         if (response && response.type) {
@@ -139,7 +152,8 @@ const ListProducts = ({
                 limit,
                 newPage,
                 columnSort,
-                directionSort
+                directionSort,
+                search
             );
             setIsLoading(false);
             if (response && response.type) {
@@ -155,7 +169,8 @@ const ListProducts = ({
             limit,
             1,
             column.nameOnDB,
-            direction
+            direction,
+            search
         );
         isSorting = false;
         setIsLoading(false);
@@ -166,37 +181,82 @@ const ListProducts = ({
 
     useEffect(async () => {
         setIsLoading(true);
-        const response = await getProducts(10, 1, "id", "asc");
+        const response = await getProducts(10, 1, "id", "asc", "");
         setIsLoading(false);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
         }
     }, []);
 
+    const handleInputChange = (e, stateProp) => {
+        updateInput(e.target.value, stateProp);
+    };
+
+    const handleSearch = async e => {
+        e.preventDefault();
+        setIsLoading(true);
+        const response = await getProducts(
+            limit,
+            1,
+            columnSort,
+            directionSort,
+            search
+        );
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
     return (
         <div className="products-list-admin">
-            <DataTable
-                columns={columns}
-                data={data}
-                pagination
-                paginationServer
-                paginationTotalRows={totalRows}
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
-                onSort={handleColumnOrderChange}
-                sortServer={true}
-                defaultSortFieldId={1}
-                progressPending={isLoading}
-                progressComponent={<ModalLoading onDataTable={true} />}
-                responsive
-                noDataComponent={
-                    <p style={{ padding: "1.5em 0", fontSize: "1.1em" }}>
-                        Nenhum resultado encontrado
-                    </p>
-                }
-                paginationComponentOptions={paginationComponentOptions}
-                customStyles={customStyles}
-            />
+            <div className="form-box">
+                <form onSubmit={handleSearch}>
+                    <div
+                        className="products-list-admin-search-box"
+                        onClick={() => {
+                            searchInput.current?.focus();
+                            console.log("click");
+                        }}
+                    >
+                        <InputText
+                            placeholder="Pesquise por produtos..."
+                            value={search}
+                            onChange={e => handleInputChange(e, "search")}
+                            innerRef={searchInput}
+                        />
+                        <MdSearch
+                            className="icon"
+                            onClick={() => searchInput.current?.focus()}
+                        />
+                    </div>
+                    <SquareButton submit={true}>Buscar</SquareButton>
+                </form>
+            </div>
+            <div className="table-box">
+                <DataTable
+                    columns={columns}
+                    data={data}
+                    pagination
+                    paginationServer
+                    paginationTotalRows={totalRows}
+                    onChangeRowsPerPage={handlePerRowsChange}
+                    onChangePage={handlePageChange}
+                    onSort={handleColumnOrderChange}
+                    sortServer={true}
+                    defaultSortFieldId={1}
+                    progressPending={isLoading}
+                    progressComponent={<ModalLoading onDataTable={true} />}
+                    responsive
+                    noDataComponent={
+                        <p style={{ padding: "1.5em 0", fontSize: "1.1em" }}>
+                            Nenhum resultado encontrado
+                        </p>
+                    }
+                    paginationComponentOptions={paginationComponentOptions}
+                    customStyles={customStyles}
+                />
+            </div>
         </div>
     );
 };
@@ -207,7 +267,8 @@ const mapStateToProps = state => ({
     page: state.listProducts.page,
     totalRows: state.listProducts.totalRows,
     columnSort: state.listProducts.columnSort,
-    directionSort: state.listProducts.directionSort
+    directionSort: state.listProducts.directionSort,
+    search: state.listProducts.input.search
 });
 
 const mapDispatchToProps = dispatch =>
