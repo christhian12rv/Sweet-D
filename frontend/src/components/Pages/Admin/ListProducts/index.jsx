@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { MdEditNote, MdHome } from "react-icons/md";
 import { ToggleSlider } from "react-toggle-slider";
@@ -20,6 +21,7 @@ const ListProducts = ({
     columnSort,
     directionSort
 }) => {
+    const navigate = useNavigate();
     let isSorting = false;
     const [isLoading, setIsLoading] = useState(false);
 
@@ -80,7 +82,7 @@ const ListProducts = ({
             id: <h5 className="id">{product.id}</h5>,
             photo: (
                 <img
-                    src={photos[0]}
+                    src={photos[0].url}
                     alt="Foto do produto"
                     className="product-img"
                 />
@@ -91,7 +93,12 @@ const ListProducts = ({
             edit: (
                 <div className="edit-column">
                     <MdHome className="view-product" />
-                    <MdEditNote className="edit-product" />
+                    <MdEditNote
+                        className="edit-product"
+                        onClick={() =>
+                            navigate("/admin/products/edit/" + product.id)
+                        }
+                    />
                     <ToggleSlider
                         active={product.active ? true : false}
                         barBackgroundColorActive="#2e7d32"

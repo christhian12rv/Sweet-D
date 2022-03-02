@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,9 +15,15 @@ const AdminLayout = ({
     children,
     activePage,
     title,
+    titleParam,
     open,
     toggleAdminSidebar
 }) => {
+    if (titleParam) {
+        const { id } = useParams();
+        title += id;
+    }
+
     const handleSidebarClose = () => {
         toggleAdminSidebar(false);
     };

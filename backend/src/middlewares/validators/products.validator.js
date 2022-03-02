@@ -49,7 +49,10 @@ exports.create = [
     body("price")
         .trim()
         .customSanitizer(value => {
-            return value.replace(",", ".");
+            let newValue = value.replace(",", ".");
+            newValue = Number(parseFloat(newValue)).toFixed(2);
+            console.log(newValue);
+            return newValue;
         })
         .notEmpty()
         .withMessage("O campo Preço é obrigatório")
@@ -94,24 +97,7 @@ exports.create = [
 ];
 
 exports.update = [
-    body("id")
-        .notEmpty()
-        .withMessage("Produto inválido")
-        .bail()
-        .isInt()
-        .withMessage("Produto inválido")
-        .custom((value, { req }) => {
-            return ProductModel.findByPk(value)
-                .catch(erro => {
-                    return Promise.reject("Ocorreu um erro interno: " + erro);
-                })
-                .then(product => {
-                    if (!product) return Promise.reject("Produto inválido");
-                });
-        }),
-
     body("name")
-        .optional()
         .trim()
         .customSanitizer(value => {
             return value.charAt(0).toUpperCase() + value.slice(1);
@@ -125,38 +111,7 @@ exports.update = [
         .isLength({ min: 2 })
         .withMessage("O campo Nome deve conter no mínimo 2 caracteres"),
 
-    body("description")
-        .optional()
-        .trim()
-        .notEmpty()
-        .withMessage("O campo Descrição é obrigatório")
-        .bail()
-        .isString()
-        .withMessage("O Descrição informado é inválido")
-        .bail()
-        .isLength({ min: 2 })
-        .withMessage("O campo Descrição deve conter no mínimo 2 caracteres"),
-
-    body("price")
-        .optional()
-        .trim()
-        .notEmpty()
-        .withMessage("O campo Preço é obrigatório")
-        .bail()
-        .isFloat({ min: 0.01 })
-        .withMessage("O Preço informado é inválido"),
-
-    body("storage")
-        .optional()
-        .trim()
-        .notEmpty()
-        .withMessage("O campo Estoque é obrigatório")
-        .bail()
-        .isInt()
-        .withMessage("O Estoque informado é inválido"),
-
     body("slug")
-        .optional()
         .trim()
         .toLowerCase()
         .notEmpty()
@@ -178,10 +133,59 @@ exports.update = [
                     return Promise.reject("Ocorreu um erro interno");
                 })
                 .then(product => {
-                    if (product)
+                    if (product && product.slug != value)
                         return Promise.reject(
-                            "Slug igual ao do produto ou já existe outro produto com o slug informado"
+                            "Já existe um Produto com o slug informado"
                         );
                 });
+        }),
+
+    body("price")
+        .trim()
+        .customSanitizer(value => {
+            let newValue = value.replace(",", ".");
+            newValue = Number(parseFloat(newValue)).toFixed(2);
+            console.log(newValue);
+            return newValue;
         })
+        .notEmpty()
+        .withMessage("O campo Preço é obrigatório")
+        .bail()
+        .isFloat({ min: 0.01 })
+        .withMessage("O Preço informado é inválido"),
+
+    body("storage")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Estoque é obrigatório")
+        .bail()
+        .isInt()
+        .withMessage("O Estoque informado é inválido"),
+
+    body("description")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Descrição é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Descrição informado é inválido")
+        .bail()
+        .isLength({ min: 2 })
+        .withMessage("O campo Descrição deve conter no mínimo 2 caracteres"),
+
+    body("extras")
+        .optional()
+        .customSanitizer(value => {
+            if (typeof value !== "object") return JSON.parse(value);
+            return value;
+        })
+        .isArray()
+        .withMessage("O campo Extra é inválido"),
+
+    body("extras.*")
+        .trim()
+        .notEmpty()
+        .withMessage("Extra inválido")
+        .isString()
+        .withMessage("Extra inválido")
 ];

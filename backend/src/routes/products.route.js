@@ -6,7 +6,8 @@ const { verifyJWTAdmin } = require("../middlewares/jwtAdminVerify.middleware");
 
 const productsController = require("../controllers/products.controller");
 
-router.get("/", productsController.find);
+router.get("/:id", productsController.findByPk);
+router.get("/", productsController.findAll);
 router.post(
     "/",
     verifyJWTAdmin,

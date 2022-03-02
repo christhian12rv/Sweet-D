@@ -25,6 +25,7 @@ import AdminListUsers from "./components/Pages/Admin/ListUsers";
 import AdminListOrders from "./components/Pages/Admin/ListOrders";
 import AdminOrderDetails from "./components/Pages/Admin/OrderDetails";
 import AdminAddProduct from "./components/Pages/Admin/AddProduct";
+import AdminEditProduct from "./components/Pages/Admin/EditProduct";
 import Error404 from "./components/Pages/Error404";
 import Error500 from "./components/Pages/Error500";
 import RequiredAuth from "./components/RequiredAuth";
@@ -32,6 +33,7 @@ import RequiredAuth from "./components/RequiredAuth";
 import "./App.scss";
 
 function App() {
+    let productId;
     return (
         <div className="App" id="app">
             <Provider store={store}>
@@ -155,6 +157,22 @@ function App() {
                                         title="Adicionar Produto"
                                     >
                                         <AdminAddProduct />
+                                    </AdminLayout>
+                                </RequiredAuth>
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/admin/products/edit/:id"
+                        element={
+                            <>
+                                <RequiredAuth isAdmin={true}>
+                                    <AdminLayout
+                                        activePage="2"
+                                        title="Editar produto #"
+                                        titleParam={true}
+                                    >
+                                        <AdminEditProduct />
                                     </AdminLayout>
                                 </RequiredAuth>
                             </>
