@@ -168,3 +168,8 @@ exports.update = async (
 
     return newProduct;
 };
+
+exports.updateActive = async (id, active) => {
+    const newProduct = await ProductModel.update({ active }, { where: { id } });
+    return newProduct;
+};

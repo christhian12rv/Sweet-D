@@ -5,7 +5,7 @@ const usersService = require("../services/users.service");
 
 exports.findAll = async (req, res) => {
     try {
-        let { limit, page, columnSort, directionSort } = req.query;
+        let { limit, page, columnSort, directionSort, search } = req.query;
         columnSort =
             columnSort == "undefined" || columnSort == "null"
                 ? undefined
@@ -18,10 +18,12 @@ exports.findAll = async (req, res) => {
             parseInt(limit),
             parseInt(page),
             columnSort,
-            directionSort
+            directionSort,
+            search
         );
         res.json({ status: 200, totalRows, users });
     } catch (error) {
+        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };

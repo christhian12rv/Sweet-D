@@ -189,3 +189,13 @@ exports.update = [
         .isString()
         .withMessage("Extra inválido")
 ];
+
+exports.updateActive = [
+    body("active")
+        .trim()
+        .toBoolean()
+        .notEmpty()
+        .withMessage("Valor obrigatório")
+        .isBoolean()
+        .withMessage("Valor inválido")
+];

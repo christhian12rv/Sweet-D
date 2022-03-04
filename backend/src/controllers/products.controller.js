@@ -23,7 +23,6 @@ exports.findByPk = async (req, res) => {
 exports.findAll = async (req, res) => {
     try {
         let { limit, page, columnSort, directionSort, search } = req.query;
-        console.log(search);
         columnSort =
             columnSort == "undefined" || columnSort == "null"
                 ? undefined
@@ -41,7 +40,6 @@ exports.findAll = async (req, res) => {
         );
         res.json({ status: 200, totalRows, products });
     } catch (error) {
-        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -116,7 +114,6 @@ exports.update = async (req, res) => {
             req.body.bodyPhotos = [req.body.bodyPhotos];
 
         const bodyPhotos = [];
-        console.log(req.body.bodyPhotos);
         if (req.body.bodyPhotos) {
             req.body.bodyPhotos.forEach(b => {
                 if (b) bodyPhotos.push(JSON.parse(b));
@@ -140,10 +137,33 @@ exports.update = async (req, res) => {
             msg: "Produto alterado com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar alterar produto"
+        });
+    }
+};
+
+exports.updateActive = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const { id, active } = req.body;
+
+        const product = await productsService.updateActive(id, active);
+        res.json({
+            status: 200,
+            product,
+            msg:
+                "Produto " + (active ? "ativado" : "desativado") + "com sucesso"
+        });
+    } catch (error) {
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar ativar ou desativar produto"
         });
     }
 };

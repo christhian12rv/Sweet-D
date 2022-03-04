@@ -23,12 +23,38 @@ const ListProducts = ({
     columnSort,
     directionSort,
     search,
+    updateActive,
     updateInput
 }) => {
     const navigate = useNavigate();
+    const toastId = useRef(null);
     const searchInput = useRef(null);
     let isSorting = false;
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleActiveToggle = async (id, active) => {
+        setIsLoading(true);
+        const response = await updateActive(id, active, toastId);
+        if (response && response.success) {
+            const responseGetProducts = await getProducts(
+                limit,
+                page,
+                columnSort,
+                directionSort,
+                search
+            );
+            setIsLoading(false);
+            if (responseGetProducts && responseGetProducts.type) {
+                if (responseGetProducts.type == "REDIRECT")
+                    navigate(response.to);
+            }
+        } else {
+            setIsLoading(false);
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
+            }
+        }
+    };
 
     const customStyles = {
         headCells: {
@@ -117,6 +143,9 @@ const ListProducts = ({
                         barHeight={22}
                         barWidth={44}
                         handleSize={16}
+                        onToggle={state =>
+                            handleActiveToggle(product.id, state)
+                        }
                     />
                 </div>
             )
@@ -216,7 +245,6 @@ const ListProducts = ({
                         className="products-list-admin-search-box"
                         onClick={() => {
                             searchInput.current?.focus();
-                            console.log("click");
                         }}
                     >
                         <InputText

@@ -7,6 +7,7 @@ import adminSidebar from "./adminSidebar";
 import addProduct from "./addProduct";
 import editProduct from "./editProduct";
 import listProducts from "./listProducts";
+import listUsers from "./listUsers";
 
 export default combineReducers({
     register,
@@ -15,5 +16,6 @@ export default combineReducers({
     adminSidebar,
     addProduct,
     editProduct,
-    listProducts
+    listProducts,
+    listUsers
 });

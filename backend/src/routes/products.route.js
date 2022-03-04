@@ -20,5 +20,11 @@ router.put(
     productsValidator.update,
     productsController.update
 );
+router.put(
+    "/active",
+    verifyJWTAdmin,
+    productsValidator.updateActive,
+    productsController.updateActive
+);
 
 module.exports = router;

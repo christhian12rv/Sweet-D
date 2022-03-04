@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const UserModel = require("../models/User.model");
 const AddressModel = require("../models/Address.model");
@@ -21,7 +23,19 @@ exports.findAll = async (
             }
         }
     });
-    return { totalRows: result.count, users: result.rows };
+
+    let users = result.rows;
+    users = await Promise.all(
+        users.map(async user => {
+            const address = await AddressModel.findOne({
+                where: { userId: user.id }
+            });
+            user.setDataValue("address", address);
+            return user;
+        })
+    );
+
+    return { totalRows: result.count, users };
 };
 
 exports.create = async (name, email, password) => {

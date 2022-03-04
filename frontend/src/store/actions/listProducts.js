@@ -1,5 +1,6 @@
 import types from "../types";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export function getProducts(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
@@ -41,33 +42,30 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
     };
 }
 
-export function handleUpdateActive(active) {
-    return async dispatch => {
-        const response = await axios.get(
-            "/products?limit=" +
-                limit +
-                "&page=" +
-                page +
-                "&columnSort=" +
-                columnSort +
-                "&directionSort=" +
-                directionSort
-        );
+export function updateActive(id, active, toastId) {
+    return async () => {
+        const token = localStorage.getItem("user_token");
+        const response = await axios.put("/products/active", {
+            id,
+            active,
+            token
+        });
+
+        const delay = toast.isActive(toastId.current) ? 1000 : 0;
+        toast.dismiss();
 
         const data = response.data;
-
         switch (data.status) {
             case 200:
-                dispatch({
-                    type: types.LIST_PRODUCTS_GET_PRODUCTS,
-                    payload: {
-                        products: data.products,
-                        limit,
-                        page,
-                        totalRows: data.totalRows,
-                        columnSort,
-                        directionSort
-                    }
+                return {
+                    success: true
+                };
+            case 400:
+                data.errors.forEach((error, i) => {
+                    toastId.current = toast.error(error.msg, {
+                        delay: delay,
+                        autoClose: 5000 * (i + 1)
+                    });
                 });
                 break;
             default:
