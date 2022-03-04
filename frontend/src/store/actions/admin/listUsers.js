@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../../types";
 import axios from "axios";
 
 export function getUsers(limit, page, columnSort, directionSort, search) {
@@ -44,7 +44,7 @@ export function getUsers(limit, page, columnSort, directionSort, search) {
 
 export function updateInput(value, stateProp) {
     return {
-        type: types.UPDATE_INPUT_LIST_USERS,
+        type: types.UPDATE_INPUT_ADMIN_LIST_USERS,
         payload: {
             input: {
                 value,

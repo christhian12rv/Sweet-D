@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as AdminNavbarActions from "../../../../store/actions/adminNavbar";
+import * as AdminNavbarActions from "../../../../store/actions/admin/adminNavbar";
 
 import AdminSidebar from "./AdminSidebar";
 import AdminNavbar from "./AdminNavbar";

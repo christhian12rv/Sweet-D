@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../../types";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -36,7 +36,7 @@ export function addProduct(
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -53,7 +53,7 @@ export function addProduct(
             case 401:
                 toastId.current = toast.error(data.msg, { delay: delay });
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -61,7 +61,7 @@ export function addProduct(
                 };
             default:
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -73,13 +73,13 @@ export function addProduct(
 
 export function clearState() {
     return {
-        type: types.CLEAR_STATE_ADD_PRODUCT
+        type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
     };
 }
 
 export function updateInput(value, stateProp) {
     return {
-        type: types.UPDATE_INPUT_ADD_PRODUCT,
+        type: types.UPDATE_INPUT_ADMIN_ADD_PRODUCT,
         payload: {
             input: {
                 value,

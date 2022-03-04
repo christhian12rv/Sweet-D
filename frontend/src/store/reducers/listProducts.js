@@ -2,17 +2,21 @@ import types from "../types";
 
 const INITIAL_STATE = {
     products: [],
-    limit: 10,
+    limit: 12,
     page: 1,
     totalRows: 0,
     columnSort: "id",
     directionSort: "asc",
+    minPrice: null,
+    maxPrice: null,
     input: {
-        search: ""
+        search: "",
+        price: [0, 0]
     }
 };
 
 export default function listProducts(state = INITIAL_STATE, action) {
+    console.log(action);
     switch (action.type) {
         case types.LIST_PRODUCTS_GET_PRODUCTS:
             return { ...state, ...action.payload };
@@ -23,6 +27,11 @@ export default function listProducts(state = INITIAL_STATE, action) {
                     ...state.input,
                     [action.payload.input.stateProp]: action.payload.input.value
                 }
+            };
+        case types.UPDATE_SELECT_FILTER_LIST_PRODUCTS:
+            return {
+                ...state,
+                ...action.payload
             };
         default:
             return state;

@@ -3,19 +3,21 @@ import { combineReducers } from "redux";
 import register from "./register";
 import login from "./login";
 import userSettings from "./userSettings";
-import adminSidebar from "./adminSidebar";
-import addProduct from "./addProduct";
-import editProduct from "./editProduct";
 import listProducts from "./listProducts";
-import listUsers from "./listUsers";
+import adminSidebar from "./admin/adminSidebar";
+import addProductAdmin from "./admin/addProduct";
+import editProductAdmin from "./admin/editProduct";
+import listProductsAdmin from "./admin/listProducts";
+import listUsersAdmin from "./admin/listUsers";
 
 export default combineReducers({
     register,
     login,
     userSettings,
-    adminSidebar,
-    addProduct,
-    editProduct,
     listProducts,
-    listUsers
+    adminSidebar,
+    addProductAdmin,
+    editProductAdmin,
+    listProductsAdmin,
+    listUsersAdmin
 });

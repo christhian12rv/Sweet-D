@@ -9,7 +9,7 @@ import { MdOutlineFileUpload, MdCancel } from "react-icons/md";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as EditProductActions from "../../../../store/actions/editProduct";
+import * as EditProductActions from "../../../../store/actions/admin/editProduct";
 
 import InputText from "../../../InputText";
 import SquareButton from "../../../Buttons/SquareButton";
@@ -93,7 +93,7 @@ const EditProduct = ({
             if (response.type == "REDIRECT") navigate(response.to);
         }
 
-        if (response.type == "EDIT_PRODUCT_GET_SUCCESS") {
+        if (response.type == "ADMIN_EDIT_PRODUCT_GET_SUCCESS") {
             response.photos.forEach(photo => {
                 imagePreview.push(photo.url);
             });
@@ -241,14 +241,14 @@ const EditProduct = ({
 };
 
 const mapStateToProps = state => ({
-    productId: state.editProduct.id,
-    name: state.editProduct.input.name,
-    slug: state.editProduct.input.slug,
-    price: state.editProduct.input.price,
-    storage: state.editProduct.input.storage,
-    description: state.editProduct.input.description,
-    extras: state.editProduct.input.extras,
-    photos: state.editProduct.input.photos
+    productId: state.editProductAdmin.id,
+    name: state.editProductAdmin.input.name,
+    slug: state.editProductAdmin.input.slug,
+    price: state.editProductAdmin.input.price,
+    storage: state.editProductAdmin.input.storage,
+    description: state.editProductAdmin.input.description,
+    extras: state.editProductAdmin.input.extras,
+    photos: state.editProductAdmin.input.photos
 });
 
 const mapDispatchToProps = dispatch =>

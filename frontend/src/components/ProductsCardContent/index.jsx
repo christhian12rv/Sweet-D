@@ -4,15 +4,11 @@ import ProductCard from "../ProductCard";
 
 import "./index.scss";
 
-const ProductsCardContent = ({ className }) => {
-    let cards = ["", "", "", "", "", "", "", "", ""];
-
-    let actualPage, countPages;
-
+const ProductsCardContent = ({ data, className }) => {
     return (
         <div className={"product-card-content " + className}>
-            {cards.map(card => (
-                <ProductCard />
+            {data.map(d => (
+                <ProductCard key={d.id} data={d} />
             ))}
         </div>
     );

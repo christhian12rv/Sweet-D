@@ -15,7 +15,10 @@ const Home = () => {
         <div className="home-div">
             <Header />
             <FirstBanner />
-            <ProductsCardContent className="products-card-content-home" />
+            <ProductsCardContent
+                data={["", "", ""]}
+                className="products-card-content-home"
+            />
         </div>
     );
 };

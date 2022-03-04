@@ -1,7 +1,7 @@
-import types from "../types";
+import types from "../../types";
 
 const INITIAL_STATE = {
-    users: [],
+    products: [],
     limit: 10,
     page: 1,
     totalRows: 0,
@@ -12,11 +12,11 @@ const INITIAL_STATE = {
     }
 };
 
-export default function listUsers(state = INITIAL_STATE, action) {
+export default function listProductsAdmin(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case types.LIST_USERS_GET_USERS:
+        case types.ADMIN_LIST_PRODUCTS_GET_PRODUCTS:
             return { ...state, ...action.payload };
-        case types.UPDATE_INPUT_LIST_USERS:
+        case types.UPDATE_INPUT_ADMIN_LIST_PRODUCTS:
             return {
                 ...state,
                 input: {

@@ -6,7 +6,7 @@ import { ToggleSlider } from "react-toggle-slider";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as ListProductsActions from "../../../../store/actions/listProducts";
+import * as ListProductsAdminActions from "../../../../store/actions/admin/listProducts";
 
 import "./index.scss";
 
@@ -26,6 +26,7 @@ const ListProducts = ({
     updateActive,
     updateInput
 }) => {
+    console.log(products);
     const navigate = useNavigate();
     const toastId = useRef(null);
     const searchInput = useRef(null);
@@ -290,16 +291,15 @@ const ListProducts = ({
 };
 
 const mapStateToProps = state => ({
-    products: state.listProducts.products,
-    limit: state.listProducts.limit,
-    page: state.listProducts.page,
-    totalRows: state.listProducts.totalRows,
-    columnSort: state.listProducts.columnSort,
-    directionSort: state.listProducts.directionSort,
-    search: state.listProducts.input.search
+    products: state.listProductsAdmin.products,
+    limit: state.listProductsAdmin.limit,
+    page: state.listProductsAdmin.page,
+    totalRows: state.listProductsAdmin.totalRows,
+    columnSort: state.listProductsAdmin.columnSort,
+    directionSort: state.listProductsAdmin.directionSort,
+    search: state.listProductsAdmin.input.search
 });
-
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(ListProductsActions, dispatch);
+    bindActionCreators(ListProductsAdminActions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListProducts);

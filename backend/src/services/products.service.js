@@ -17,19 +17,38 @@ exports.findAll = async (
     page = 1,
     columnSort = "id",
     directionSort = "asc",
-    search = ""
+    search = "",
+    priceFilter
 ) => {
-    const result = await ProductModel.findAndCountAll({
+    const options = {
+        ...(columnSort &&
+            directionSort && {
+                order: [[columnSort, directionSort]]
+            }),
         limit,
         offset: limit * (page - 1),
-        order: [[columnSort, directionSort]],
         where: {
             name: {
                 [Op.like]: "%" + search + "%"
-            }
+            },
+            ...(priceFilter && {
+                price: {
+                    [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
+                }
+            })
         }
-    });
-    return { totalRows: result.count, products: result.rows };
+    };
+
+    const result = await ProductModel.findAndCountAll(options);
+    const minPrice = await ProductModel.min("price");
+    const maxPrice = await ProductModel.max("price");
+
+    return {
+        totalRows: result.count,
+        products: result.rows,
+        minPrice,
+        maxPrice
+    };
 };
 
 exports.create = async (
@@ -99,12 +118,6 @@ exports.update = async (
     if (!bodyPhotos.length || bodyPhotos.length < 1) {
         arrayAuxPhotos.push(bodyPhotos);
         bodyPhotos = arrayAuxPhotos;
-    }
-
-    arrayAuxPhotos = [];
-    if (!filesPhotos.length || filesPhotos.length < 1) {
-        arrayAuxPhotos.push(filesPhotos);
-        filesPhotos = arrayAuxPhotos;
     }
 
     console.log(filesPhotos);

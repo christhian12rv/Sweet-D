@@ -9,7 +9,7 @@ import { MdOutlineFileUpload, MdCancel } from "react-icons/md";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as AddProductActions from "../../../../store/actions/addProduct";
+import * as AddProductActions from "../../../../store/actions/admin/addProduct";
 
 import InputText from "../../../InputText";
 import SquareButton from "../../../Buttons/SquareButton";
@@ -224,13 +224,13 @@ const AddProduct = ({
 };
 
 const mapStateToProps = state => ({
-    name: state.addProduct.input.name,
-    slug: state.addProduct.input.slug,
-    price: state.addProduct.input.price,
-    storage: state.addProduct.input.storage,
-    description: state.addProduct.input.description,
-    extras: state.addProduct.input.extras,
-    photos: state.addProduct.input.photos
+    name: state.addProductAdmin.input.name,
+    slug: state.addProductAdmin.input.slug,
+    price: state.addProductAdmin.input.price,
+    storage: state.addProductAdmin.input.storage,
+    description: state.addProductAdmin.input.description,
+    extras: state.addProductAdmin.input.extras,
+    photos: state.addProductAdmin.input.photos
 });
 
 const mapDispatchToProps = dispatch =>

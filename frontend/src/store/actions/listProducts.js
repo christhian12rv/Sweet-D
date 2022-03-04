@@ -2,7 +2,15 @@ import types from "../types";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export function getProducts(limit, page, columnSort, directionSort, search) {
+export function getProducts(
+    limit,
+    page,
+    columnSort,
+    directionSort,
+    search,
+    priceFilter
+) {
+    console.log(limit, page, columnSort, directionSort, search, priceFilter);
     return async dispatch => {
         const response = await axios.get(
             "/products?limit=" +
@@ -14,11 +22,13 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
                 "&directionSort=" +
                 directionSort +
                 "&search=" +
-                search
+                search +
+                "&priceFilter=" +
+                JSON.stringify(priceFilter)
         );
 
         const data = response.data;
-
+        console.log(data);
         switch (data.status) {
             case 200:
                 dispatch({
@@ -29,9 +39,15 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
                         page,
                         totalRows: data.totalRows,
                         columnSort,
-                        directionSort
+                        directionSort,
+                        minPrice: data.minPrice,
+                        maxPrice: data.maxPrice
                     }
                 });
+                return {
+                    minPrice: data.minPrice,
+                    maxPrice: data.maxPrice
+                };
                 break;
             default:
                 return {
@@ -42,37 +58,24 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
     };
 }
 
-export function updateActive(id, active, toastId) {
-    return async () => {
-        const token = localStorage.getItem("user_token");
-        const response = await axios.put("/products/active", {
-            id,
-            active,
-            token
-        });
-
-        const delay = toast.isActive(toastId.current) ? 1000 : 0;
-        toast.dismiss();
-
-        const data = response.data;
-        switch (data.status) {
-            case 200:
-                return {
-                    success: true
-                };
-            case 400:
-                data.errors.forEach((error, i) => {
-                    toastId.current = toast.error(error.msg, {
-                        delay: delay,
-                        autoClose: 5000 * (i + 1)
-                    });
-                });
-                break;
-            default:
-                return {
-                    type: "REDIRECT",
-                    to: "/error/500"
-                };
+export function updateSelectFilter(value) {
+    let columnSort = "id";
+    let directionSort = "asc";
+    switch (value) {
+        case "min-price":
+            columnSort = "price";
+            directionSort = "asc";
+            break;
+        case "max-price":
+            columnSort = "price";
+            directionSort = "desc";
+            break;
+    }
+    return {
+        type: types.UPDATE_SELECT_FILTER_LIST_PRODUCTS,
+        payload: {
+            columnSort,
+            directionSort
         }
     };
 }

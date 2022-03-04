@@ -27,6 +27,8 @@
     }
 
     .img-carousel {
+        cursor: pointer;
+
         .img-parent {
             transition: all 0.25s ease;
             &:hover {
@@ -43,11 +45,20 @@
     }
 
     .content {
+        display: flex;
+        flex-direction: column;
         padding: 1em;
+        height: calc(100% - 180px);
 
         h4 {
             color: $dark;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            cursor: pointer;
+            @include transition(all 0.25s ease);
+
+            &:hover {
+                color: $primaryColor;
+            }
         }
 
         hr {
@@ -56,6 +67,8 @@
         }
 
         .extras-div {
+            flex-grow: 1;
+
             .title {
                 display: flex;
                 flex-direction: row;

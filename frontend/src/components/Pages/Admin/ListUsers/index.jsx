@@ -7,7 +7,7 @@ import "moment-timezone";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as ListUsersActions from "../../../../store/actions/listUsers";
+import * as ListUsersActions from "../../../../store/actions/admin/listUsers";
 
 import "./index.scss";
 
@@ -28,6 +28,7 @@ const ListUsers = ({
 }) => {
     const navigate = useNavigate();
     const searchInput = useRef(null);
+    let isSorting = false;
     const [isLoading, setIsLoading] = useState(false);
 
     const customStyles = {
@@ -134,6 +135,55 @@ const ListUsers = ({
         selectAllRowsItemText: "Todos"
     };
 
+    const handlePerRowsChange = async (newLimit, newPage) => {
+        setIsLoading(true);
+        const response = await getUsers(
+            newLimit,
+            newPage,
+            columnSort,
+            directionSort,
+            search
+        );
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
+    const handlePageChange = async newPage => {
+        if (!isSorting) {
+            setIsLoading(true);
+            const response = await getUsers(
+                limit,
+                newPage,
+                columnSort,
+                directionSort,
+                search
+            );
+            setIsLoading(false);
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
+            }
+        }
+    };
+
+    const handleColumnOrderChange = async (column, direction) => {
+        isSorting = true;
+        setIsLoading(true);
+        const response = await getUsers(
+            limit,
+            1,
+            column.nameOnDB,
+            direction,
+            search
+        );
+        isSorting = false;
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
     useEffect(async () => {
         setIsLoading(true);
         const response = await getUsers(10, 1, "id", "asc", "");
@@ -194,6 +244,11 @@ const ListUsers = ({
                     pagination
                     paginationServer
                     paginationTotalRows={totalRows}
+                    onChangeRowsPerPage={handlePerRowsChange}
+                    onChangePage={handlePageChange}
+                    onSort={handleColumnOrderChange}
+                    sortServer={true}
+                    defaultSortFieldId={1}
                     progressPending={isLoading}
                     progressComponent={<ModalLoading onDataTable={true} />}
                     expandableRows

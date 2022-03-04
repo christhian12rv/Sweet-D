@@ -22,7 +22,12 @@ exports.findByPk = async (req, res) => {
 
 exports.findAll = async (req, res) => {
     try {
-        let { limit, page, columnSort, directionSort, search } = req.query;
+        let { limit, page, columnSort, directionSort, search, priceFilter } =
+            req.query;
+        console.log(req.query);
+        console.log(priceFilter);
+        priceFilter =
+            priceFilter && priceFilter == "undefined" ? undefined : priceFilter;
         columnSort =
             columnSort == "undefined" || columnSort == "null"
                 ? undefined
@@ -31,15 +36,18 @@ exports.findAll = async (req, res) => {
             directionSort == "undefined" || directionSort == "null"
                 ? undefined
                 : directionSort;
-        const { totalRows, products } = await productsService.findAll(
-            parseInt(limit),
-            parseInt(page),
-            columnSort,
-            directionSort,
-            search
-        );
-        res.json({ status: 200, totalRows, products });
+        const { totalRows, products, minPrice, maxPrice } =
+            await productsService.findAll(
+                parseInt(limit),
+                parseInt(page),
+                columnSort,
+                directionSort,
+                search,
+                priceFilter ? JSON.parse(priceFilter) : priceFilter
+            );
+        res.json({ status: 200, totalRows, products, minPrice, maxPrice });
     } catch (error) {
+        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -137,6 +145,7 @@ exports.update = async (req, res) => {
             msg: "Produto alterado com sucesso"
         });
     } catch (error) {
+        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar alterar produto"

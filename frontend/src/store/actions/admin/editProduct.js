@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../../types";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -43,7 +43,7 @@ export function editProduct(
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -60,7 +60,7 @@ export function editProduct(
             case 401:
                 toastId.current = toast.error(data.msg, { delay: delay });
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -68,7 +68,7 @@ export function editProduct(
                 };
             default:
                 dispatch({
-                    type: types.CLEAR_STATE_ADD_PRODUCT
+                    type: types.CLEAR_STATE_ADMIN_ADD_PRODUCT
                 });
                 return {
                     type: "REDIRECT",
@@ -89,7 +89,7 @@ export function getProduct(id, toastId) {
         switch (data.status) {
             case 200:
                 dispatch({
-                    type: types.EDIT_PRODUCT_GET_SUCCESS,
+                    type: types.ADMIN_EDIT_PRODUCT_GET_SUCCESS,
                     payload: {
                         id: data.product.id,
                         input: {
@@ -108,7 +108,7 @@ export function getProduct(id, toastId) {
                     }
                 });
                 return {
-                    type: types.EDIT_PRODUCT_GET_SUCCESS,
+                    type: types.ADMIN_EDIT_PRODUCT_GET_SUCCESS,
                     photos: JSON.parse(data.product.photos)
                 };
                 break;
@@ -134,13 +134,13 @@ export function getProduct(id, toastId) {
 
 export function clearState() {
     return {
-        type: types.CLEAR_STATE_EDIT_PRODUCT
+        type: types.CLEAR_STATE_ADMIN_EDIT_PRODUCT
     };
 }
 
 export function updateInput(value, stateProp) {
     return {
-        type: types.UPDATE_INPUT_EDIT_PRODUCT,
+        type: types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT,
         payload: {
             input: {
                 value,
