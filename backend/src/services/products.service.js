@@ -7,8 +7,8 @@ const Op = Sequelize.Op;
 
 const ProductModel = require("../models/Product.model");
 
-exports.findByPk = async id => {
-    const product = await ProductModel.findByPk(id);
+exports.findBySlug = async slug => {
+    const product = await ProductModel.findOne({ where: { slug } });
     return product;
 };
 
@@ -113,14 +113,19 @@ exports.update = async (
     bodyPhotos,
     filesPhotos
 ) => {
-    console.log(filesPhotos);
+    console.log(typeof filesPhotos);
     let arrayAuxPhotos = [];
     if (!bodyPhotos.length || bodyPhotos.length < 1) {
         arrayAuxPhotos.push(bodyPhotos);
         bodyPhotos = arrayAuxPhotos;
     }
 
-    console.log(filesPhotos);
+    if (!filesPhotos.length || filesPhotos.length < 1) {
+        arrayAuxPhotos.push(filesPhotos);
+        filesPhotos = arrayAuxPhotos;
+    }
+
+    console.log(slug);
 
     let newPhotos = [];
 

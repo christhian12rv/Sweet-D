@@ -71,7 +71,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/product/:id"
+                        path="/products/:slug"
                         element={
                             <>
                                 <Layout>
@@ -163,7 +163,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/admin/products/edit/:id"
+                        path="/admin/products/edit/:slug"
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>

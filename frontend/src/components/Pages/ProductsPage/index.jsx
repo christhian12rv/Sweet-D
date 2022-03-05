@@ -85,7 +85,7 @@ const ProductsPage = ({
             if (response.type == "REDIRECT") navigate(response.to);
         }
     };
-    console.log(products);
+
     useEffect(async () => {
         setIsLoading(true);
         const response = await getProducts(

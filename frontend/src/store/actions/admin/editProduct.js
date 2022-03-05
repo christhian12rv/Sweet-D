@@ -78,9 +78,10 @@ export function editProduct(
     };
 }
 
-export function getProduct(id, toastId) {
+export function getProduct(slug, toastId) {
+    console.log(slug);
     return async dispatch => {
-        const response = await axios.get("/products/" + id);
+        const response = await axios.get("/products/" + slug);
 
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();

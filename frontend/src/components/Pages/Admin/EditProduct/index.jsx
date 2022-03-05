@@ -33,7 +33,7 @@ const EditProduct = ({
 }) => {
     const toastId = React.useRef(null);
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { slug: slugParam } = useParams();
 
     const [modalShow, setModalShow] = useState(false);
     const [getProductFinish, setGetProductFinish] = useState(false);
@@ -87,7 +87,7 @@ const EditProduct = ({
 
     useEffect(async () => {
         clearState();
-        const response = await getProduct(id, toastId);
+        const response = await getProduct(slugParam, toastId);
         setGetProductFinish(true);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);

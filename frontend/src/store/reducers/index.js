@@ -4,6 +4,7 @@ import register from "./register";
 import login from "./login";
 import userSettings from "./userSettings";
 import listProducts from "./listProducts";
+import product from "./product";
 import adminSidebar from "./admin/adminSidebar";
 import addProductAdmin from "./admin/addProduct";
 import editProductAdmin from "./admin/editProduct";
@@ -15,6 +16,7 @@ export default combineReducers({
     login,
     userSettings,
     listProducts,
+    product,
     adminSidebar,
     addProductAdmin,
     editProductAdmin,

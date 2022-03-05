@@ -1,26 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Select from "react-select";
 import { HiPlusCircle, HiMinusCircle } from "react-icons/hi";
+import parse from "html-react-parser";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as productsActions from "../../../store/actions/product";
 
 import "./index.scss";
 
 import SquareButton from "../../Buttons/SquareButton";
 import ProductCard from "../../ProductCard";
+import ProductsCardContent from "../../ProductsCardContent";
 
-import DonutImg from "../../../img/donut-example.jpg";
-import DonutImg2 from "../../../img/donut-example2.jpg";
-import DonutImg3 from "../../../img/donut-example3.jpg";
+const Product = ({ product, products, getProductBySlug, getProducts }) => {
+    const { slug } = useParams();
+    const navigate = useNavigate();
 
-const Product = () => {
-    const selectOptions = [
-        { value: "canela", label: "Canela" },
-        { value: "calda-de-chocolate", label: "Calda de Chocolate" },
-        { value: "chocolate-granulado", label: "Chocolate Granulado" }
-    ];
+    const selectOptions = [];
 
-    let cards = ["", "", "", "", "", ""];
+    useEffect(async () => {
+        let response = await getProducts(3, 1, "id", "asc", "", undefined);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+
+        response = await getProductBySlug(slug);
+        console.log(response);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    }, []);
+
+    if (product && product.extras)
+        JSON.parse(product.extras).forEach(extra => {
+            selectOptions.push({ value: extra, label: extra });
+        });
 
     return (
         <div className="product-page">
@@ -34,42 +52,30 @@ const Product = () => {
                         showStatus={false}
                         emulateTouch={false}
                         showIndicators={false}
+                        selectedItem={1}
                     >
-                        <div className="img-parent">
-                            <img src={DonutImg}></img>
-                        </div>
-                        <div className="img-parent">
-                            <img src={DonutImg2}></img>
-                        </div>
-                        <div className="img-parent">
-                            <img src={DonutImg3}></img>
-                        </div>
-                        <div className="img-parent">
-                            <img src={DonutImg3}></img>
-                        </div>
-                        <div className="img-parent">
-                            <img src={DonutImg3}></img>
-                        </div>
-                        <div className="img-parent">
-                            <img src={DonutImg3}></img>
-                        </div>
+                        {product.photos &&
+                            JSON.parse(product.photos).map(photo => (
+                                <div className="img-parent">
+                                    <img src={photo.url}></img>
+                                </div>
+                            ))}
                     </Carousel>
                 </div>
                 <div className="product-details">
-                    <h3 className="title">Donut Doce</h3>
-                    <p className="product-id">#12345678</p>
+                    <h3 className="title">{product.name}</h3>
+                    <p className="product-id">#{product.id}</p>
                     <div className="price">
                         <h4>R$ </h4>
-                        <h3>20,99</h3>
+                        <h3>
+                            {product.price
+                                .toFixed(2)
+                                .toString()
+                                .replace(".", ",")}
+                        </h3>
                     </div>
                     <div className="description">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur, adipisicing
-                            elit. Rem sunt possimus similique nihil officiis
-                            consequuntur quam omnis nemo aspernatur unde
-                            corporis totam, iste hic voluptates voluptate. In
-                            nobis omnis non!
-                        </p>
+                        {parse(product.description)}
                     </div>
                     <div className="extras">
                         <h4>Extras</h4>
@@ -88,7 +94,21 @@ const Product = () => {
                         <HiPlusCircle className="icon" />
                     </div>
                     <div className="storage">
-                        <h4>Em estoque</h4>
+                        <h4>
+                            {product.storage > 1 ? (
+                                product.storage <= 10 ? (
+                                    <span className="mid-storage">
+                                        {product.storage + " "}disponíveis
+                                    </span>
+                                ) : (
+                                    "Em estoque"
+                                )
+                            ) : (
+                                <span className="zero-storage">
+                                    Produto esgotado
+                                </span>
+                            )}
+                        </h4>
                     </div>
                     <div className="product-buttons">
                         <SquareButton>Adicionar ao Carrinho</SquareButton>
@@ -98,17 +118,22 @@ const Product = () => {
             </div>
             <div className="related-products-container">
                 <h3 className="related-products-container-title">
-                    Produtos Relacionados
+                    Outros Produtos
                 </h3>
                 <hr className="related-products-container-hr" />
                 <div className="products-container">
-                    {cards.map(card => (
-                        <ProductCard />
-                    ))}
+                    <ProductsCardContent data={products} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default Product;
+const mapStateToProps = state => ({
+    product: state.product.product,
+    products: state.product.products
+});
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(productsActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Product);

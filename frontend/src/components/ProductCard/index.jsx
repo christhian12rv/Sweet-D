@@ -13,12 +13,12 @@ import "./index.scss";
 
 const ProductCard = ({ data }) => {
     const navigate = useNavigate();
-
+    console.log(data);
     return (
         <div className="product-card">
             <div className="img-div">
                 <Carousel
-                    onClickItem={() => navigate("/product/" + data.slug)}
+                    onClickItem={() => navigate("/products/" + data.slug)}
                     className="img-carousel"
                     showArrows={true}
                     autoplay={true}
@@ -34,7 +34,7 @@ const ProductCard = ({ data }) => {
                 </Carousel>
             </div>
             <div className="content">
-                <h4 onClick={() => navigate("/product/" + data.slug)}>
+                <h4 onClick={() => navigate("/products/" + data.slug)}>
                     {data.name}
                 </h4>
                 <hr />
@@ -44,9 +44,10 @@ const ProductCard = ({ data }) => {
                         <h5>Extras</h5>
                     </div>
                     <ul>
-                        {JSON.parse(data.extras).map(extra => (
-                            <li>{extra}</li>
-                        ))}
+                        {data.extras &&
+                            JSON.parse(data.extras).map(extra => (
+                                <li>{extra}</li>
+                            ))}
                     </ul>
                 </div>
                 <div className="description-div">{parse(data.description)}</div>

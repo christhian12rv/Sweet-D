@@ -31,10 +31,6 @@
 
         .img-parent {
             transition: all 0.25s ease;
-            &:hover {
-                transform: scale(2);
-                transition: all 0.25s ease;
-            }
 
             img {
                 width: 350px;
@@ -97,6 +93,10 @@
             p {
                 text-align: center;
                 color: $darkLighter;
+
+                white-space: break-word;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
 

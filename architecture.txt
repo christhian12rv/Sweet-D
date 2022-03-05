@@ -1,3 +1,5 @@
+Product page with some other products
+
 PAGES
 	* Home
 	{

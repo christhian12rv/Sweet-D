@@ -135,7 +135,7 @@ const ListProducts = ({
                     <MdEditNote
                         className="edit-product"
                         onClick={() =>
-                            navigate("/admin/products/edit/" + product.id)
+                            navigate("/admin/products/edit/" + product.slug)
                         }
                     />
                     <ToggleSlider

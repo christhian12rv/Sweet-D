@@ -2,11 +2,12 @@ const { validationResult } = require("express-validator");
 
 const productsService = require("../services/products.service");
 
-exports.findByPk = async (req, res) => {
+exports.findBySlug = async (req, res) => {
     try {
-        let { id } = req.params;
+        let { slug } = req.params;
+        console.log(slug);
 
-        const product = await productsService.findByPk(id);
+        const product = await productsService.findBySlug(slug);
 
         if (!product)
             return res.json({
@@ -16,6 +17,7 @@ exports.findByPk = async (req, res) => {
 
         res.json({ status: 200, product });
     } catch (error) {
+        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -110,8 +112,8 @@ exports.update = async (req, res) => {
     }
 
     try {
-        const { id } = req.body;
-        const productExists = productsService.findByPk(id);
+        const { slug: slugParam } = req.body;
+        const productExists = productsService.findBySlug(slugParam);
         if (!productExists)
             return res.json({
                 status: 400,
@@ -127,14 +129,14 @@ exports.update = async (req, res) => {
                 if (b) bodyPhotos.push(JSON.parse(b));
             });
         }
-        const { name, description, price, storage, slug, extras } = req.body;
+        const { id, name, description, price, storage, extras } = req.body;
         const product = await productsService.update(
             id,
             name,
             description,
             price,
             storage,
-            slug,
+            slugParam,
             extras,
             bodyPhotos,
             req.files && req.files.photos ? req.files.photos : []
