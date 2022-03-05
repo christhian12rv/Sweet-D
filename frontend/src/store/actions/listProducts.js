@@ -1,6 +1,5 @@
 import types from "../types";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 export function getProducts(
     limit,
@@ -10,7 +9,6 @@ export function getProducts(
     search,
     priceFilter
 ) {
-    console.log(limit, page, columnSort, directionSort, search, priceFilter);
     return async dispatch => {
         const response = await axios.get(
             "/products?limit=" +
@@ -28,7 +26,7 @@ export function getProducts(
         );
 
         const data = response.data;
-        console.log(data);
+
         switch (data.status) {
             case 200:
                 dispatch({

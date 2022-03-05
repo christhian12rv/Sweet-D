@@ -1,18 +1,18 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 
-const Address = db.define("address", {
+const OrderAddress = db.define("orderAddress", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    userId: {
+    orderId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: "users",
+            model: "orders",
             key: "id"
         }
     },
@@ -56,8 +56,11 @@ const Address = db.define("address", {
     updatedAt: Sequelize.DATE
 });
 
-Address.associate = function (models) {
-    Address.belongsTo(models.User, { foreignKey: "userId", targetKey: "id" });
+OrderAddress.associate = function (models) {
+    OrderAddress.belongsTo(models.Order, {
+        foreignKey: "orderId",
+        targetKey: "id"
+    });
 };
 
-module.exports = Address;
+module.exports = OrderAddress;

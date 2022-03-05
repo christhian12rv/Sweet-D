@@ -51,7 +51,6 @@ exports.create = [
         .customSanitizer(value => {
             let newValue = value.replace(",", ".");
             newValue = Number(parseFloat(newValue)).toFixed(2);
-            console.log(newValue);
             return newValue;
         })
         .notEmpty()
@@ -145,7 +144,6 @@ exports.update = [
         .customSanitizer(value => {
             let newValue = value.replace(",", ".");
             newValue = Number(parseFloat(newValue)).toFixed(2);
-            console.log(newValue);
             return newValue;
         })
         .notEmpty()

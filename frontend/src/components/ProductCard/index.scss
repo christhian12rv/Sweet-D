@@ -27,15 +27,21 @@
     }
 
     .img-carousel {
+        height: 100%;
         cursor: pointer;
+
+        .carousel-slider {
+            height: 100%;
+        }
 
         .img-parent {
             transition: all 0.25s ease;
 
             img {
-                width: 350px;
+                width: 100%;
                 height: auto;
                 min-height: 180px;
+                object-fit: cover;
             }
         }
     }
@@ -94,7 +100,7 @@
                 text-align: center;
                 color: $darkLighter;
 
-                white-space: break-word;
+                white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -115,6 +121,20 @@
             flex-direction: column;
             gap: 0.25em;
             margin-top: 1em;
+
+            .zero-storage-button {
+                color: $light;
+                border: none;
+                border-radius: 0.2em;
+                overflow: hidden;
+                text-decoration: none;
+                padding: 0.5em;
+                width: 100%;
+                font-size: 1em;
+                font-weight: bold;
+                outline: none;
+                background-color: $secondaryColor;
+            }
 
             .cart-icon {
                 margin-right: 0.25em;

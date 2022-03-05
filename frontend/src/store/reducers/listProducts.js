@@ -16,7 +16,6 @@ const INITIAL_STATE = {
 };
 
 export default function listProducts(state = INITIAL_STATE, action) {
-    console.log(action);
     switch (action.type) {
         case types.LIST_PRODUCTS_GET_PRODUCTS:
             return { ...state, ...action.payload };

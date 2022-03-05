@@ -1,43 +1,75 @@
-const { validationResult } = require('express-validator');
+const { validationResult } = require("express-validator");
 
 const ordersService = require("../services/orders.service");
 
+exports.findAll = async (req, res) => {
+    try {
+        const orders = await ordersService.findAll();
+        res.json({ status: 200, orders });
+    } catch (error) {
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar procurar por pedidos"
+        });
+    }
+};
+
 exports.findAllByUser = async (req, res) => {
     try {
-        const { userId } = req.body;
-        const orders = await ordersService.findAllByUser(userId);
-        res.json({ orders });
+        const { id } = req.param;
+        const orders = await ordersService.findAllByUser(id);
+        res.json({ status: 200, orders });
     } catch (error) {
-        res.status(500).json({ message: "Houve um erro interno ao tentar procurar por pedidos" });
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar procurar por pedidos"
+        });
     }
-}
+};
 
 exports.create = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.json({ status: 400, errors: errors.array() });
     }
 
     try {
-        const { userId, products } = req.body;
-        const order = await ordersService.create(userId, products);
-        res.json({ order, message: "Pedido criado com sucesso" });
+        const { products, address } = req.body;
+        const user = req.user;
+
+        const order = await ordersService.create(user.id, products, address);
+        res.json({
+            status: 200,
+            order,
+            msg: "Pedido feito com sucesso. Aguarde e já iremos colocar seu pedido a caminho"
+        });
     } catch (error) {
-        res.status(500).json({ message: "Houve um erro interno ao tentar criar pedido" });
+        console.log(error);
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar fazer pedido"
+        });
     }
-}
+};
 
 exports.update = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.json({ status: 400, errors: errors.array() });
     }
 
     try {
         const { orderId, finished } = req.body;
         const order = await ordersService.update(orderId, finished);
-        res.json({ order, message: "Pedido alterado com sucesso" });
+        res.json({
+            status: 200,
+            order,
+            msg: "Pedido alterado com sucesso"
+        });
     } catch (error) {
-        res.status(500).json({ message: "Houve um erro interno ao tentar alterar pedido" });
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao tentar alterar pedido"
+        });
     }
-}
+};

@@ -88,16 +88,8 @@ const ProductsPage = ({
 
     useEffect(async () => {
         setIsLoading(true);
-        const response = await getProducts(
-            limit,
-            1,
-            "id",
-            "asc",
-            "",
-            undefined
-        );
+        const response = await getProducts(12, 1, "id", "asc", "", undefined);
         setIsLoading(false);
-        console.log(response);
         handleInputPriceChange([response.minPrice, response.maxPrice]);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);

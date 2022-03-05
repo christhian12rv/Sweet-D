@@ -4,23 +4,6 @@ const ProductModel = require("../../models/Product.model");
 const UserModel = require("../../models/User.model");
 
 exports.create = [
-    body("userId")
-        .notEmpty()
-        .withMessage("Usuário inválido")
-        .bail()
-        .isInt()
-        .withMessage("Usuário inválido")
-        .custom(value => {
-            return UserModel.findByPk(value)
-                .catch((error) => {
-                    return Promise.reject("Ocorreu um erro interno");
-                })
-                .then((user) => {
-                    if (!user)
-                        return Promise.reject("Usuário inválido");
-                })
-        }),
-
     body("product.id")
         .notEmpty()
         .withMessage("Produto inválido")
@@ -29,19 +12,17 @@ exports.create = [
         .withMessage("Produto inválido")
         .custom(value => {
             return ProductModel.findByPk(value)
-                .catch((error) => {
+                .catch(error => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((product) => {
-                    if (!product)
-                        return Promise.reject("Produto inválido");
-                })
+                .then(product => {
+                    if (!product) return Promise.reject("Produto inválido");
+                });
         }),
 
     body("product.extras")
-        .customSanitizer((value) => {
-            if (typeof value !== 'object')
-                return JSON.parse(value);
+        .customSanitizer(value => {
+            if (typeof value !== "object") return JSON.parse(value);
             return value;
         })
         .isArray()
@@ -55,33 +36,42 @@ exports.create = [
         .withMessage("Produto inválido")
         .custom((value, { req }) => {
             return ProductModel.findByPk(value.id)
-                .catch((error) => {
+                .catch(error => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((product) => {
+                .then(product => {
                     if (product) {
                         if (req.session.products) {
-                            const productExistsInSession = req.session.products.products.find(p => p.id == product.id);
+                            const productExistsInSession =
+                                req.session.products.products.find(
+                                    p => p.id == product.id
+                                );
                             if (productExistsInSession)
-                                return Promise.reject("Produto já está no carrinho");
+                                return Promise.reject(
+                                    "Produto já está no carrinho"
+                                );
                         }
 
                         const extrasFindArray = product.extras;
                         let invalidExtra = false;
                         let invalidExtraValue = "";
-                        value.extras.forEach((e) => {
+                        value.extras.forEach(e => {
                             if (!extrasFindArray.includes(e)) {
                                 invalidExtra = true;
                                 invalidExtraValue = e;
                             }
-                        })
+                        });
                         if (invalidExtra)
-                            return Promise.reject("Extra " + invalidExtraValue + " inválido");
+                            return Promise.reject(
+                                "Extra " + invalidExtraValue + " inválido"
+                            );
 
                         if (value.quantity > product.storage)
-                            return Promise.reject("Quantidade inválida, maior que estoque");
+                            return Promise.reject(
+                                "Quantidade inválida, maior que estoque"
+                            );
                     }
-                })
+                });
         }),
 
     body("product.extras.*")
@@ -95,28 +85,10 @@ exports.create = [
         .withMessage("Quantidade inválida")
         .bail()
         .isInt({ min: 1 })
-        .withMessage("Quantidade inválida"),
-]
+        .withMessage("Quantidade inválida")
+];
 
 exports.update = [
-    body("userId")
-        .optional()
-        .notEmpty()
-        .withMessage("Usuário inválido")
-        .bail()
-        .isInt()
-        .withMessage("Usuário inválido")
-        .custom(value => {
-            return UserModel.findByPk(value)
-                .catch((error) => {
-                    return Promise.reject("Ocorreu um erro interno");
-                })
-                .then((user) => {
-                    if (!user)
-                        return Promise.reject("Usuário inválido");
-                })
-        }),
-
     body("product.id")
         .optional()
         .notEmpty()
@@ -126,26 +98,29 @@ exports.update = [
         .withMessage("Produto inválido")
         .custom((value, { req }) => {
             return ProductModel.findByPk(value)
-                .catch((error) => {
+                .catch(error => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((product) => {
-                    if (!product)
-                        return Promise.reject("Produto inválido");
+                .then(product => {
+                    if (!product) return Promise.reject("Produto inválido");
 
                     if (req.session.products) {
-                        const productExistsInSession = req.session.products.products.find(p => p.id == product.id);
+                        const productExistsInSession =
+                            req.session.products.products.find(
+                                p => p.id == product.id
+                            );
                         if (!productExistsInSession)
-                            return Promise.reject("Produto não está no carrinho");
+                            return Promise.reject(
+                                "Produto não está no carrinho"
+                            );
                     }
-                })
+                });
         }),
 
     body("product.extras")
         .optional()
-        .customSanitizer((value) => {
-            if (typeof value !== 'object')
-                return JSON.parse(value);
+        .customSanitizer(value => {
+            if (typeof value !== "object") return JSON.parse(value);
             return value;
         })
         .isArray()
@@ -160,27 +135,31 @@ exports.update = [
         .withMessage("Produto inválido")
         .custom((value, { req }) => {
             return ProductModel.findByPk(value.id)
-                .catch((error) => {
+                .catch(error => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then((product) => {
+                .then(product => {
                     if (product) {
                         const extrasFindArray = product.extras;
                         let invalidExtra = false;
                         let invalidExtraValue = "";
-                        value.extras.forEach((e) => {
+                        value.extras.forEach(e => {
                             if (!extrasFindArray.includes(e)) {
                                 invalidExtra = true;
                                 invalidExtraValue = e;
                             }
-                        })
+                        });
                         if (invalidExtra)
-                            return Promise.reject("Extra " + invalidExtraValue + " inválido");
+                            return Promise.reject(
+                                "Extra " + invalidExtraValue + " inválido"
+                            );
 
                         if (value.quantity > product.storage)
-                            return Promise.reject("Quantidade inválida, maior que estoque");
+                            return Promise.reject(
+                                "Quantidade inválida, maior que estoque"
+                            );
                     }
-                })
+                });
         }),
 
     body("product.extras.*")
@@ -196,5 +175,5 @@ exports.update = [
         .withMessage("Quantidade inválida")
         .bail()
         .isInt({ min: 1 })
-        .withMessage("Quantidade inválida"),
-]
+        .withMessage("Quantidade inválida")
+];

@@ -1,13 +1,17 @@
 import React from "react";
 import { CgDetailsMore } from "react-icons/cg";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as OrdersActions from "../../../../store/actions/orders";
+
 import UserSidebar from "../Sidebar";
 
 import "./index.scss";
 
 import Donut from "../../../../img/donut-example.jpg";
 
-const Orders = () => {
+const Orders = ({ orders, getOrders }) => {
     return (
         <div className="user-orders">
             <UserSidebar active="orders" />
@@ -161,4 +165,10 @@ const Orders = () => {
     );
 };
 
-export default Orders;
+const mapStateToProps = state => ({
+    orders: state.orders.orders
+});
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(OrdersActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);

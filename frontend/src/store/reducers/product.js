@@ -10,7 +10,11 @@ const INITIAL_STATE = {
         storage: "",
         photos: ""
     },
-    products: []
+    products: [],
+    input: {
+        extras: [],
+        quantity: 1
+    }
 };
 
 export default function product(state = INITIAL_STATE, action) {
@@ -19,6 +23,14 @@ export default function product(state = INITIAL_STATE, action) {
             return { ...state, ...action.payload };
         case types.PRODUCT_GET_PRODUCTS:
             return { ...state, ...action.payload };
+        case types.UPDATE_INPUT_PRODUCT:
+            return {
+                ...state,
+                input: {
+                    ...state.input,
+                    [action.payload.input.stateProp]: action.payload.input.value
+                }
+            };
         default:
             return state;
     }

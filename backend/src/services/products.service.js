@@ -23,7 +23,10 @@ exports.findAll = async (
     const options = {
         ...(columnSort &&
             directionSort && {
-                order: [[columnSort, directionSort]]
+                order:
+                    columnSort != "random"
+                        ? [[columnSort, directionSort]]
+                        : Sequelize.literal("rand()")
             }),
         limit,
         offset: limit * (page - 1),
@@ -113,7 +116,6 @@ exports.update = async (
     bodyPhotos,
     filesPhotos
 ) => {
-    console.log(typeof filesPhotos);
     let arrayAuxPhotos = [];
     if (!bodyPhotos.length || bodyPhotos.length < 1) {
         arrayAuxPhotos.push(bodyPhotos);
@@ -124,8 +126,6 @@ exports.update = async (
         arrayAuxPhotos.push(filesPhotos);
         filesPhotos = arrayAuxPhotos;
     }
-
-    console.log(slug);
 
     let newPhotos = [];
 

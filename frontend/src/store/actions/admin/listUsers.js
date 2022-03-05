@@ -17,7 +17,6 @@ export function getUsers(limit, page, columnSort, directionSort, search) {
         );
 
         const data = response.data;
-        console.log(data);
 
         switch (data.status) {
             case 200:

@@ -35,4 +35,11 @@ Order.associate = function (models) {
     Order.hasMany(models.User, { as: "users" });
 };
 
+Order.associate = function (models) {
+    Order.hasOne(models.OrderAddress, {
+        foreignKey: "orderId",
+        sourceKey: "id"
+    });
+};
+
 module.exports = Order;

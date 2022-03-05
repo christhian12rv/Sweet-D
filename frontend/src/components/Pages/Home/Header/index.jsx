@@ -10,7 +10,11 @@ const Header = () => {
         <div className="header">
             <TextDiv />
             <div className="button-div">
-                <RoundedButton>Ver produtos</RoundedButton>
+                <RoundedButton
+                    onClick={() => (window.location.href = "/products")}
+                >
+                    Ver produtos
+                </RoundedButton>
             </div>
         </div>
     );

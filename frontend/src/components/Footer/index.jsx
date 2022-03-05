@@ -3,7 +3,8 @@ import React from "react";
 import { BsFacebook } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { AiFillInstagram } from "react-icons/ai";
-import { GiWrappedSweet } from "react-icons/gi";
+
+import LogoImg from "../../img/Logo.png";
 
 import "./index.scss";
 
@@ -34,7 +35,7 @@ const Footer = () => {
                 <p> © Direitos Reservados www.sweetd.com.br</p>
             </div>
             <div className="footer-logo">
-                <GiWrappedSweet className="logo" />
+                <img className="logo" src={LogoImg} alt="" />
                 <span>Sweet-D</span>
             </div>
         </footer>

@@ -9,13 +9,23 @@ import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import * as CartActions from "../../store/actions/cart";
 import * as LoginActions from "../../store/actions/login";
 
 import "./index.scss";
 
 import Logo from "../Logo";
 
-const Navbar = ({ activePage, name, isAdmin, auth, getUserAuth, logout }) => {
+const Navbar = ({
+    activePage,
+    name,
+    isAdmin,
+    auth,
+    cart,
+    getUserAuth,
+    logout,
+    getCart
+}) => {
     const navigate = useNavigate();
     let listener = null;
 
@@ -26,6 +36,10 @@ const Navbar = ({ activePage, name, isAdmin, auth, getUserAuth, logout }) => {
     useEffect(async () => {
         await getUserAuth();
     });
+
+    useEffect(async () => {
+        await getCart();
+    }, []);
 
     useEffect(() => {
         listener = document.addEventListener("scroll", e => {
@@ -182,6 +196,20 @@ const Navbar = ({ activePage, name, isAdmin, auth, getUserAuth, logout }) => {
 
                 <li className="cart-li" onClick={() => handleNavigate("/cart")}>
                     <IoMdCart className="cart-icon" />
+                    <span
+                        className={
+                            "cart-count" +
+                            (cart.products &&
+                            cart.products.length &&
+                            cart.products.length > 9
+                                ? " plus"
+                                : "")
+                        }
+                    >
+                        {cart.products && cart.products.length
+                            ? cart.products.length
+                            : 0}
+                    </span>
                 </li>
             </ul>
         </nav>
@@ -192,10 +220,11 @@ const mapStateToProps = state => ({
     name: state.login.user.name,
     email: state.login.user.email,
     isAdmin: state.login.user.isAdmin,
-    auth: state.login.user.auth
+    auth: state.login.user.auth,
+    cart: state.cart
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(LoginActions, dispatch);
+    bindActionCreators(Object.assign({}, CartActions, LoginActions), dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

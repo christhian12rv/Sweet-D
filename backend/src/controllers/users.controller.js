@@ -23,7 +23,6 @@ exports.findAll = async (req, res) => {
         );
         res.json({ status: 200, totalRows, users });
     } catch (error) {
-        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };

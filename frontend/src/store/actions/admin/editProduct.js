@@ -13,7 +13,6 @@ export function editProduct(
     photos,
     toastId
 ) {
-    console.log(photos);
     return async dispatch => {
         const token = localStorage.getItem("user_token");
         const dataForm = new FormData();
@@ -26,7 +25,6 @@ export function editProduct(
         if (extras && extras.length)
             dataForm.append("extras", JSON.stringify(extras));
         for (const photo of photos) {
-            console.log(photo);
             if (photo.hasOwnProperty("url"))
                 dataForm.append("bodyPhotos", JSON.stringify(photo));
             else dataForm.append("photos", photo);
@@ -38,7 +36,6 @@ export function editProduct(
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
@@ -79,7 +76,6 @@ export function editProduct(
 }
 
 export function getProduct(slug, toastId) {
-    console.log(slug);
     return async dispatch => {
         const response = await axios.get("/products/" + slug);
 

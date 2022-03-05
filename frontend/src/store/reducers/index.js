@@ -5,6 +5,8 @@ import login from "./login";
 import userSettings from "./userSettings";
 import listProducts from "./listProducts";
 import product from "./product";
+import cart from "./cart";
+import orders from "./orders";
 import adminSidebar from "./admin/adminSidebar";
 import addProductAdmin from "./admin/addProduct";
 import editProductAdmin from "./admin/editProduct";
@@ -17,6 +19,8 @@ export default combineReducers({
     userSettings,
     listProducts,
     product,
+    cart,
+    orders,
     adminSidebar,
     addProductAdmin,
     editProductAdmin,

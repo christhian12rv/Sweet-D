@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { GiWrappedSweet } from "react-icons/gi";
+import LogoImg from "../../img/Logo.png";
 
 import "./index.scss";
 
@@ -11,7 +11,7 @@ const Logo = () => {
     return (
         <ul className="logo-ul" onClick={() => navigate("/")}>
             <li className="logo-li">
-                <GiWrappedSweet className="logo" />
+                <img className="logo" src={LogoImg} alt="" />
                 <span>Sweet-D</span>
             </li>
         </ul>

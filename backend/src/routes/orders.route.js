@@ -7,8 +7,14 @@ const { verifyJWTAdmin } = require("../middlewares/jwtAdminVerify.middleware");
 
 const ordersController = require("../controllers/orders.controller");
 
-router.get("/", verifyJWT, ordersController.findAllByUser);
+router.get("/", verifyJWT, ordersController.findAll);
+router.get("/:id", verifyJWT, ordersController.findAllByUser);
 router.post("/", verifyJWT, ordersValidator.create, ordersController.create);
-router.put("/", verifyJWTAdmin, ordersValidator.update, ordersController.update);
+router.put(
+    "/",
+    verifyJWTAdmin,
+    ordersValidator.update,
+    ordersController.update
+);
 
 module.exports = router;

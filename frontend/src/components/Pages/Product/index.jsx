@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -8,32 +8,76 @@ import parse from "html-react-parser";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as productsActions from "../../../store/actions/product";
+import * as CartActions from "../../../store/actions/cart";
+import * as ProductActions from "../../../store/actions/product";
 
 import "./index.scss";
 
 import SquareButton from "../../Buttons/SquareButton";
-import ProductCard from "../../ProductCard";
 import ProductsCardContent from "../../ProductsCardContent";
 
-const Product = ({ product, products, getProductBySlug, getProducts }) => {
+const Product = ({
+    product,
+    products,
+    getProductBySlug,
+    getProducts,
+    addToCart,
+    extrasInput,
+    quantityInput,
+    updateInputProduct
+}) => {
     const { slug } = useParams();
     const navigate = useNavigate();
+    const toastId = useRef(null);
 
     const selectOptions = [];
 
     useEffect(async () => {
-        let response = await getProducts(3, 1, "id", "asc", "", undefined);
+        let response = await getProducts(
+            3,
+            1,
+            "random",
+            undefined,
+            "",
+            undefined
+        );
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
         }
 
         response = await getProductBySlug(slug);
-        console.log(response);
+
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
         }
     }, []);
+
+    const handleAddToCart = async () => {
+        const newExtras = extrasInput.map(e => e.value);
+        const response = await addToCart(
+            product.id,
+            newExtras,
+            quantityInput,
+            toastId
+        );
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
+    const handleSelectChange = async value => {
+        await updateInputProduct(value, "extras");
+    };
+
+    const handleQuantityChange = async func => {
+        let newValue = quantityInput;
+        if (func == "add") {
+            if (newValue < product.storage) newValue += 1;
+        } else if (func == "remove") {
+            if (newValue > 1) newValue -= 1;
+        }
+        await updateInputProduct(newValue, "quantity");
+    };
 
     if (product && product.extras)
         JSON.parse(product.extras).forEach(extra => {
@@ -50,13 +94,12 @@ const Product = ({ product, products, getProductBySlug, getProducts }) => {
                         autoplay={false}
                         infiniteLoop={true}
                         showStatus={false}
-                        emulateTouch={false}
+                        swipeScrollTolerance={20}
                         showIndicators={false}
-                        selectedItem={1}
                     >
                         {product.photos &&
-                            JSON.parse(product.photos).map(photo => (
-                                <div className="img-parent">
+                            JSON.parse(product.photos).map((photo, i) => (
+                                <div key={i} className="img-parent">
                                     <img src={photo.url}></img>
                                 </div>
                             ))}
@@ -85,13 +128,21 @@ const Product = ({ product, products, getProductBySlug, getProducts }) => {
                             isMulti
                             options={selectOptions}
                             placeholder="Selecione algum extra"
+                            value={extrasInput}
+                            onChange={handleSelectChange}
                         />
                     </div>
                     <div className="quantity">
                         <h4>Quantidade</h4>
-                        <HiMinusCircle className="icon" />
-                        <h3>2</h3>
-                        <HiPlusCircle className="icon" />
+                        <HiMinusCircle
+                            className="icon"
+                            onClick={() => handleQuantityChange("remove")}
+                        />
+                        <h3>{quantityInput}</h3>
+                        <HiPlusCircle
+                            className="icon"
+                            onClick={() => handleQuantityChange("add")}
+                        />
                     </div>
                     <div className="storage">
                         <h4>
@@ -104,15 +155,23 @@ const Product = ({ product, products, getProductBySlug, getProducts }) => {
                                     "Em estoque"
                                 )
                             ) : (
-                                <span className="zero-storage">
-                                    Produto esgotado
-                                </span>
+                                ""
                             )}
                         </h4>
                     </div>
                     <div className="product-buttons">
-                        <SquareButton>Adicionar ao Carrinho</SquareButton>
-                        <SquareButton>Comprar</SquareButton>
+                        {product.storage && product.storage > 0 ? (
+                            <>
+                                <SquareButton onClick={handleAddToCart}>
+                                    Adicionar ao Carrinho
+                                </SquareButton>
+                                <SquareButton>Comprar</SquareButton>
+                            </>
+                        ) : (
+                            <button className="zero-storage-button">
+                                Produto esgotado
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -131,9 +190,14 @@ const Product = ({ product, products, getProductBySlug, getProducts }) => {
 
 const mapStateToProps = state => ({
     product: state.product.product,
-    products: state.product.products
+    products: state.product.products,
+    extrasInput: state.product.input.extras,
+    quantityInput: state.product.input.quantity
 });
 const mapDispatchToProps = dispatch =>
-    bindActionCreators(productsActions, dispatch);
+    bindActionCreators(
+        Object.assign({}, CartActions, ProductActions),
+        dispatch
+    );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

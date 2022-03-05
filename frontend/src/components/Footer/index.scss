@@ -72,8 +72,10 @@
         gap: 0.5em;
         justify-content: center;
         color: $primaryColor;
+
         .logo {
-            font-size: 3em;
+            width: 70px;
+            height: 70px;
         }
 
         span {

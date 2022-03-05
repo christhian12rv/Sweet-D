@@ -33,6 +33,10 @@
             flex-basis: 100%;
         }
 
+        &.description {
+            word-break: break-word;
+        }
+
         &.price,
         &.storage {
             flex-basis: 47%;

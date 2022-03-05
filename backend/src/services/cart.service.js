@@ -1,16 +1,25 @@
 const ProductModel = require("../models/Product.model");
 
-exports.create = async (sess, userId, product) => {
-    if (!sess.products)
-        sess.products = {};
+exports.getAllData = async productsIds => {
+    const products = [];
+
+    for (const id of productsIds) {
+        const product = await ProductModel.findByPk(id);
+        products.push(product);
+    }
+
+    return products;
+};
+
+exports.create = async (sess, product) => {
+    if (!sess.products) sess.products = {};
 
     let productsArray = sess.products.products || [];
 
     const productFindOne = await ProductModel.findByPk(product.id);
     productsArray.push({
-        userId: userId,
         id: product.id,
-        extras: product.extras.join(","),
+        extras: product.extras,
         quantity: product.quantity,
         total: product.quantity * productFindOne.price
     });
@@ -27,18 +36,16 @@ exports.create = async (sess, userId, product) => {
     }
 
     sess.products = { ...sess.products, total };
-}
 
-exports.update = async (sess, userId, product) => {
-    if (!sess.products)
-        sess.products = {};
+    return productFindOne;
+};
+
+exports.update = async (sess, product) => {
+    if (!sess.products) sess.products = {};
 
     let productsArray = sess.products.products || [];
 
     const productFindOne = await ProductModel.findByPk(product.id);
-
-    if (product.extras)
-        product.extras = product.extras.join(',');
 
     if (product.quantity)
         product.total = product.quantity * productFindOne.price;
@@ -63,4 +70,33 @@ exports.update = async (sess, userId, product) => {
     }
 
     sess.products = { ...sess.products, total };
-}
+
+    return product;
+};
+
+exports.remove = async (sess, id) => {
+    if (!sess.products) sess.products = {};
+
+    let productsArray = sess.products.products || [];
+
+    productsArray = sess.products.products.filter(p => p.id != id);
+
+    sess.products = {
+        products: productsArray,
+        total: sess.products.total
+    };
+
+    let total = 0;
+    for (const p of sess.products.products) {
+        const productFind = await ProductModel.findByPk(p.id);
+        total += p.quantity * productFind.price;
+    }
+
+    sess.products = { ...sess.products, total };
+
+    return sess;
+};
+
+exports.clear = async sess => {
+    sess.products = undefined;
+};

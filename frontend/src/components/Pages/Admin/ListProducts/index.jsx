@@ -26,7 +26,6 @@ const ListProducts = ({
     updateActive,
     updateInput
 }) => {
-    console.log(products);
     const navigate = useNavigate();
     const toastId = useRef(null);
     const searchInput = useRef(null);
@@ -131,7 +130,10 @@ const ListProducts = ({
             quantity: product.storage,
             edit: (
                 <div className="edit-column">
-                    <MdHome className="view-product" />
+                    <MdHome
+                        className="view-product"
+                        onClick={() => navigate("/products/" + product.slug)}
+                    />
                     <MdEditNote
                         className="edit-product"
                         onClick={() =>

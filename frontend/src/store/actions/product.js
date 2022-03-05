@@ -1,6 +1,5 @@
 import types from "../types";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 export function getProducts(
     limit,
@@ -27,7 +26,6 @@ export function getProducts(
         );
 
         const data = response.data;
-        console.log(data);
 
         switch (data.status) {
             case 200:
@@ -52,7 +50,7 @@ export function getProductBySlug(slug) {
         const response = await axios.get("/products/" + slug);
 
         const data = response.data;
-        console.log(data);
+
         switch (data.status) {
             case 200:
                 dispatch({
@@ -72,6 +70,18 @@ export function getProductBySlug(slug) {
                     type: "REDIRECT",
                     to: "/error/500"
                 };
+        }
+    };
+}
+
+export function updateInputProduct(value, stateProp) {
+    return {
+        type: types.UPDATE_INPUT_PRODUCT,
+        payload: {
+            input: {
+                value,
+                stateProp
+            }
         }
     };
 }

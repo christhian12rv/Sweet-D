@@ -5,7 +5,6 @@ const productsService = require("../services/products.service");
 exports.findBySlug = async (req, res) => {
     try {
         let { slug } = req.params;
-        console.log(slug);
 
         const product = await productsService.findBySlug(slug);
 
@@ -17,7 +16,6 @@ exports.findBySlug = async (req, res) => {
 
         res.json({ status: 200, product });
     } catch (error) {
-        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -26,8 +24,7 @@ exports.findAll = async (req, res) => {
     try {
         let { limit, page, columnSort, directionSort, search, priceFilter } =
             req.query;
-        console.log(req.query);
-        console.log(priceFilter);
+
         priceFilter =
             priceFilter && priceFilter == "undefined" ? undefined : priceFilter;
         columnSort =
@@ -49,7 +46,6 @@ exports.findAll = async (req, res) => {
             );
         res.json({ status: 200, totalRows, products, minPrice, maxPrice });
     } catch (error) {
-        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -147,7 +143,6 @@ exports.update = async (req, res) => {
             msg: "Produto alterado com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar alterar produto"
