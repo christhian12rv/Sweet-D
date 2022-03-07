@@ -1,9 +1,11 @@
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
+
 const ProductModel = require("../models/Product.model");
 const OrderModel = require("../models/Order.model");
 const OrderProductModel = require("../models/OrderProduct.model");
 const OrderAddress = require("../models/OrderAddress.model");
 const UserModel = require("../models/User.model");
-const ProductModel = require("../models/Product.model");
 
 exports.findAll = async (
     limit = -1,
@@ -14,13 +16,14 @@ exports.findAll = async (
 ) => {
     const options = {
         ...(columnSort &&
-            directionSort && {
+            directionSort &&
+            columnSort != "products" && {
                 order: [[columnSort, directionSort]]
             }),
         limit,
         offset: limit * (page - 1),
         where: {
-            name: {
+            id: {
                 [Op.like]: "%" + search + "%"
             }
         }
@@ -30,13 +33,12 @@ exports.findAll = async (
 
     result.rows = await Promise.all(
         result.rows.map(async r => {
-            const user = UserModel.findByPk(r.userId);
+            const user = await UserModel.findByPk(r.userId);
             r.setDataValue("user", user);
-
-            const orderProducts = OrderProductModel.findAll({
+            let orderProducts = await OrderProductModel.findAll({
                 where: { orderId: r.id }
             });
-            orderProducts = Promise.all(
+            orderProducts = await Promise.all(
                 orderProducts.map(async op => {
                     const product = await ProductModel.findByPk(op.productId);
                     op.setDataValue("product", product);
@@ -49,36 +51,101 @@ exports.findAll = async (
         })
     );
 
+    if (columnSort == "products") {
+        result.rows.sort((a, b) => {
+            a = JSON.stringify(a);
+            a = JSON.parse(a);
+            b = JSON.stringify(b);
+            b = JSON.parse(b);
+            if (
+                a.orderProducts[0].product == b.orderProducts[0].product.name &&
+                a.orderProducts[1] &&
+                b.orderProducts[1]
+            )
+                return a.orderProducts[1].product.name.localeCompare(
+                    b.orderProducts[1].product.name
+                );
+
+            return a.orderProducts[0].product.name.localeCompare(
+                b.orderProducts[0].product.name
+            );
+        });
+
+        if (directionSort == "desc") result.rows = result.rows.reverse();
+    }
+
     return {
         totalRows: result.count,
         orders: result.rows
     };
 };
+exports.findByPk = async id => {
+    let order = await OrderModel.findByPk(id);
+
+    const user = await UserModel.findByPk(order.userId);
+    order.setDataValue("user", user);
+
+    const address = await OrderAddress.findOne({ where: { orderId: id } });
+    order.setDataValue("address", address);
+
+    let orderProducts = await OrderProductModel.findAll({
+        where: { orderId: id }
+    });
+
+    let quantityTotal = 0;
+
+    orderProducts = await Promise.all(
+        orderProducts.map(async op => {
+            const product = await ProductModel.findByPk(op.productId);
+            op.setDataValue("product", product);
+
+            quantityTotal += op.quantity;
+
+            return op;
+        })
+    );
+    order.setDataValue("quantityTotal", quantityTotal);
+
+    order.setDataValue("orderProducts", orderProducts);
+
+    return order;
+};
 
 exports.findAllByUser = async userId => {
-    let orders = await OrderModel.findAll({ where: { userId } });
-    orders = await Promise.all(
-        orders.map(async order => {
+    const result = await OrderModel.findAndCountAll({
+        order: [["createdAt", "desc"]],
+        where: { userId }
+    });
+
+    result.rows = await Promise.all(
+        result.rows.map(async r => {
             let orderProducts = await OrderProductModel.findAll({
-                where: { orderId: order.id }
+                where: { orderId: r.id }
             });
 
+            let quantityTotal = 0;
+
             orderProducts = await Promise.all(
-                orderProducts.map(async orderProduct => {
-                    const product = await ProductModel.findByPk(
-                        orderProduct.productId
-                    );
-                    orderProduct.setDataValue("product", product);
-                    return orderProduct;
+                orderProducts.map(async op => {
+                    const product = await ProductModel.findByPk(op.productId);
+                    op.setDataValue("product", product);
+
+                    quantityTotal += op.quantity;
+                    return op;
                 })
             );
+            r.setDataValue("orderProducts", orderProducts);
 
-            order.setDataValue("orderProducts", orderProducts);
-            return order;
+            r.setDataValue("quantityTotal", quantityTotal);
+
+            return r;
         })
     );
 
-    return orders;
+    return {
+        totalRows: result.count,
+        orders: result.rows
+    };
 };
 
 exports.create = async (userId, products, address) => {
@@ -108,7 +175,7 @@ exports.create = async (userId, products, address) => {
             { where: { id: product.id } }
         );
     }
-    console.log(address);
+
     await OrderAddress.create({ ...address, ...{ orderId: order.id } });
 
     return order;
@@ -121,4 +188,8 @@ exports.update = async (orderId, finished) => {
     );
 
     return order;
+};
+
+exports.updateFinish = async id => {
+    await OrderModel.update({ finished: true }, { where: { id } });
 };

@@ -68,7 +68,11 @@ const ListUsers = ({
             name: user.name,
             email: user.email,
             createdAt: (
-                <Moment format="DD/MM/YYYY - HH:mm:ss" tz="America/Sao_Paulo">
+                <Moment
+                    className="date-createdAt"
+                    format="DD/MM/YYYY - HH:mm:ss"
+                    tz="America/Sao_Paulo"
+                >
                     {user.createdAt}
                 </Moment>
             ),
@@ -268,13 +272,13 @@ const ListUsers = ({
 };
 
 const mapStateToProps = state => ({
-    users: state.listUsers.users,
-    limit: state.listUsers.limit,
-    page: state.listUsers.page,
-    totalRows: state.listUsers.totalRows,
-    columnSort: state.listUsers.columnSort,
-    directionSort: state.listUsers.directionSort,
-    search: state.listUsers.input.search
+    users: state.listUsersAdmin.users,
+    limit: state.listUsersAdmin.limit,
+    page: state.listUsersAdmin.page,
+    totalRows: state.listUsersAdmin.totalRows,
+    columnSort: state.listUsersAdmin.columnSort,
+    directionSort: state.listUsersAdmin.directionSort,
+    search: state.listUsersAdmin.input.search
 });
 
 const mapDispatchToProps = dispatch =>

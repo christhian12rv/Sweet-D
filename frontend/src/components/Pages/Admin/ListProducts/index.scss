@@ -63,7 +63,10 @@
         .product-img {
             width: 60px;
             height: 60px;
+            object-fit: cover;
+            object-position: center;
             padding-top: 3px;
+            border-radius: 0.5em;
         }
     }
 

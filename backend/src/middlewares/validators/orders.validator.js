@@ -291,8 +291,8 @@ exports.create = [
         .withMessage("A Descrição informada é inválida")
 ];
 
-exports.update = [
-    body("orderId")
+exports.updateFinish = [
+    body("id")
         .notEmpty()
         .withMessage("Pedido inválido")
         .bail()
@@ -303,9 +303,11 @@ exports.update = [
                 .catch(error => {
                     return Promise.reject("Ocorreu um erro interno");
                 })
-                .then(Order => {
-                    if (!Order) return Promise.reject("Pedido inválido");
+                .then(order => {
+                    if (!order) return Promise.reject("Pedido inválido");
+
+                    if (order.finished)
+                        return Promise.reject("Pedido já finalizado");
                 });
-        }),
-    body("finished").toBoolean().isBoolean().withMessage("Valor inválido")
+        })
 ];

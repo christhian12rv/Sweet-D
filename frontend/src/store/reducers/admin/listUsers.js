@@ -14,7 +14,7 @@ const INITIAL_STATE = {
 
 export default function listUsersAdmin(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case types.LIST_USERS_GET_USERS:
+        case types.ADMIN_LIST_USERS_GET_USERS:
             return { ...state, ...action.payload };
         case types.UPDATE_INPUT_ADMIN_LIST_USERS:
             return {

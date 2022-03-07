@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { MdEditNote, MdHome, MdSearch } from "react-icons/md";
-import { ToggleSlider } from "react-toggle-slider";
+import Switch from "react-switch";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -140,13 +140,17 @@ const ListProducts = ({
                             navigate("/admin/products/edit/" + product.slug)
                         }
                     />
-                    <ToggleSlider
-                        active={product.active ? true : false}
-                        barBackgroundColorActive="#2e7d32"
-                        barHeight={22}
-                        barWidth={44}
-                        handleSize={16}
-                        onToggle={state =>
+                    <Switch
+                        checked={product.active}
+                        height={22}
+                        width={44}
+                        handleDiameter={16}
+                        offColor="#a5d6a7"
+                        onColor="#2e7d32"
+                        activeBoxShadow="none"
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        onChange={state =>
                             handleActiveToggle(product.id, state)
                         }
                     />

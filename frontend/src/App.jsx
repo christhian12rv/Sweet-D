@@ -212,7 +212,8 @@ function App() {
                                 <RequiredAuth isAdmin={true}>
                                     <AdminLayout
                                         activePage="5"
-                                        title="Pedido #12345678"
+                                        title="Pedido #"
+                                        titleParam={true}
                                     >
                                         <AdminOrderDetails />
                                     </AdminLayout>

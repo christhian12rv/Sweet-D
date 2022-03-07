@@ -1,28 +1,61 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { ToggleSlider } from "react-toggle-slider";
+import { MdSearch } from "react-icons/md";
+import Switch from "react-switch";
+import Moment from "react-moment";
+import "moment-timezone";
+import { CgDetailsMore } from "react-icons/cg";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as OrdersActions from "../../../../store/actions/admin/listProducts";
+import * as OrdersActions from "../../../../store/actions/orders";
 
 import ModalLoading from "../../../ModalLoading";
+import InputText from "../../../InputText";
+import SquareButton from "../../../Buttons/SquareButton";
 
 import "./index.scss";
 
 const ListOrders = ({
     orders,
+    limit,
+    page,
     totalRows,
-    orderProducts,
-    orderProductsData,
-    getOrders
+    getOrders,
+    columnSort,
+    directionSort,
+    search,
+    updateInput,
+    updateFinish
 }) => {
     const navigate = useNavigate();
     const toastId = useRef(null);
     const searchInput = useRef(null);
     let isSorting = false;
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleActiveToggle = async (state, id) => {
+        setIsLoading(true);
+        let response = await updateFinish(id, toastId);
+        if (response && response.success) {
+            response = await getOrders(
+                limit,
+                page,
+                columnSort,
+                directionSort,
+                search
+            );
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
+            }
+        } else {
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
+            }
+        }
+        setIsLoading(false);
+    };
 
     const customStyles = {
         headCells: {
@@ -48,7 +81,8 @@ const ListOrders = ({
         {
             name: "Produtos",
             selector: row => row.products,
-            sortable: true
+            sortable: true,
+            nameOnDB: "products"
         },
         {
             name: "Total",
@@ -60,6 +94,14 @@ const ListOrders = ({
             name: "Usuário",
             selector: row => row.user,
             sortable: true
+        },
+        {
+            name: "Data",
+            selector: row => row.createdAt,
+            sortable: true,
+            nameOnDB: "createdAt",
+            minWidth: "180px",
+            maxWidth: "180px"
         },
         {
             name: "Finalizado",
@@ -76,37 +118,60 @@ const ListOrders = ({
 
     const data = [];
 
+    console.log(orders);
     orders.forEach(order => {
-        const productsName = [];
-        orderProductsData.forEach(p => {
-            productsName.push(p.name);
+        let productsName = [];
+        order.orderProducts.forEach(p => {
+            productsName.push(p.product.name);
         });
-        productsName.join(", ");
+        productsName = productsName.join(", ");
 
         data.push({
             id: <h5 className="id">{order.id}</h5>,
             photo: (
                 <img
-                    src={orderProductsData[0].photos[0].url}
+                    src={
+                        JSON.parse(order.orderProducts[0].product.photos)[0].url
+                    }
                     alt="Foto do produto"
                     className="product-img"
                 />
             ),
-            products: ProductsName,
-            total: "R$ " + order.total,
+            products: productsName,
+            total:
+                "R$ " +
+                parseFloat(order.total).toFixed(2).toString().replace(".", ","),
             user: order.user.name,
+            createdAt: (
+                <Moment format="DD/MM/YYYY - HH:mm:ss" tz="America/Sao_Paulo">
+                    {order.createdAt}
+                </Moment>
+            ),
             finish: (
                 <div className="edit-column">
-                    <ToggleSlider
-                        barBackgroundColor="#a5d6a7"
-                        barBackgroundColorActive="#2e7d32"
-                        barHeight={22}
-                        barWidth={44}
-                        handleSize={16}
+                    <Switch
+                        checked={order.finished}
+                        height={22}
+                        width={44}
+                        handleDiameter={15}
+                        offColor="#a5d6a7"
+                        onColor="#2e7d32"
+                        activeBoxShadow="none"
+                        uncheckedIcon={false}
+                        checkedIcon={false}
+                        onChange={state => handleActiveToggle(state, order.id)}
                     />
                 </div>
             ),
-            details: <h5 className="details-link">Detalhes</h5>
+            details: (
+                <h5
+                    className="details-link"
+                    onClick={() => navigate("/admin/orders/" + order.id)}
+                >
+                    <CgDetailsMore className="icon" />
+                    Detalhes
+                </h5>
+            )
         });
     });
 
@@ -116,18 +181,98 @@ const ListOrders = ({
         selectAllRowsItem: true,
         selectAllRowsItemText: "Todos"
     };
+
+    const handleInputChange = (e, stateProp) => {
+        updateInput(e.target.value, stateProp);
+    };
+
+    const handleSearch = async e => {
+        e.preventDefault();
+        setIsLoading(true);
+        const response = await getOrders(
+            limit,
+            1,
+            columnSort,
+            directionSort,
+            search
+        );
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
+    const handlePerRowsChange = async (newLimit, newPage) => {
+        setIsLoading(true);
+        const response = await getOrders(
+            newLimit,
+            newPage,
+            columnSort,
+            directionSort,
+            search
+        );
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
+    const handlePageChange = async newPage => {
+        if (!isSorting) {
+            setIsLoading(true);
+            const response = await getOrders(
+                limit,
+                newPage,
+                columnSort,
+                directionSort,
+                search
+            );
+            setIsLoading(false);
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
+            }
+        }
+    };
+
+    const handleColumnOrderChange = async (column, direction) => {
+        isSorting = true;
+        setIsLoading(true);
+        const response = await getOrders(
+            limit,
+            1,
+            column.nameOnDB,
+            direction,
+            search
+        );
+        isSorting = false;
+        setIsLoading(false);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    };
+
+    useEffect(async () => {
+        setIsLoading(true);
+        const response = await getOrders(10, 1, "id", "asc", "");
+        setIsLoading(false);
+        console.log(response);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    }, []);
+
     return (
         <div className="orders-list-admin">
             <div className="form-box">
                 <form onSubmit={handleSearch}>
                     <div
-                        className="products-list-admin-search-box"
+                        className="orders-list-admin-search-box"
                         onClick={() => {
                             searchInput.current?.focus();
                         }}
                     >
                         <InputText
-                            placeholder="Pesquise por produtos..."
+                            placeholder="Pesquise por pedidos (#)..."
                             value={search}
                             onChange={e => handleInputChange(e, "search")}
                             innerRef={searchInput}
@@ -147,9 +292,9 @@ const ListOrders = ({
                     pagination
                     paginationServer
                     paginationTotalRows={totalRows}
-                    onChangeRowsPerPage={}
-                    onChangePage={}
-                    onSort={}
+                    onChangeRowsPerPage={handlePerRowsChange}
+                    onChangePage={handlePageChange}
+                    onSort={handleColumnOrderChange}
                     sortServer={true}
                     defaultSortFieldId={1}
                     progressPending={isLoading}
@@ -170,9 +315,12 @@ const ListOrders = ({
 
 const mapStateToProps = state => ({
     orders: state.orders.orders,
+    limit: state.orders.limit,
+    page: state.orders.page,
     totalRows: state.orders.totalRows,
-    orderProducts: state.orders.orderProducts,
-    orderProductsData: state.order.orderProductsData
+    columnSort: state.orders.columnSort,
+    directionSort: state.orders.directionSort,
+    search: state.orders.input.search
 });
 const mapDispatchToProps = dispatch =>
     bindActionCreators(OrdersActions, dispatch);

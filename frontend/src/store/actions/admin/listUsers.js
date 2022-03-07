@@ -21,7 +21,7 @@ export function getUsers(limit, page, columnSort, directionSort, search) {
         switch (data.status) {
             case 200:
                 dispatch({
-                    type: types.LIST_USERS_GET_USERS,
+                    type: types.ADMIN_LIST_USERS_GET_USERS,
                     payload: {
                         users: data.users,
                         limit,

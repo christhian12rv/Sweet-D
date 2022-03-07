@@ -13,6 +13,13 @@
 
     .icon-handle-sidebar {
         display: none;
+        color: $dark;
+        cursor: pointer;
+        @include transition(all 0.25s ease);
+
+        &:hover {
+            color: $darkLighter;
+        }
     }
 
     .user-sidebar-content {
@@ -125,6 +132,12 @@
                 margin-right: 1em;
             }
         }
+    }
+}
+
+@include breakpoint(desktop) {
+    .user-sidebar {
+        min-height: 500px;
     }
 }
 

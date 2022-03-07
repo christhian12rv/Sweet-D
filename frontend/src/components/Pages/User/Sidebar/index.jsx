@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiSettings, FiShoppingBag } from "react-icons/fi";
 import { GoPerson } from "react-icons/go";
 import { BsList } from "react-icons/bs";
@@ -6,6 +7,7 @@ import { BsList } from "react-icons/bs";
 import "./index.scss";
 
 const Sidebar = ({ active }) => {
+    const navigate = useNavigate();
     const [sidebarOpenMobile, setSidebarOpenMobile] = useState("closed");
 
     const handleSidebarOpen = () => {
@@ -27,13 +29,17 @@ const Sidebar = ({ active }) => {
                 </div>
                 <div
                     className={"item " + (active == "settings" ? "active" : "")}
+                    onClick={() => navigate("/user/settings")}
                 >
                     <div className="selector-border-top"></div>
                     <FiSettings className="icon" />
                     <h3>Conta</h3>
                     <div className="selector-border-bottom"></div>
                 </div>
-                <div className={"item " + (active == "orders" ? "active" : "")}>
+                <div
+                    className={"item " + (active == "orders" ? "active" : "")}
+                    onClick={() => navigate("/user/orders")}
+                >
                     <div className="selector-border-top"></div>
                     <FiShoppingBag className="icon" />
                     <h3>Pedidos</h3>

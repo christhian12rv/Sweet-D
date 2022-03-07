@@ -17,11 +17,12 @@ const AdminLayout = ({
     title,
     titleParam,
     open,
+    editProductId,
     toggleAdminSidebar
 }) => {
     if (titleParam) {
         const { id } = useParams();
-        title += id;
+        title += id || editProductId || "";
     }
 
     const handleSidebarClose = () => {
@@ -50,7 +51,8 @@ const AdminLayout = ({
 };
 
 const mapStateToProps = state => ({
-    open: state.adminSidebar.open
+    open: state.adminSidebar.open,
+    editProductId: state.editProductAdmin.id
 });
 
 const mapDispatchToProps = dispatch =>
