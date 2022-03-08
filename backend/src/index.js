@@ -10,15 +10,11 @@ const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const cloudinary = require("cloudinary").v2;
 
+const indexRoute = require("./routes/index.route");
 const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
 const cartRoute = require("./routes/cart.route");
-
-const User = require("./models/User.model");
-const Product = require("./models/Product.model");
-const Order = require("./models/Order.model");
-const OrderProduct = require("./models/OrderProduct.model");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -45,6 +41,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+app.use("/", indexRoute);
 app.use("/users", usersRoute);
 app.use("/products", productsRoute);
 app.use("/orders", ordersRoute);

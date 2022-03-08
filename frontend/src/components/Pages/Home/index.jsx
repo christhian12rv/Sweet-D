@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Wave from "react-wavify";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -8,6 +9,7 @@ import * as ListProductsActions from "../../../store/actions/listProducts";
 import Header from "./Header";
 import FirstBanner from "./FirstBanner";
 import ProductsCardContent from "../../ProductsCardContent";
+import SquareButton from "../../Buttons/SquareButton";
 
 import "./index.scss";
 
@@ -35,12 +37,34 @@ const Home = ({ products, getProducts }) => {
         <div className="home-div">
             <Header />
             <FirstBanner />
-            {products.length && (
-                <ProductsCardContent
-                    data={products}
-                    className="products-card-content-home"
+            <div className="products-mid-content-box">
+                <div className="view-our-products">
+                    <h1>Veja alguns de nossos produtos</h1>
+                </div>
+
+                <Wave
+                    className="wave"
+                    fill="#ffcfbd"
+                    paused={false}
+                    options={{
+                        height: 20,
+                        amplitude: 20,
+                        speed: 0.25,
+                        points: 8
+                    }}
                 />
-            )}
+
+                {products.length && (
+                    <ProductsCardContent
+                        data={products}
+                        className="products-card-content-home"
+                    ></ProductsCardContent>
+                )}
+
+                <SquareButton className="view-more-products">
+                    Ver mais produtos
+                </SquareButton>
+            </div>
         </div>
     );
 };

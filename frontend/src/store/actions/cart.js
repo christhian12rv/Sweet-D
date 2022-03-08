@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -53,13 +53,11 @@ export function addToCart(id, extras, quantity, toastId) {
 export function updateToCart(id, extras, quantity) {
     return async dispatch => {
         extras = extras.map(e => e.value);
-        console.log(quantity);
         const response = await axios.put("/cart", {
             product: { id, extras, quantity }
         });
 
         let data = response.data;
-        console.log(data);
 
         data.session_products.products = data.session_products.products.map(
             p => {
@@ -95,7 +93,6 @@ export function removeToCart(id, productsData) {
         const response = await axios.delete("/cart/" + id);
 
         let data = response.data;
-        console.log(data);
 
         productsData = productsData.filter(p => p.id != id);
 
@@ -123,7 +120,7 @@ export function getCart() {
         const response = await axios.get("/cart");
 
         const data = response.data;
-        console.log(data);
+
         data.session_products.products = data.session_products.products.map(
             p => {
                 p.extras = p.extras.map(e => {
@@ -153,8 +150,6 @@ export function getCart() {
 }
 
 export function getProductsDataCart(productsCart) {
-    console.log("asdffads");
-    console.log(productsCart);
     return async dispatch => {
         productsCart = productsCart.map(p => p.id);
 

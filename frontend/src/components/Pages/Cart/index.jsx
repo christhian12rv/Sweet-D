@@ -24,6 +24,7 @@ const Cart = ({
     removeToCart,
     createOrder
 }) => {
+    console.log(address);
     const toastId = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -71,7 +72,7 @@ const Cart = ({
 
     const handleOrderSubmit = async () => {
         setIsLoading(true);
-        const response = await createOrder(cart.products, address, toastId);
+        const response = await createOrder(cart.products, toastId);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
             else if (response.type == "REDIRECT_SUCCESS") {
@@ -247,48 +248,61 @@ const Cart = ({
 
                         <div className="address-box">
                             <h3>Endereço</h3>
-                            <div className="box">
-                                <p className="title">Endereço</p>
-                                <p>{address.address}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Número</p>
-                                <p>{address.number}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Bairro</p>
-                                <p>{address.district}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">CEP</p>
-                                <p>{address.postalCode}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Cidade</p>
-                                <p>{address.city}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Estado</p>
-                                <p>{address.state}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Complemento</p>
-                                <p>{address.complement}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Telefone</p>
-                                <p>{address.phone}</p>
-                            </div>
-                            <div className="box">
-                                <p className="title">Descrição</p>
-                                <p>{address.description}</p>
-                            </div>
-                            <a
-                                className="change-address"
-                                onClick={() => navigate("/user/settings")}
-                            >
-                                Trocar
-                            </a>
+                            {address.address ? (
+                                <>
+                                    <div className="box">
+                                        <p className="title">Endereço</p>
+                                        <p>{address.address}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Número</p>
+                                        <p>{address.number}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Bairro</p>
+                                        <p>{address.district}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">CEP</p>
+                                        <p>{address.postalCode}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Cidade</p>
+                                        <p>{address.city}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Estado</p>
+                                        <p>{address.state}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Complemento</p>
+                                        <p>{address.complement}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Telefone</p>
+                                        <p>{address.phone}</p>
+                                    </div>
+                                    <div className="box">
+                                        <p className="title">Descrição</p>
+                                        <p>{address.description}</p>
+                                    </div>
+                                    <a
+                                        className="change-address"
+                                        onClick={() =>
+                                            navigate("/user/settings")
+                                        }
+                                    >
+                                        Trocar
+                                    </a>
+                                </>
+                            ) : (
+                                <a
+                                    className="add-address"
+                                    onClick={() => navigate("/user/settings")}
+                                >
+                                    Adicione um endereço
+                                </a>
+                            )}
                         </div>
 
                         <RoundedButton onClick={handleOrderSubmit}>

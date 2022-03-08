@@ -1,166 +1,289 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Moment from "react-moment";
+import "moment-timezone";
+import { BsArrowLeftShort } from "react-icons/bs";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as OrdersActions from "../../../../store/actions/orders";
 
 import UserSidebar from "../Sidebar";
 
 import "./index.scss";
 
-import Donut from "../../../../img/donut-example.jpg";
+const OrderDetails = ({ order, getOrder, clearState }) => {
+    const navigate = useNavigate();
+    const { id } = useParams();
 
-const OrderDetails = () => {
+    useEffect(async () => {
+        await clearState();
+        const response = await getOrder(id);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+        }
+    }, []);
+
     return (
         <div className="user-orders-order">
             <UserSidebar active="orders" />
             <div className="user-orders-order-content">
-                <h2 className="title">
-                    Pedido <span>#12345678</span>
-                </h2>
-                <div className="row">
-                    <div className="first-div">
-                        <div className="table-content-div">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>PRODUTOS</th>
-                                        <th>QUANTIDADE</th>
-                                        <th>TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="product">
-                                            <img
-                                                className="product-img"
-                                                src={Donut}
-                                            ></img>
-                                            <div>
-                                                <h4>Donuts doce</h4>
-                                                <p>#12345678</p>
-                                                <h5>
-                                                    Extras:&nbsp;
-                                                    <span>
-                                                        Chocolate granulado,
-                                                        calda de chocolate
-                                                    </span>
-                                                </h5>
-                                            </div>
-                                        </td>
-                                        <td className="quantity">
-                                            <div className="quantity-div">
-                                                <h3>2</h3>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <h3>R$ 49,80</h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="product">
-                                            <img
-                                                className="product-img"
-                                                src={Donut}
-                                            ></img>
-                                            <div>
-                                                <h4>Donuts doce</h4>
-                                                <p>#12345678</p>
-                                                <h5>
-                                                    Extras:&nbsp;
-                                                    <span>
-                                                        Chocolate granulado,
-                                                        calda de chocolate
-                                                    </span>
-                                                </h5>
-                                            </div>
-                                        </td>
-                                        <td className="quantity">
-                                            <div className="quantity-div">
-                                                <h3>2</h3>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <h3>R$ 49,80</h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="product">
-                                            <img
-                                                className="product-img"
-                                                src={Donut}
-                                            ></img>
-                                            <div>
-                                                <h4>Donuts doce</h4>
-                                                <p>#12345678</p>
-                                                <h5>
-                                                    Extras:&nbsp;
-                                                    <span>
-                                                        Chocolate granulado,
-                                                        calda de chocolate
-                                                    </span>
-                                                </h5>
-                                            </div>
-                                        </td>
-                                        <td className="quantity">
-                                            <div className="quantity-div">
-                                                <h3>2</h3>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <h3>R$ 49,80</h3>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                {order && (
+                    <>
+                        <div className="user-orders-order-header">
+                            <BsArrowLeftShort
+                                className="back-page"
+                                onClick={() => navigate("/user/orders")}
+                            />
+                            <h2 className="title">
+                                Pedido <span>#{order.id}</span>
+                            </h2>
                         </div>
-                    </div>
-                    <div className="second-div">
-                        <div className="content">
-                            <hr />
-                            <h3>
-                                <span className="lighter">
-                                    QUANTIDADE TOTAL:
-                                </span>
-                                <span className="to-right">6</span>
-                            </h3>
-                            <h3>
-                                <span className="lighter">SUBTOTAL: </span>
-                                <span className="to-right">R$ 99,60</span>
-                            </h3>
-                            <h3>
-                                <span className="lighter">PREÇO TOTAL: </span>
-                                <span className="to-right">R$ 99,60</span>
-                            </h3>
+                        <div className="row">
+                            <div className="first-div">
+                                <div className="table-content-div">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>PRODUTOS</th>
+                                                <th>QUANTIDADE</th>
+                                                <th>TOTAL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {order.orderProducts.map((o, i) => (
+                                                <tr
+                                                    key={i}
+                                                    onClick={() =>
+                                                        navigate(
+                                                            "/products/" +
+                                                                o.product.slug
+                                                        )
+                                                    }
+                                                >
+                                                    <td className="product">
+                                                        <img
+                                                            className="product-img"
+                                                            src={
+                                                                JSON.parse(
+                                                                    o.product
+                                                                        .photos
+                                                                )[0].url
+                                                            }
+                                                        ></img>
+                                                        <div>
+                                                            <h4 className="product-name">
+                                                                {o.product.name}{" "}
+                                                                <span>
+                                                                    #
+                                                                    {
+                                                                        o.productId
+                                                                    }
+                                                                </span>
+                                                            </h4>
+                                                            <h5>
+                                                                Extras:&nbsp;
+                                                                {JSON.parse(
+                                                                    o.extras
+                                                                ).map(
+                                                                    (
+                                                                        e,
+                                                                        i,
+                                                                        array
+                                                                    ) => (
+                                                                        <span>
+                                                                            {array.length -
+                                                                                1 ==
+                                                                            i
+                                                                                ? e
+                                                                                : e +
+                                                                                  ", "}
+                                                                        </span>
+                                                                    )
+                                                                )}
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                    <td className="quantity">
+                                                        <div className="quantity-div">
+                                                            <h3>
+                                                                {o.quantity}
+                                                            </h3>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <h3>
+                                                            R$
+                                                            {" " +
+                                                                o.total
+                                                                    .toFixed(2)
+                                                                    .toString()
+                                                                    .replace(
+                                                                        ".",
+                                                                        ","
+                                                                    )}
+                                                        </h3>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div className="second-div">
+                                <div className="content">
+                                    <hr />
+                                    <h3>
+                                        <span className="lighter">
+                                            QUANTIDADE TOTAL:
+                                        </span>
+                                        <span className="to-right">
+                                            {order.quantityTotal}
+                                        </span>
+                                    </h3>
+                                    <h3>
+                                        <span className="lighter">
+                                            SUBTOTAL:
+                                        </span>
+                                        <span className="to-right">
+                                            R$
+                                            {" " +
+                                                order.total
+                                                    .toFixed(2)
+                                                    .toString()
+                                                    .replace(".", ",")}
+                                        </span>
+                                    </h3>
+                                    <h3>
+                                        <span className="lighter">
+                                            PREÇO TOTAL:{" "}
+                                        </span>
+                                        <span className="to-right">
+                                            R${" "}
+                                            {" " +
+                                                order.total
+                                                    .toFixed(2)
+                                                    .toString()
+                                                    .replace(".", ",")}
+                                        </span>
+                                    </h3>
 
-                            <div className="details">
-                                <h4>Detalhes</h4>
-                                <h5>
-                                    <span className="lighter">Data:</span>
-                                    <span className="to-right">23/07/2021</span>
-                                </h5>
-                                <h5>
-                                    <span className="lighter">Status:</span>
-                                    <span className="to-right status finished">
-                                        Entregue
-                                    </span>
-                                </h5>
-                                <h5>
-                                    <span className="lighter">
-                                        Data de entrega:
-                                    </span>
-                                    <span className="to-right">23/07/2021</span>
-                                </h5>
-                                <h5>
-                                    <span className="lighter">Endereço:</span>
-                                    <span className="to-right address">
-                                        Rua Leandro Silva da Cruz, 27, Centro,
-                                        Uberlândia - MG
-                                    </span>
-                                </h5>
+                                    <div className="details">
+                                        <h4>Detalhes</h4>
+                                        <h5>
+                                            <span className="lighter">
+                                                Data:
+                                            </span>
+                                            <span className="to-right">
+                                                <Moment
+                                                    format="DD/MM/YYYY - HH:mm:ss"
+                                                    tz="America/Sao_Paulo"
+                                                >
+                                                    {order.createdAt}
+                                                </Moment>
+                                            </span>
+                                        </h5>
+                                        <h5>
+                                            <span className="lighter">
+                                                Status:
+                                            </span>
+                                            {order.finished ? (
+                                                <span className="to-right status finished">
+                                                    Entregue
+                                                </span>
+                                            ) : (
+                                                <span className="to-right status not-finished">
+                                                    Em andamento
+                                                </span>
+                                            )}
+                                        </h5>
+                                        <h5>
+                                            <span className="lighter">
+                                                Data de entrega:
+                                            </span>
+                                            <span className="to-right">
+                                                {order.finished && (
+                                                    <Moment
+                                                        format="DD/MM/YYYY - HH:mm:ss"
+                                                        tz="America/Sao_Paulo"
+                                                    >
+                                                        {order.updatedAt}
+                                                    </Moment>
+                                                )}
+                                            </span>
+                                        </h5>
+                                        <h5 className="address">
+                                            <span className="lighter">
+                                                Endereço:
+                                            </span>
+                                        </h5>
+                                        <div className="address-box">
+                                            <div className="box address-address">
+                                                <p className="title">
+                                                    Endereço
+                                                </p>
+                                                <p>{order.address.address}</p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">Número</p>
+                                                <p>{order.address.number}</p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">Bairro</p>
+                                                <p>{order.address.district}</p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">CEP</p>
+                                                <p>
+                                                    {order.address.postalCode}
+                                                </p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">Cidade</p>
+                                                <p>{order.address.city}</p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">Estado</p>
+                                                <p>{order.address.state}</p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">
+                                                    Complemento
+                                                </p>
+                                                <p>
+                                                    {order.address.complement}
+                                                </p>
+                                            </div>
+                                            <div className="box">
+                                                <p className="title">
+                                                    Telefone
+                                                </p>
+                                                <p>{order.address.phone}</p>
+                                            </div>
+                                            <div className="box description">
+                                                <p className="title">
+                                                    Descrição
+                                                </p>
+                                                <p>
+                                                    {order.address.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );
 };
 
-export default OrderDetails;
+const mapStateToProps = state => ({
+    order: state.orders.viewOrder
+});
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(OrdersActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetails);

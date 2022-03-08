@@ -1,6 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
 var path = require("path");
-const datauri = require("datauri");
 const cloudinary = require("cloudinary").v2;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
@@ -61,6 +60,7 @@ exports.create = async (
     storage,
     slug,
     extras,
+    priceExtras,
     photos
 ) => {
     if (!photos.length || photos.length < 1) {
@@ -100,7 +100,8 @@ exports.create = async (
         price,
         storage,
         slug,
-        ...(extras && { extras: JSON.stringify(extras) })
+        ...(extras && { extras: JSON.stringify(extras) }),
+        ...(priceExtras && { priceExtras: JSON.stringify(priceExtras) })
     });
     return product;
 };
@@ -113,6 +114,7 @@ exports.update = async (
     storage,
     slug,
     extras,
+    priceExtras,
     bodyPhotos,
     filesPhotos
 ) => {
@@ -177,7 +179,8 @@ exports.update = async (
             price,
             storage,
             slug,
-            ...(extras && { extras: JSON.stringify(extras) })
+            ...(extras && { extras: JSON.stringify(extras) }),
+            ...(priceExtras && { priceExtras: JSON.stringify(priceExtras) })
         },
         {
             where: { id }

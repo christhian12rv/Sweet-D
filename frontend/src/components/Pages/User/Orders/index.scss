@@ -13,6 +13,10 @@
         width: 100%;
         overflow-x: auto;
 
+        .not-order {
+            color: $darkLighter;
+        }
+
         h2 {
             font-size: 1.7em;
             margin-bottom: 1em;

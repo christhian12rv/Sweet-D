@@ -8,6 +8,7 @@ import product from "./product";
 import cart from "./cart";
 import orders from "./orders";
 import adminSidebar from "./admin/adminSidebar";
+import dashboardAdmin from "./admin/dashboard";
 import addProductAdmin from "./admin/addProduct";
 import editProductAdmin from "./admin/editProduct";
 import listProductsAdmin from "./admin/listProducts";
@@ -22,6 +23,7 @@ export default combineReducers({
     cart,
     orders,
     adminSidebar,
+    dashboardAdmin,
     addProductAdmin,
     editProductAdmin,
     listProductsAdmin,

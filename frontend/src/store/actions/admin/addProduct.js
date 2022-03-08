@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -9,10 +9,12 @@ export function addProduct(
     storage,
     description,
     extras,
+    priceExtras,
     photos,
     toastId
 ) {
     return async dispatch => {
+        console.log(priceExtras);
         const token = localStorage.getItem("user_token");
         const dataForm = new FormData();
         dataForm.append("name", name);
@@ -20,8 +22,10 @@ export function addProduct(
         dataForm.append("price", price);
         dataForm.append("storage", storage);
         dataForm.append("description", description);
-        if (extras && extras.length)
+        if (extras && extras.length) {
             dataForm.append("extras", JSON.stringify(extras));
+            dataForm.append("priceExtras", JSON.stringify(priceExtras));
+        }
         for (const photo of photos) {
             dataForm.append("photos", photo);
         }
@@ -32,6 +36,7 @@ export function addProduct(
         toast.dismiss();
 
         const data = response.data;
+        console.log(data);
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
@@ -77,13 +82,59 @@ export function clearState() {
     };
 }
 
-export function updateInput(value, stateProp) {
+export function updateInput(value, stateProp, toastId, priceExtras, oldExtras) {
+    return dispatch => {
+        if (stateProp == "extras") {
+            if (value.length < oldExtras.length) {
+                let loopStop = false;
+                oldExtras.forEach((e, i) => {
+                    if (loopStop) return;
+                    if (e != value[i]) {
+                        priceExtras.splice(i, 1);
+                        dispatch({
+                            type: types.UPDATE_INPUT_ADMIN_ADD_PRODUCT_PRICE_EXTRAS,
+                            payload: {
+                                input: {
+                                    priceExtras
+                                }
+                            }
+                        });
+                        loopStop = true;
+                    }
+                });
+            } else {
+                if (oldExtras.indexOf(value[value.length - 1]) > -1) {
+                    const delay = toast.isActive(toastId.current) ? 1000 : 0;
+                    toast.dismiss();
+                    toastId.current = toast.success(
+                        "Você já adicionou um extra com esse nome",
+                        { delay: delay }
+                    );
+                    return;
+                }
+            }
+        }
+
+        dispatch({
+            type: types.UPDATE_INPUT_ADMIN_ADD_PRODUCT,
+            payload: {
+                input: {
+                    value,
+                    stateProp
+                }
+            }
+        });
+    };
+}
+
+export function updateInputPriceExtras(value, index, priceExtras) {
+    priceExtras[index] = value;
+
     return {
-        type: types.UPDATE_INPUT_ADMIN_ADD_PRODUCT,
+        type: types.UPDATE_INPUT_ADMIN_ADD_PRODUCT_PRICE_EXTRAS,
         payload: {
             input: {
-                value,
-                stateProp
+                priceExtras
             }
         }
     };

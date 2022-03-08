@@ -9,14 +9,12 @@ import * as OrdersActions from "../../../../store/actions/orders";
 
 import "./index.scss";
 
-import Donut from "../../../../img/donut-example.jpg";
-
-const OrderDetails = ({ order, getOrder }) => {
+const OrderDetails = ({ order, getOrder, clearState }) => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [qtyTotal, setQtyTotal] = useState(0);
 
     useEffect(async () => {
+        await clearState();
         const response = await getOrder(id);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);

@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../constants";
 
 const INITIAL_STATE = {
     orders: [],
@@ -33,6 +33,8 @@ export default function orders(state = INITIAL_STATE, action) {
                     [action.payload.input.stateProp]: action.payload.input.value
                 }
             };
+        case types.CLEAR_STATE_ORDERS:
+            return { ...state, INITIAL_STATE };
         default:
             return state;
     }

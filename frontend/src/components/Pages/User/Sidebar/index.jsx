@@ -4,9 +4,13 @@ import { FiSettings, FiShoppingBag } from "react-icons/fi";
 import { GoPerson } from "react-icons/go";
 import { BsList } from "react-icons/bs";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as LoginActions from "../../../../store/actions/login";
+
 import "./index.scss";
 
-const Sidebar = ({ active }) => {
+const Sidebar = ({ active, name }) => {
     const navigate = useNavigate();
     const [sidebarOpenMobile, setSidebarOpenMobile] = useState("closed");
 
@@ -25,7 +29,7 @@ const Sidebar = ({ active }) => {
             <div className={"user-sidebar-content " + sidebarOpenMobile}>
                 <div className="user-panel">
                     <GoPerson className="icon" />
-                    <h4>Admin</h4>
+                    <h4>{name.substr(0, name.indexOf(" "))}</h4>
                 </div>
                 <div
                     className={"item " + (active == "settings" ? "active" : "")}
@@ -50,4 +54,11 @@ const Sidebar = ({ active }) => {
     );
 };
 
-export default Sidebar;
+const mapStateToProps = state => ({
+    name: state.login.user.name
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(LoginActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

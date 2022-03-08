@@ -28,6 +28,7 @@
         &.slug,
         &.description,
         &.extras,
+        &.price-extras,
         &.photos,
         &.add-product {
             flex-basis: 100%;
@@ -40,6 +41,20 @@
         &.price,
         &.storage {
             flex-basis: 47%;
+        }
+
+        &.price-extras {
+            .box {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                column-gap: 1%;
+                row-gap: 0.75em;
+
+                .currency-input {
+                    flex-basis: 32%;
+                }
+            }
         }
 
         .row {

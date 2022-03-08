@@ -25,12 +25,15 @@ const EditProduct = ({
     storage,
     description,
     extras,
+    priceExtras,
     photos,
     updateInput,
     editProduct,
     clearState,
-    getProduct
+    getProduct,
+    updateInputPriceExtras
 }) => {
+    console.log(priceExtras);
     const toastId = React.useRef(null);
     const navigate = useNavigate();
     const { slug: slugParam } = useParams();
@@ -111,7 +114,11 @@ const EditProduct = ({
 
     const handleInputChange = (e, stateProp) => {
         const value = e.target ? e.target.value : e;
-        updateInput(value, stateProp);
+        updateInput(value, stateProp, toastId, priceExtras, extras);
+    };
+
+    const handleInputChangePriceExtras = (value, index) => {
+        updateInputPriceExtras(value, index, priceExtras);
     };
 
     const handleEditProduct = async e => {
@@ -125,6 +132,7 @@ const EditProduct = ({
             storage,
             description,
             extras,
+            priceExtras,
             photos,
             toastId
         );
@@ -200,6 +208,30 @@ const EditProduct = ({
                     />
                 </div>
 
+                {extras.length ? (
+                    <div className="item price-extras">
+                        <h5>Preço dos extras</h5>
+                        <div className="box">
+                            {extras.map((e, i) => (
+                                <CurrencyInput
+                                    className="currency-input"
+                                    prefix="R$ "
+                                    decimalSeparator=","
+                                    groupSeparator="."
+                                    allowNegativeValue={false}
+                                    placeholder={"R$ " + e}
+                                    value={priceExtras[i]}
+                                    onValueChange={value =>
+                                        handleInputChangePriceExtras(value, i)
+                                    }
+                                />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    ""
+                )}
+
                 <div className="item photos">
                     <h5>Imagens</h5>
                     <label htmlFor="upload-photo" className="photo-label">
@@ -248,6 +280,7 @@ const mapStateToProps = state => ({
     storage: state.editProductAdmin.input.storage,
     description: state.editProductAdmin.input.description,
     extras: state.editProductAdmin.input.extras,
+    priceExtras: state.editProductAdmin.input.priceExtras,
     photos: state.editProductAdmin.input.photos
 });
 

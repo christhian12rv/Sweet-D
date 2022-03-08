@@ -32,7 +32,21 @@ exports.create = async (sess, product) => {
     let total = 0;
     for (const p of sess.products.products) {
         const productFind = await ProductModel.findByPk(p.id);
-        total += p.quantity * productFind.price;
+
+        const extrasPriceTotal = 0;
+        if (sess.products.extras.length) {
+            const findExtras =
+                productFind.extras && JSON.parse(productFind.extras);
+            const findPriceExtras =
+                productFind.extras && JSON.parse(productFind.priceExtras);
+
+            sess.products.extras.forEach((e, i) => {
+                const eFindIndex = findExtras.indexOf(e);
+                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
+            });
+        }
+
+        total += p.quantity * productFind.price + extrasPriceTotal;
     }
 
     sess.products = { ...sess.products, total };
@@ -66,7 +80,21 @@ exports.update = async (sess, product) => {
     let total = 0;
     for (const p of sess.products.products) {
         const productFind = await ProductModel.findByPk(p.id);
-        total += p.quantity * productFind.price;
+
+        const extrasPriceTotal = 0;
+        if (sess.products.extras.length) {
+            const findExtras =
+                productFind.extras && JSON.parse(productFind.extras);
+            const findPriceExtras =
+                productFind.extras && JSON.parse(productFind.priceExtras);
+
+            sess.products.extras.forEach((e, i) => {
+                const eFindIndex = findExtras.indexOf(e);
+                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
+            });
+        }
+
+        total += p.quantity * productFind.price + extrasPriceTotal;
     }
 
     sess.products = { ...sess.products, total };
@@ -89,7 +117,21 @@ exports.remove = async (sess, id) => {
     let total = 0;
     for (const p of sess.products.products) {
         const productFind = await ProductModel.findByPk(p.id);
-        total += p.quantity * productFind.price;
+
+        const extrasPriceTotal = 0;
+        if (sess.products.extras.length) {
+            const findExtras =
+                productFind.extras && JSON.parse(productFind.extras);
+            const findPriceExtras =
+                productFind.extras && JSON.parse(productFind.priceExtras);
+
+            sess.products.extras.forEach((e, i) => {
+                const eFindIndex = findExtras.indexOf(e);
+                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
+            });
+        }
+
+        total += p.quantity * productFind.price + extrasPriceTotal;
     }
 
     sess.products = { ...sess.products, total };

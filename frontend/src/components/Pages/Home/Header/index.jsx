@@ -5,7 +5,7 @@ import RoundedButton from "../../../Buttons/RoundedButton";
 
 import "./index.scss";
 
-const Header = () => {
+const Header = ({ children }) => {
     return (
         <div className="header">
             <TextDiv />
@@ -15,6 +15,7 @@ const Header = () => {
                 >
                     Ver produtos
                 </RoundedButton>
+                {children}
             </div>
         </div>
     );

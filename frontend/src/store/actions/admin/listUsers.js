@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 import axios from "axios";
 
 export function getUsers(limit, page, columnSort, directionSort, search) {

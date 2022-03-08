@@ -24,7 +24,6 @@ exports.findAll = async (req, res) => {
 
         res.json({ status: 200, orders, totalRows });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar procurar por pedidos"
@@ -67,15 +66,11 @@ exports.create = async (req, res) => {
     }
 
     try {
-        const { products, address } = req.body;
+        const { products } = req.body;
         const user = req.user;
 
-        const order = await ordersService.create(user.id, products, address);
-        res.json({
-            status: 200,
-            order,
-            msg: "Pedido feito com sucesso. Aguarde e já iremos colocar seu pedido a caminho"
-        });
+        const response = await ordersService.create(user.id, products);
+        res.json(response);
     } catch (error) {
         console.log(error);
         res.json({
@@ -122,7 +117,6 @@ exports.updateFinish = async (req, res) => {
             msg: "Pedido concluído com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar finalizar pedido"

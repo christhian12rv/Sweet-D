@@ -26,6 +26,7 @@ const ListOrders = ({
     columnSort,
     directionSort,
     search,
+    clearState,
     updateInput,
     updateFinish
 }) => {
@@ -33,7 +34,7 @@ const ListOrders = ({
     const toastId = useRef(null);
     const searchInput = useRef(null);
     let isSorting = false;
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleActiveToggle = async (state, id) => {
         setIsLoading(true);
@@ -118,62 +119,71 @@ const ListOrders = ({
 
     const data = [];
 
-    console.log(orders);
-    orders.forEach(order => {
-        let productsName = [];
-        order.orderProducts.forEach(p => {
-            productsName.push(p.product.name);
-        });
-        productsName = productsName.join(", ");
+    !isLoading &&
+        orders.forEach((order, i) => {
+            let productsName = [];
+            order.orderProducts.forEach(p => {
+                productsName.push(p.product.name);
+            });
+            productsName = productsName.join(", ");
 
-        data.push({
-            id: <h5 className="id">{order.id}</h5>,
-            photo: (
-                <img
-                    src={
-                        JSON.parse(order.orderProducts[0].product.photos)[0].url
-                    }
-                    alt="Foto do produto"
-                    className="product-img"
-                />
-            ),
-            products: productsName,
-            total:
-                "R$ " +
-                parseFloat(order.total).toFixed(2).toString().replace(".", ","),
-            user: order.user.name,
-            createdAt: (
-                <Moment format="DD/MM/YYYY - HH:mm:ss" tz="America/Sao_Paulo">
-                    {order.createdAt}
-                </Moment>
-            ),
-            finish: (
-                <div className="edit-column">
-                    <Switch
-                        checked={order.finished}
-                        height={22}
-                        width={44}
-                        handleDiameter={15}
-                        offColor="#a5d6a7"
-                        onColor="#2e7d32"
-                        activeBoxShadow="none"
-                        uncheckedIcon={false}
-                        checkedIcon={false}
-                        onChange={state => handleActiveToggle(state, order.id)}
+            data.push({
+                id: <h5 className="id">{order.id}</h5>,
+                photo: (
+                    <img
+                        src={
+                            JSON.parse(order.orderProducts[0].product.photos)[0]
+                                .url
+                        }
+                        alt="Foto do produto"
+                        className="product-img"
                     />
-                </div>
-            ),
-            details: (
-                <h5
-                    className="details-link"
-                    onClick={() => navigate("/admin/orders/" + order.id)}
-                >
-                    <CgDetailsMore className="icon" />
-                    Detalhes
-                </h5>
-            )
+                ),
+                products: productsName,
+                total:
+                    "R$ " +
+                    parseFloat(order.total)
+                        .toFixed(2)
+                        .toString()
+                        .replace(".", ","),
+                user: order.user.name,
+                createdAt: (
+                    <Moment
+                        format="DD/MM/YYYY - HH:mm:ss"
+                        tz="America/Sao_Paulo"
+                    >
+                        {order.createdAt}
+                    </Moment>
+                ),
+                finish: (
+                    <div className="edit-column">
+                        <Switch
+                            checked={order.finished}
+                            height={22}
+                            width={44}
+                            handleDiameter={15}
+                            offColor="#a5d6a7"
+                            onColor="#2e7d32"
+                            activeBoxShadow="none"
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            onChange={state =>
+                                handleActiveToggle(state, order.id)
+                            }
+                        />
+                    </div>
+                ),
+                details: (
+                    <h5
+                        className="details-link"
+                        onClick={() => navigate("/admin/orders/" + order.id)}
+                    >
+                        <CgDetailsMore className="icon" />
+                        Detalhes
+                    </h5>
+                )
+            });
         });
-    });
 
     const paginationComponentOptions = {
         rowsPerPageText: "Resultados por página",
@@ -253,9 +263,10 @@ const ListOrders = ({
 
     useEffect(async () => {
         setIsLoading(true);
+        await clearState();
         const response = await getOrders(10, 1, "id", "asc", "");
         setIsLoading(false);
-        console.log(response);
+
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
         }

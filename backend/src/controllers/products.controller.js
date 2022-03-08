@@ -46,6 +46,7 @@ exports.findAll = async (req, res) => {
             );
         res.json({ status: 200, totalRows, products, minPrice, maxPrice });
     } catch (error) {
+        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -68,7 +69,8 @@ exports.create = async (req, res) => {
     }
 
     try {
-        const { name, description, price, storage, slug, extras } = req.body;
+        const { name, description, price, storage, slug, extras, priceExtras } =
+            req.body;
         const product = await productsService.create(
             name,
             description,
@@ -76,6 +78,7 @@ exports.create = async (req, res) => {
             storage,
             slug,
             extras,
+            priceExtras,
             req.files.photos
         );
         res.json({ status: 200, product, msg: "Produto criado com sucesso" });
@@ -125,7 +128,8 @@ exports.update = async (req, res) => {
                 if (b) bodyPhotos.push(JSON.parse(b));
             });
         }
-        const { id, name, description, price, storage, extras } = req.body;
+        const { id, name, description, price, storage, extras, priceExtras } =
+            req.body;
         const product = await productsService.update(
             id,
             name,
@@ -134,6 +138,7 @@ exports.update = async (req, res) => {
             storage,
             slugParam,
             extras,
+            priceExtras,
             bodyPhotos,
             req.files && req.files.photos ? req.files.photos : []
         );

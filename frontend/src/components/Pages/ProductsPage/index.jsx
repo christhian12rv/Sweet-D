@@ -181,6 +181,8 @@ const ProductsPage = ({
                     <Select onChange={handleSelectFilterChange}>
                         <option value="min-price">Menor preço</option>
                         <option value="max-price">Maior preço</option>
+                        <option value="available">Disponível</option>
+                        <option value="with-storage">Estoque</option>
                     </Select>
                     <SquareButton>Buscar</SquareButton>
                 </form>

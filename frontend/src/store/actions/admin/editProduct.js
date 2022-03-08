@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -10,9 +10,11 @@ export function editProduct(
     storage,
     description,
     extras,
+    priceExtras,
     photos,
     toastId
 ) {
+    console.log(priceExtras);
     return async dispatch => {
         const token = localStorage.getItem("user_token");
         const dataForm = new FormData();
@@ -22,8 +24,10 @@ export function editProduct(
         dataForm.append("price", price);
         dataForm.append("storage", storage);
         dataForm.append("description", description);
-        if (extras && extras.length)
+        if (extras && extras.length) {
             dataForm.append("extras", JSON.stringify(extras));
+            dataForm.append("priceExtras", JSON.stringify(priceExtras));
+        }
         for (const photo of photos) {
             if (photo.hasOwnProperty("url"))
                 dataForm.append("bodyPhotos", JSON.stringify(photo));
@@ -83,6 +87,13 @@ export function getProduct(slug, toastId) {
         toast.dismiss();
 
         const data = response.data;
+        if (data.product.extras) {
+            data.product.priceExtras = JSON.parse(data.product.priceExtras).map(
+                pe => pe.toString().replace(".", ",")
+            );
+        }
+        console.log(data);
+
         switch (data.status) {
             case 200:
                 dispatch({
@@ -99,6 +110,9 @@ export function getProduct(slug, toastId) {
                             }),
                             ...(data.product.extras && {
                                 extras: JSON.parse(data.product.extras)
+                            }),
+                            ...(data.product.extras && {
+                                priceExtras: data.product.priceExtras
                             }),
                             photos: JSON.parse(data.product.photos)
                         }
@@ -135,13 +149,59 @@ export function clearState() {
     };
 }
 
-export function updateInput(value, stateProp) {
+export function updateInput(value, stateProp, toastId, priceExtras, oldExtras) {
+    return dispatch => {
+        if (stateProp == "extras") {
+            if (value.length < oldExtras.length) {
+                let loopStop = false;
+                oldExtras.forEach((e, i) => {
+                    if (loopStop) return;
+                    if (e != value[i]) {
+                        priceExtras.splice(i, 1);
+                        dispatch({
+                            type: types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT_PRICE_EXTRAS,
+                            payload: {
+                                input: {
+                                    priceExtras
+                                }
+                            }
+                        });
+                        loopStop = true;
+                    }
+                });
+            } else if (value.length > oldExtras.length) {
+                if (oldExtras.indexOf(value[value.length - 1]) > -1) {
+                    const delay = toast.isActive(toastId.current) ? 1000 : 0;
+                    toast.dismiss();
+                    toastId.current = toast.success(
+                        "Você já adicionou um extra com esse nome",
+                        { delay: delay }
+                    );
+                    return;
+                }
+            }
+        }
+
+        dispatch({
+            type: types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT,
+            payload: {
+                input: {
+                    value,
+                    stateProp
+                }
+            }
+        });
+    };
+}
+
+export function updateInputPriceExtras(value, index, priceExtras) {
+    const newPriceExtras = [...priceExtras];
+    newPriceExtras[index] = value;
     return {
-        type: types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT,
+        type: types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT_PRICE_EXTRAS,
         payload: {
             input: {
-                value,
-                stateProp
+                priceExtras: newPriceExtras
             }
         }
     };

@@ -26,15 +26,23 @@ const Navbar = ({
     logout,
     getCart
 }) => {
+    console.log(auth);
     const navigate = useNavigate();
     let listener = null;
 
     const [scrollState, setScrollState] = useState("top");
     const [mobileMenuOpen, setMobileMenuOpen] = useState("");
     const [dropdownOpen, setDropdownOpen] = useState("");
+    const [isGettingUser, setIsGettingUser] = useState(true);
 
     useEffect(async () => {
+        setIsGettingUser(true);
         await getUserAuth();
+        setIsGettingUser(false);
+    }, []);
+
+    useEffect(async () => {
+        if (!isGettingUser) await getUserAuth();
     });
 
     useEffect(async () => {
@@ -129,71 +137,78 @@ const Navbar = ({
 
             {centerUl}
             <ul className="login-ul">
-                {!auth ? (
+                {!isGettingUser && (
                     <>
-                        <li
-                            className="login-li"
-                            onClick={() => handleNavigate("/login")}
-                        >
-                            <BiLogInCircle className="login-icon" />
-                            Login
-                        </li>
-                    </>
-                ) : (
-                    <>
-                        <li
-                            className="login-li user-logged"
-                            onClick={handleDropdownOpen}
-                        >
-                            {name.substr(0, name.indexOf(" "))
-                                ? name.substr(0, name.indexOf(" "))
-                                : name}
-                            <GoPerson className="person-icon" />
+                        {!auth ? (
+                            <>
+                                <li
+                                    className="login-li"
+                                    onClick={() => handleNavigate("/login")}
+                                >
+                                    <BiLogInCircle className="login-icon" />
+                                    Login
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li
+                                    className="login-li user-logged"
+                                    onClick={handleDropdownOpen}
+                                >
+                                    {name.substr(0, name.indexOf(" "))
+                                        ? name.substr(0, name.indexOf(" "))
+                                        : name}
+                                    <GoPerson className="person-icon" />
 
-                            <div
-                                className={"dropdown " + dropdownOpen}
-                                id="user-dropdown"
-                            >
-                                <ul className="dropdown-ul">
-                                    {isAdmin && (
-                                        <li
-                                            onClick={() =>
-                                                handleNavigate(
-                                                    "/admin/dashboard"
-                                                )
-                                            }
-                                        >
-                                            <MdOutlineAdminPanelSettings className="icon" />
-                                            Painel de controle
-                                        </li>
-                                    )}
+                                    <div
+                                        className={"dropdown " + dropdownOpen}
+                                        id="user-dropdown"
+                                    >
+                                        <ul className="dropdown-ul">
+                                            {isAdmin && (
+                                                <li
+                                                    onClick={() =>
+                                                        handleNavigate(
+                                                            "/admin/dashboard"
+                                                        )
+                                                    }
+                                                >
+                                                    <MdOutlineAdminPanelSettings className="icon" />
+                                                    Painel de controle
+                                                </li>
+                                            )}
 
-                                    <li
-                                        onClick={() =>
-                                            handleNavigate("/user/settings")
-                                        }
-                                    >
-                                        <FiSettings className="icon" />
-                                        Configurações
-                                    </li>
-                                    <li
-                                        onClick={() =>
-                                            handleNavigate("/user/orders")
-                                        }
-                                    >
-                                        <FiShoppingBag className="icon" />
-                                        Meus pedidos
-                                    </li>
-                                    <li onClick={handleLogout}>
-                                        <BiLogOutCircle className="icon" />
-                                        Logout
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                                            <li
+                                                onClick={() =>
+                                                    handleNavigate(
+                                                        "/user/settings"
+                                                    )
+                                                }
+                                            >
+                                                <FiSettings className="icon" />
+                                                Configurações
+                                            </li>
+                                            <li
+                                                onClick={() =>
+                                                    handleNavigate(
+                                                        "/user/orders"
+                                                    )
+                                                }
+                                            >
+                                                <FiShoppingBag className="icon" />
+                                                Meus pedidos
+                                            </li>
+                                            <li onClick={handleLogout}>
+                                                <BiLogOutCircle className="icon" />
+                                                Logout
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </>
+                        )}
                     </>
                 )}
-
                 <li className="cart-li" onClick={() => handleNavigate("/cart")}>
                     <IoMdCart className="cart-icon" />
                     <span

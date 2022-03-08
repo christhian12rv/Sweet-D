@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 
 const INITIAL_STATE = {
     id: null,
@@ -9,11 +9,13 @@ const INITIAL_STATE = {
         storage: "",
         description: "",
         extras: [],
+        priceExtras: [],
         photos: []
     }
 };
 
 export default function editProductAdmin(state = INITIAL_STATE, action) {
+    console.log(action.payload);
     switch (action.type) {
         case types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT:
             return {
@@ -34,6 +36,12 @@ export default function editProductAdmin(state = INITIAL_STATE, action) {
             };
         case types.CLEAR_STATE_ADMIN_EDIT_PRODUCT:
             return { ...INITIAL_STATE };
+        case types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT_PRICE_EXTRAS: {
+            return {
+                ...state,
+                input: { ...state.input, ...action.payload.input }
+            };
+        }
         default:
             return state;
     }

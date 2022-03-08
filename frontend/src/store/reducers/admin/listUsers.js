@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 
 const INITIAL_STATE = {
     users: [],

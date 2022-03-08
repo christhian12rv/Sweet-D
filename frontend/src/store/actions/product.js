@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../constants";
 import axios from "axios";
 
 export function getProducts(
@@ -50,6 +50,7 @@ export function getProductBySlug(slug) {
         const response = await axios.get("/products/" + slug);
 
         const data = response.data;
+        console.log(data);
 
         switch (data.status) {
             case 200:

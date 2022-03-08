@@ -1,8 +1,8 @@
-import types from "../types";
+import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export function createOrder(products, address, toastId) {
+export function createOrder(products, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
         products = products.map(p => {
@@ -11,7 +11,6 @@ export function createOrder(products, address, toastId) {
         });
         let response = await axios.post("/orders", {
             products,
-            address,
             token
         });
 
@@ -39,7 +38,6 @@ export function createOrder(products, address, toastId) {
                     type: "REDIRECT_SUCCESS",
                     to: "/"
                 };
-                break;
             case 400:
                 data.errors.forEach((error, i) => {
                     toastId.current = toast.error(error.msg, {
@@ -48,6 +46,11 @@ export function createOrder(products, address, toastId) {
                     });
                 });
                 break;
+            case 401:
+                return {
+                    type: "REDIRECT",
+                    to: "/login"
+                };
             default:
                 return {
                     type: "REDIRECT",
@@ -103,7 +106,6 @@ export function getOrdersByUser() {
         const response = await axios.post("/orders/user", { token });
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 dispatch({
@@ -132,7 +134,6 @@ export function getOrder(id) {
         const response = await axios.get("/orders/" + id);
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 dispatch({
@@ -160,8 +161,6 @@ export function updateFinish(id, toastId) {
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
-
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, {
@@ -184,6 +183,12 @@ export function updateFinish(id, toastId) {
                     to: "/error/500"
                 };
         }
+    };
+}
+
+export function clearState() {
+    return {
+        type: types.CLEAR_STATE_ORDERS
     };
 }
 

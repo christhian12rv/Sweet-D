@@ -12,10 +12,11 @@ import "./index.scss";
 
 import Donut from "../../../../img/donut-example.jpg";
 
-const Orders = ({ orders, getOrdersByUser }) => {
+const Orders = ({ orders, getOrdersByUser, clearState }) => {
     const navigate = useNavigate();
 
     useEffect(async () => {
+        await clearState();
         const response = await getOrdersByUser(-1, 1, "createdAt", "desc", "");
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
@@ -27,7 +28,7 @@ const Orders = ({ orders, getOrdersByUser }) => {
             <UserSidebar active="orders" />
             <div className="content">
                 <h2>Pedidos</h2>
-                {orders && (
+                {orders && orders.length ? (
                     <div className="table-content-div">
                         <table>
                             <thead>
@@ -40,7 +41,7 @@ const Orders = ({ orders, getOrdersByUser }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {orders.map(o => {
+                                {orders.map((o, i) => {
                                     let productsName = [];
                                     o.orderProducts.forEach(p => {
                                         productsName.push(p.product.name);
@@ -48,7 +49,7 @@ const Orders = ({ orders, getOrdersByUser }) => {
                                     productsName = productsName.join(", ");
 
                                     return (
-                                        <tr>
+                                        <tr key={i}>
                                             <td className="product">
                                                 <img
                                                     className="product-img"
@@ -114,6 +115,10 @@ const Orders = ({ orders, getOrdersByUser }) => {
                             </tbody>
                         </table>
                     </div>
+                ) : (
+                    <h3 className="not-order">
+                        Você ainda não fez nenhum pedido...
+                    </h3>
                 )}
             </div>
         </div>

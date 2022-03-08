@@ -1,4 +1,4 @@
-import types from "../types";
+import types from "../constants";
 import axios from "axios";
 
 export function getProducts(
@@ -62,10 +62,17 @@ export function updateSelectFilter(value) {
     switch (value) {
         case "min-price":
             columnSort = "price";
-            directionSort = "asc";
             break;
         case "max-price":
             columnSort = "price";
+            directionSort = "desc";
+            break;
+        case "available":
+            columnSort = "active";
+            directionSort = "desc";
+            break;
+        case "with-storage":
+            columnSort = "storage";
             directionSort = "desc";
             break;
     }

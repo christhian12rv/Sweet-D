@@ -6,6 +6,7 @@ const OrderModel = require("../models/Order.model");
 const OrderProductModel = require("../models/OrderProduct.model");
 const OrderAddress = require("../models/OrderAddress.model");
 const UserModel = require("../models/User.model");
+const AddressModel = require("../models/Address.model");
 
 exports.findAll = async (
     limit = -1,
@@ -148,11 +149,49 @@ exports.findAllByUser = async userId => {
     };
 };
 
-exports.create = async (userId, products, address) => {
+exports.create = async (userId, products) => {
+    if (!userId)
+        return {
+            status: 401,
+            errors: [
+                {
+                    msg: "Usuário não está logado"
+                }
+            ]
+        };
+
+    let address = await AddressModel.findOne({ where: { userId } });
+
+    if (!address)
+        return {
+            status: 400,
+            errors: [
+                {
+                    msg: "Você ainda não definiu um endereço. Vá ao seu perfil e adicione um endereço"
+                }
+            ]
+        };
+
+    address = JSON.stringify(address);
+    address = JSON.parse(address);
+    delete address.id;
+
     let total = 0;
     for (const p of products) {
         const productFind = await ProductModel.findByPk(p.id);
-        total += productFind.price * p.quantity;
+
+        const findExtras = productFind.extras && JSON.parse(productFind.extras);
+        const findPriceExtras =
+            productFind.extras && JSON.parse(productFind.priceExtras);
+
+        const extrasPriceTotal = 0;
+        product.extras &&
+            product.extras.forEach(pr => {
+                const eFindIndex = findExtras.indexOf(pr.e);
+                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
+            });
+
+        total += productFind.price * p.quantity + extrasPriceTotal;
     }
 
     const order = await OrderModel.create({
@@ -162,12 +201,27 @@ exports.create = async (userId, products, address) => {
 
     for (const product of products) {
         const productFind = await ProductModel.findByPk(product.id);
+
+        const findExtras = productFind.extras && JSON.parse(productFind.extras);
+        const findPriceExtras =
+            productFind.extras && JSON.parse(productFind.priceExtras);
+
+        const priceExtras = [];
+        const extrasPriceTotal = 0;
+        product.extras &&
+            product.extras.forEach(p => {
+                const eFindIndex = findExtras.indexOf(p.e);
+                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
+                priceExtras.push(parseFloat(findPriceExtras[eFindIndex]));
+            });
+
         await OrderProductModel.create({
             orderId: order.id,
             productId: product.id,
             extras: JSON.stringify(product.extras),
+            priceExtras,
             quantity: product.quantity,
-            total: productFind.price * product.quantity
+            total: productFind.price * product.quantity + extrasPriceTotal
         });
 
         await ProductModel.update(
@@ -178,7 +232,11 @@ exports.create = async (userId, products, address) => {
 
     await OrderAddress.create({ ...address, ...{ orderId: order.id } });
 
-    return order;
+    return {
+        status: 200,
+        order,
+        msg: "Pedido feito com sucesso. Aguarde e já iremos colocar seu pedido a caminho"
+    };
 };
 
 exports.update = async (orderId, finished) => {

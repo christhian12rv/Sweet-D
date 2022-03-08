@@ -1,9 +1,10 @@
-import types from "../types";
+import types from "../constants";
 
 const INITIAL_STATE = {
     products: [],
     total: 0,
-    productsData: []
+    productsData: [],
+    oneProduct: {}
 };
 
 export default function cart(state = INITIAL_STATE, action) {

@@ -28,6 +28,8 @@ const ProductCard = ({ data, addToCart }) => {
 
     return (
         <div className="product-card">
+            {!data.active && <div className="modal-unavailable-Product"></div>}
+
             <div className="img-div">
                 <Carousel
                     onClickItem={() =>
@@ -84,18 +86,26 @@ const ProductCard = ({ data, addToCart }) => {
                     </h3>
                 </div>
                 <div className="buttons-div">
-                    {data.storage && data.storage > 0 ? (
+                    {data.active ? (
                         <>
-                            <SquareButton>Comprar</SquareButton>
-                            <SquareButton onClick={handleAddToCart}>
-                                <IoMdCart className="cart-icon" />
-                                Adicionar ao carrinho
-                            </SquareButton>
+                            {data.storage && data.storage > 0 ? (
+                                <>
+                                    <SquareButton>Comprar</SquareButton>
+                                    <SquareButton onClick={handleAddToCart}>
+                                        <IoMdCart className="cart-icon" />
+                                        Adicionar ao carrinho
+                                    </SquareButton>
+                                </>
+                            ) : (
+                                <button className="zero-storage-button">
+                                    Produto esgotado
+                                </button>
+                            )}
                         </>
                     ) : (
-                        <button className="zero-storage-button">
-                            Produto esgotado
-                        </button>
+                        <h4 className="unavailable-product">
+                            Produto indisponível
+                        </h4>
                     )}
                 </div>
             </div>

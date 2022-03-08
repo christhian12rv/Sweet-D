@@ -1,7 +1,61 @@
 @import "../../../sassStyles/variables";
 
+.home-div {
+    position: relative;
+
+    .view-our-products {
+        background-color: $light;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding-top: 5em;
+        padding-left: 2em;
+        padding-right: 2em;
+
+        h1 {
+            z-index: 2;
+            font-size: 1.7em;
+        }
+    }
+
+    .products-mid-content-box {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: $light;
+
+        .wave {
+            z-index: 1;
+            position: absolute;
+            top: -19em;
+            right: -20em;
+            height: 500px;
+            transform: rotateZ(220deg);
+            overflow: hidden;
+        }
+
+        .view-more-products {
+            align-self: center;
+            width: fit-content;
+            padding-left: 2em !important;
+            padding-right: 2em !important;
+            padding-top: 0.75em !important;
+            padding-bottom: 0.75em !important;
+            border-radius: 3em !important;
+            margin-bottom: 5em;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+    }
+}
+
 .products-card-content-home {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url("../../../img/Home/sweet-bg.jpg") center no-repeat;
-    background-size: cover;
+    background-color: $light;
+    overflow: hidden;
+
+    .product-card {
+        z-index: 2;
+    }
 }

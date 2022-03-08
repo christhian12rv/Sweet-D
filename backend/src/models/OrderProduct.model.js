@@ -28,6 +28,10 @@ const Order = db.define("orderProduct", {
         type: Sequelize.STRING(500),
         allowNull: true
     },
+    priceExtras: {
+        type: Sequelize.STRING(500),
+        allowNull: true
+    },
     quantity: {
         type: Sequelize.INTEGER,
         allowNull: false,

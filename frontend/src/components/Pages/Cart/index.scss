@@ -231,6 +231,17 @@
                     color: #000085;
                 }
             }
+
+            .add-address {
+                width: fit-content;
+                color: #0000ee;
+                font-weight: bold;
+                cursor: pointer;
+
+                &:hover {
+                    color: #000085;
+                }
+            }
         }
     }
 }

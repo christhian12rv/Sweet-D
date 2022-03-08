@@ -1,4 +1,4 @@
-import types from "../../types";
+import types from "../../constants";
 
 const isOpen = localStorage.getItem("admin_sidebar_open");
 

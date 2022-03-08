@@ -92,7 +92,40 @@ exports.create = [
         .notEmpty()
         .withMessage("Extra inválido")
         .isString()
-        .withMessage("Extra inválido")
+        .withMessage("Extra inválido"),
+
+    body("priceExtras")
+        .optional()
+        .customSanitizer(value => {
+            if (typeof value !== "object") {
+                value = JSON.parse(value);
+            }
+
+            value = value.map(v => {
+                let newV = v.replace(",", ".");
+                newV = Number(parseFloat(newV)).toFixed(2);
+                return newV;
+            });
+
+            return value;
+        })
+        .isArray()
+        .withMessage("O campo Preço do Extra é inválido")
+        .bail()
+        .custom((value, { req }) => {
+            console.log(value);
+            if (value.length != req.body.extras.length)
+                throw new Error("Quantidade de preços dos extras inválidos");
+
+            return true;
+        }),
+
+    body("priceExtras.*")
+        .trim()
+        .notEmpty()
+        .withMessage("Preço do extra inválido")
+        .isString()
+        .withMessage("Preço do extra inválido")
 ];
 
 exports.update = [
@@ -185,7 +218,39 @@ exports.update = [
         .notEmpty()
         .withMessage("Extra inválido")
         .isString()
-        .withMessage("Extra inválido")
+        .withMessage("Extra inválido"),
+
+    body("priceExtras")
+        .optional()
+        .customSanitizer(value => {
+            if (typeof value !== "object") {
+                value = JSON.parse(value);
+            }
+
+            value = value.map(v => {
+                let newV = v.replace(",", ".");
+                newV = Number(parseFloat(newV)).toFixed(2);
+                return newV;
+            });
+
+            return value;
+        })
+        .isArray()
+        .withMessage("O campo Preço do Extra é inválido")
+        .bail()
+        .custom((value, { req }) => {
+            if (value.length != req.body.extras.length)
+                throw new Error("Quantidade de preços dos extras inválidos");
+
+            return true;
+        }),
+
+    body("priceExtras.*")
+        .trim()
+        .notEmpty()
+        .withMessage("Preço do extra inválido")
+        .isString()
+        .withMessage("Preço do extra inválido")
 ];
 
 exports.updateActive = [

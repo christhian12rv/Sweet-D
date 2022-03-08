@@ -87,7 +87,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(id);
+
         await cartService.remove(req.session, id);
 
         res.json({
@@ -96,7 +96,6 @@ exports.remove = async (req, res) => {
             msg: "Produto retirado do carrinho com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar retirar produto do carrinho"
@@ -113,7 +112,6 @@ exports.clear = async (req, res) => {
             msg: "Carrinho limpo com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar limpar carrinho"
