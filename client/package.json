@@ -64,5 +64,5 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://localhost:9090/api/"
+    "proxy": "https://sweet-d.herokuapp.com/api"
 }

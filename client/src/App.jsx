@@ -15,7 +15,6 @@ import Register from "./components/Pages/Register";
 import RecoveryPassword from "./components/Pages/RecoveryPassword";
 import RecoveryPasswordChange from "./components/Pages/RecoveryPasswordChange";
 import Cart from "./components/Pages/Cart";
-import CartOneProduct from "./components/Pages/CartOneProduct";
 import Product from "./components/Pages/Product";
 import UserSettings from "./components/Pages/User/Settings";
 import UserOrders from "./components/Pages/User/Orders";
