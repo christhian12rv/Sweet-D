@@ -1,7 +1,7 @@
 {
     "proxies": {
         "/api/": {
-            "origin": "https://sweet-d.herokuapp.com/api/"
+            "origin": "http://sweet-d.herokuapp.com/api/"
         }
     }
 }
