@@ -32,6 +32,10 @@ app.use(
     })
 );
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../client/build")));
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 
 sequelize
     .sync()
@@ -53,11 +57,6 @@ app.use("/users", usersRoute);
 app.use("/products", productsRoute);
 app.use("/orders", ordersRoute);
 app.use("/cart", cartRoute);
-
-app.use(express.static(path.join(__dirname, "../client/build")));
-app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
