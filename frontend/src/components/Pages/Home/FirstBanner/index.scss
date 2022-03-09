@@ -10,24 +10,7 @@
     background: url("../../../../img/Home/banner-bg.webp") center;
     background-size: cover;
 
-    * {
+    h1 {
         color: $dark;
-    }
-
-    .regions-div {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1.5em;
-        justify-content: center;
-
-        h4 {
-            cursor: pointer;
-            transition: all 0.25s ease;
-
-            &:hover {
-                color: $primaryColor;
-            }
-        }
     }
 }

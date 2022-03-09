@@ -17,6 +17,7 @@ import "./index.scss";
 import Logo from "../Logo";
 
 const Navbar = ({
+    isBuyOneProduct,
     activePage,
     name,
     isAdmin,
@@ -24,7 +25,8 @@ const Navbar = ({
     cart,
     getUserAuth,
     logout,
-    getCart
+    getCart,
+    getTotalSessionCart
 }) => {
     console.log(auth);
     const navigate = useNavigate();
@@ -38,6 +40,9 @@ const Navbar = ({
     useEffect(async () => {
         setIsGettingUser(true);
         await getUserAuth();
+        const response = await getTotalSessionCart();
+        if (response && response.type)
+            if (response.type == "REDIRECT") navigate(response.to);
         setIsGettingUser(false);
     }, []);
 
@@ -46,7 +51,7 @@ const Navbar = ({
     });
 
     useEffect(async () => {
-        await getCart();
+        if (!isBuyOneProduct) await getCart();
     }, []);
 
     useEffect(() => {
@@ -214,15 +219,14 @@ const Navbar = ({
                     <span
                         className={
                             "cart-count" +
-                            (cart.products &&
-                            cart.products.length &&
-                            cart.products.length > 9
+                            (cart.sessionTotalProducts &&
+                            cart.sessionTotalProducts > 9
                                 ? " plus"
                                 : "")
                         }
                     >
-                        {cart.products && cart.products.length
-                            ? cart.products.length
+                        {cart.sessionTotalProducts
+                            ? cart.sessionTotalProducts
                             : 0}
                     </span>
                 </li>

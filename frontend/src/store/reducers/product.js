@@ -8,7 +8,8 @@ const INITIAL_STATE = {
         description: "",
         extras: "",
         storage: "",
-        photos: ""
+        photos: "",
+        active: true
     },
     products: [],
     input: {

@@ -3,10 +3,13 @@ import React from "react";
 import Navbar from "../../Navbar";
 import Footer from "../../Footer";
 
-const Layout = ({ children, activePage }) => {
+const Layout = ({ isBuyOneProduct, children, activePage }) => {
     return (
         <>
-            <Navbar activePage={activePage} />
+            <Navbar
+                activePage={activePage}
+                isBuyOneProduct={isBuyOneProduct ? true : false}
+            />
             {children}
             <Footer />
         </>

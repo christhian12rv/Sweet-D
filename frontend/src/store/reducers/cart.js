@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     products: [],
     total: 0,
     productsData: [],
-    oneProduct: {}
+    sessionTotalProducts: 0
 };
 
 export default function cart(state = INITIAL_STATE, action) {

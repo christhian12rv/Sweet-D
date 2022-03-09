@@ -176,59 +176,52 @@ exports.create = async (userId, products) => {
     address = JSON.parse(address);
     delete address.id;
 
+    const order = await OrderModel.create({
+        userId: userId,
+        total: 0
+    });
+
     let total = 0;
     for (const p of products) {
         const productFind = await ProductModel.findByPk(p.id);
 
-        const findExtras = productFind.extras && JSON.parse(productFind.extras);
-        const findPriceExtras =
-            productFind.extras && JSON.parse(productFind.priceExtras);
+        let extrasPriceTotal = 0;
+        let priceExtras = [];
 
-        const extrasPriceTotal = 0;
-        product.extras &&
-            product.extras.forEach(pr => {
-                const eFindIndex = findExtras.indexOf(pr.e);
-                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
-            });
+        if (p.extras && p.extras.length) {
+            const findExtras =
+                productFind.extras && JSON.parse(productFind.extras);
+            const findPriceExtras =
+                productFind.extras && JSON.parse(productFind.priceExtras);
 
-        total += productFind.price * p.quantity + extrasPriceTotal;
-    }
-
-    const order = await OrderModel.create({
-        userId: userId,
-        total: total
-    });
-
-    for (const product of products) {
-        const productFind = await ProductModel.findByPk(product.id);
-
-        const findExtras = productFind.extras && JSON.parse(productFind.extras);
-        const findPriceExtras =
-            productFind.extras && JSON.parse(productFind.priceExtras);
-
-        const priceExtras = [];
-        const extrasPriceTotal = 0;
-        product.extras &&
-            product.extras.forEach(p => {
-                const eFindIndex = findExtras.indexOf(p.e);
+            p.extras.forEach(e => {
+                const eFindIndex = findExtras.indexOf(e);
                 extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
                 priceExtras.push(parseFloat(findPriceExtras[eFindIndex]));
             });
+        }
+
+        const pTotal =
+            p.quantity * productFind.price + extrasPriceTotal * p.quantity;
+        total += pTotal;
+        p.total = pTotal;
 
         await OrderProductModel.create({
             orderId: order.id,
-            productId: product.id,
-            extras: JSON.stringify(product.extras),
-            priceExtras,
-            quantity: product.quantity,
-            total: productFind.price * product.quantity + extrasPriceTotal
+            productId: p.id,
+            ...(p.extras && { extras: JSON.stringify(p.extras) }),
+            ...(p.extras && { priceExtras: JSON.stringify(priceExtras) }),
+            quantity: p.quantity,
+            total: p.total
         });
 
         await ProductModel.update(
-            { storage: productFind.storage - product.quantity },
-            { where: { id: product.id } }
+            { storage: productFind.storage - p.quantity },
+            { where: { id: p.id } }
         );
     }
+
+    await OrderModel.update({ total }, { where: { id: order.id } });
 
     await OrderAddress.create({ ...address, ...{ orderId: order.id } });
 

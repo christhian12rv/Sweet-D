@@ -14,7 +14,6 @@ export function addProduct(
     toastId
 ) {
     return async dispatch => {
-        console.log(priceExtras);
         const token = localStorage.getItem("user_token");
         const dataForm = new FormData();
         dataForm.append("name", name);
@@ -36,7 +35,6 @@ export function addProduct(
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });

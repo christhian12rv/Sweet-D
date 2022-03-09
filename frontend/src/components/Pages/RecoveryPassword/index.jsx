@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as RecoveryPasswordActions from "../../../store/actions/recoveryPassword";
 
 import Logo from "../../Logo";
 import InputText from "../../InputText";
@@ -8,7 +13,22 @@ import "./index.scss";
 
 import Donut from "../../../img/Login/Donut.png";
 
-const RecoveryPassword = () => {
+const RecoveryPassword = ({ email, updateInput, sendEmail }) => {
+    const toastId = useRef(null);
+    const navigate = useNavigate();
+
+    const handleInputChange = (e, stateProp) => {
+        updateInput(e.target.value, stateProp);
+    };
+
+    const handleSendEMail = async () => {
+        const response = await sendEmail(email, toastId);
+        if (response && response.type) {
+            if (response.type == "REDIRECT") navigate(response.to);
+            else if (response.type == "LOGIN_SUCCESS") navigate("/");
+        }
+    };
+
     return (
         <div className="recovery-password">
             <div className="content">
@@ -19,10 +39,15 @@ const RecoveryPassword = () => {
                     <div className="email-div">
                         <h5>Digite seu email</h5>
                         <div className="input-div">
-                            <InputText />
+                            <InputText
+                                value={email}
+                                onChange={e => handleInputChange(e, "email")}
+                            />
                         </div>
                     </div>
-                    <RoundedButton>Recuperar Senha</RoundedButton>
+                    <RoundedButton onClick={handleSendEMail}>
+                        Recuperar Senha
+                    </RoundedButton>
                     <RoundedButton>Login</RoundedButton>
                 </div>
             </div>
@@ -30,4 +55,11 @@ const RecoveryPassword = () => {
     );
 };
 
-export default RecoveryPassword;
+const mapStateToProps = state => ({
+    email: state.recoveryPassword.input.email
+});
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(RecoveryPasswordActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecoveryPassword);

@@ -62,7 +62,13 @@ const Login = ({ email, password, login, updateInput }) => {
                         <div className="password-div">
                             <div className="password-row-div">
                                 <h5>Senha</h5>
-                                <a>Esqueceu sua senha?</a>
+                                <a
+                                    onClick={() =>
+                                        navigate("/recovery-password")
+                                    }
+                                >
+                                    Esqueceu sua senha?
+                                </a>
                             </div>
                             <div className="input-div">
                                 <GoLock className="icon" />

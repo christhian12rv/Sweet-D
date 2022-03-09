@@ -33,23 +33,30 @@ exports.create = async (sess, product) => {
     for (const p of sess.products.products) {
         const productFind = await ProductModel.findByPk(p.id);
 
-        const extrasPriceTotal = 0;
-        if (sess.products.extras.length) {
+        let extrasPriceTotal = 0;
+        if (p.extras && p.extras.length) {
             const findExtras =
                 productFind.extras && JSON.parse(productFind.extras);
             const findPriceExtras =
                 productFind.extras && JSON.parse(productFind.priceExtras);
 
-            sess.products.extras.forEach((e, i) => {
+            p.extras.forEach((e, i) => {
                 const eFindIndex = findExtras.indexOf(e);
                 extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
             });
         }
 
-        total += p.quantity * productFind.price + extrasPriceTotal;
+        const pTotal =
+            p.quantity * productFind.price + extrasPriceTotal * p.quantity;
+        total += pTotal;
+        p.total = pTotal;
     }
 
-    sess.products = { ...sess.products, total };
+    sess.products = {
+        ...sess.products,
+        total,
+        sessionTotalProducts: sess.products.length
+    };
 
     return productFindOne;
 };
@@ -81,23 +88,30 @@ exports.update = async (sess, product) => {
     for (const p of sess.products.products) {
         const productFind = await ProductModel.findByPk(p.id);
 
-        const extrasPriceTotal = 0;
-        if (sess.products.extras.length) {
+        let extrasPriceTotal = 0;
+        if (p.extras && p.extras.length) {
             const findExtras =
                 productFind.extras && JSON.parse(productFind.extras);
             const findPriceExtras =
                 productFind.extras && JSON.parse(productFind.priceExtras);
 
-            sess.products.extras.forEach((e, i) => {
+            p.extras.forEach((e, i) => {
                 const eFindIndex = findExtras.indexOf(e);
                 extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
             });
         }
 
-        total += p.quantity * productFind.price + extrasPriceTotal;
+        const pTotal =
+            p.quantity * productFind.price + extrasPriceTotal * p.quantity;
+        total += pTotal;
+        p.total = pTotal;
     }
 
-    sess.products = { ...sess.products, total };
+    sess.products = {
+        ...sess.products,
+        total,
+        sessionTotalProducts: sess.products.length
+    };
 
     return product;
 };
@@ -119,7 +133,7 @@ exports.remove = async (sess, id) => {
         const productFind = await ProductModel.findByPk(p.id);
 
         const extrasPriceTotal = 0;
-        if (sess.products.extras.length) {
+        if (sess.products.extras && sess.products.extras.length) {
             const findExtras =
                 productFind.extras && JSON.parse(productFind.extras);
             const findPriceExtras =
@@ -131,10 +145,14 @@ exports.remove = async (sess, id) => {
             });
         }
 
-        total += p.quantity * productFind.price + extrasPriceTotal;
+        total += p.quantity * productFind.price + extrasPriceTotal * p.quantity;
     }
 
-    sess.products = { ...sess.products, total };
+    sess.products = {
+        ...sess.products,
+        total,
+        sessionTotalProducts: sess.products.length
+    };
 
     return sess;
 };

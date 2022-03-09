@@ -13,23 +13,23 @@ export function addToCart(id, extras, quantity, toastId) {
 
         let data = response.data;
 
-        data.session_products.products = data.session_products.products.map(
-            p => {
-                p.extras = p.extras.map(e => {
-                    e = { value: e, label: e };
-                    return e;
-                });
-
-                return p;
-            }
-        );
-
         switch (data.status) {
             case 200:
+                data.session_products.products =
+                    data.session_products.products.map(p => {
+                        p.extras = p.extras.map(e => {
+                            e = { value: e, label: e };
+                            return e;
+                        });
+
+                        return p;
+                    });
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
-                        ...data.session_products
+                        ...data.session_products,
+                        sessionTotalProducts:
+                            data.session_products.products.length
                     }
                 });
                 break;
@@ -40,7 +40,9 @@ export function addToCart(id, extras, quantity, toastId) {
                         autoClose: 5000 * (i + 1)
                     });
                 });
-                break;
+                return {
+                    type: "ERROR"
+                };
             default:
                 return {
                     type: "REDIRECT",
@@ -54,28 +56,28 @@ export function updateToCart(id, extras, quantity) {
     return async dispatch => {
         extras = extras.map(e => e.value);
         const response = await axios.put("/cart", {
-            product: { id, extras, quantity }
+            product: { id, extras, quantity },
+            isBuyProduct: false
         });
 
         let data = response.data;
-
-        data.session_products.products = data.session_products.products.map(
-            p => {
-                p.extras = p.extras.map(e => {
-                    e = { value: e, label: e };
-                    return e;
-                });
-
-                return p;
-            }
-        );
-
         switch (data.status) {
             case 200:
+                data.session_products.products =
+                    data.session_products.products.map(p => {
+                        p.extras = p.extras.map(e => {
+                            e = { value: e, label: e };
+                            return e;
+                        });
+
+                        return p;
+                    });
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
-                        ...data.session_products
+                        ...data.session_products,
+                        sessionTotalProducts:
+                            data.session_products.products.length
                     }
                 });
                 break;
@@ -102,7 +104,9 @@ export function removeToCart(id, productsData) {
                     type: types.CART_ADD_PRODUCT,
                     payload: {
                         ...data.session_products,
-                        productsData: productsData
+                        productsData: productsData,
+                        sessionTotalProducts:
+                            data.session_products.products.length
                     }
                 });
                 break;
@@ -120,24 +124,24 @@ export function getCart() {
         const response = await axios.get("/cart");
 
         const data = response.data;
-
-        data.session_products.products = data.session_products.products.map(
-            p => {
-                p.extras = p.extras.map(e => {
-                    e = { value: e, label: e };
-                    return e;
-                });
-
-                return p;
-            }
-        );
-
+        console.log(data);
         switch (data.status) {
             case 200:
+                data.session_products.products =
+                    data.session_products.products.map(p => {
+                        p.extras = p.extras.map(e => {
+                            e = { value: e, label: e };
+                            return e;
+                        });
+
+                        return p;
+                    });
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
-                        ...data.session_products
+                        ...data.session_products,
+                        sessionTotalProducts:
+                            data.session_products.products.length
                     }
                 });
             default:
@@ -162,19 +166,29 @@ export function getProductsDataCart(productsCart) {
         data.products = data.products.map(p => {
             p.photos = JSON.parse(p.photos);
             p.extras = JSON.parse(p.extras);
-            p.extras = p.extras.map(e => {
-                e = { value: e, label: e };
+            p.priceExtras = JSON.parse(p.priceExtras);
+            p.extras = p.extras.map((e, i) => {
+                e = {
+                    value: e,
+                    label:
+                        e +
+                        " - R$ " +
+                        parseFloat(p.priceExtras[i])
+                            .toFixed(2)
+                            .toString()
+                            .replace(".", ",")
+                };
                 return e;
             });
             return p;
         });
-
         switch (data.status) {
             case 200:
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
-                        productsData: data.products
+                        productsData: data.products,
+                        sessionTotalProducts: data.products.length
                     }
                 });
                 break;
@@ -184,5 +198,143 @@ export function getProductsDataCart(productsCart) {
                     to: "/error/500"
                 };
         }
+    };
+}
+
+export function getOneProductCart(slug) {
+    return async dispatch => {
+        const response = await axios.get("/products/" + slug);
+
+        const data = response.data;
+        data.product.photos = JSON.parse(data.product.photos);
+        if (data.product.extras) {
+            data.product.extras = JSON.parse(data.product.extras);
+            data.product.priceExtras = JSON.parse(data.product.priceExtras);
+            data.product.extras = data.product.extras.map((e, i) => {
+                e = {
+                    value: e,
+                    label:
+                        e +
+                        " - R$ " +
+                        parseFloat(data.product.priceExtras[i])
+                            .toFixed(2)
+                            .toString()
+                            .replace(".", ",")
+                };
+                return e;
+            });
+        }
+
+        switch (data.status) {
+            case 200:
+                dispatch({
+                    type: types.CART_ADD_PRODUCT,
+                    payload: {
+                        products: [
+                            {
+                                id: data.product.id,
+                                extras: [],
+                                priceExtras: [],
+                                quantity: 1,
+                                total: data.product.price
+                            }
+                        ],
+                        productsData: [data.product],
+                        total: data.product.price
+                    }
+                });
+                break;
+            default:
+                return {
+                    type: "REDIRECT",
+                    to: "/error/500"
+                };
+        }
+    };
+}
+
+export function addToCartBuyOneProduct(
+    id,
+    extras,
+    priceExtras,
+    quantity,
+    total
+) {
+    return {
+        type: types.CART_ADD_PRODUCT,
+        payload: {
+            products: [{ id, extras, priceExtras, quantity, total }],
+            total
+        }
+    };
+}
+
+export function updateToCartBuyOne(
+    id,
+    extras,
+    priceExtras,
+    quantity,
+    productPrice,
+    productData
+) {
+    let extrasPriceTotal = 0;
+    if (extras && extras.length) {
+        extras.forEach((e, i) => {
+            let eFindIndex;
+            productData.extras.forEach((e2, i) => {
+                if (e2.value == e.value) eFindIndex = i;
+            });
+            extrasPriceTotal += parseFloat(productData.priceExtras[eFindIndex]);
+            priceExtras.push({ ...productData.priceExtras[eFindIndex] });
+        });
+    }
+    console.log(productPrice);
+    console.log(quantity);
+    console.log(extrasPriceTotal);
+
+    return {
+        type: types.CART_ADD_PRODUCT,
+        payload: {
+            products: [
+                {
+                    id,
+                    extras,
+                    priceExtras,
+                    quantity,
+                    total: productPrice * quantity + extrasPriceTotal * quantity
+                }
+            ],
+            total: productPrice * quantity + extrasPriceTotal * quantity
+        }
+    };
+}
+
+export function getTotalSessionCart() {
+    return async dispatch => {
+        const response = await axios.get("/cart/get/total");
+        const data = response.data;
+        console.log(data);
+        switch (data.status) {
+            case 200:
+                dispatch({
+                    type: types.CART_ADD_PRODUCT,
+                    payload: {
+                        sessionTotalProducts: data.sessionTotalProducts
+                    }
+                });
+                break;
+            default:
+                return {
+                    type: "REDIRECT",
+                    to: "/error/500"
+                };
+        }
+    };
+}
+
+export function clearStateCart() {
+    console.log("a");
+    return {
+        type: types.CART_CLEAR
     };
 }

@@ -2,6 +2,23 @@ const { validationResult } = require("express-validator");
 
 const cartService = require("../services/cart.service");
 
+exports.getTotalSessionCart = async (req, res) => {
+    try {
+        res.json({
+            status: 200,
+            sessionTotalProducts: req.session.products
+                ? req.session.products.products.length
+                : undefined,
+            msg: "Produtos buscados com sucesso"
+        });
+    } catch (error) {
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno ao procurar items no carrinho"
+        });
+    }
+};
+
 exports.getAllData = async (req, res) => {
     try {
         let { productsIds } = req.query;

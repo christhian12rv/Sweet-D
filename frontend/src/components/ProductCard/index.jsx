@@ -9,21 +9,47 @@ import { bindActionCreators } from "redux";
 import * as CartActions from "../../store/actions/cart";
 
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import { IoMdCart } from "react-icons/io";
+import { IoMdCart, IoMdSquare } from "react-icons/io";
 
 import SquareButton from "../Buttons/SquareButton";
 
 import "./index.scss";
 
-const ProductCard = ({ data, addToCart }) => {
+const ProductCard = ({
+    data,
+    addToCart,
+    addToCartBuyOneProduct,
+    getTotalSessionCart
+}) => {
     const navigate = useNavigate();
     const toastId = useRef(null);
 
-    const handleAddToCart = async () => {
-        const response = await addToCart(data.id, [], 1, toastId);
+    const handleAddToCart = async (e, id) => {
+        let response = await addToCart(data.id, [], 1, toastId);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
+        } else {
+            document
+                .getElementById("add-to-cart-button-" + id)
+                .classList.add("clicked");
         }
+
+        response = await getTotalSessionCart();
+        if (response && response.type)
+            if (response.type == "REDIRECT") navigate(response.to);
+    };
+
+    const handleBuy = async () => {
+        const response = await addToCartBuyOneProduct(
+            data.id,
+            [],
+            [],
+            1,
+            data.price
+        );
+        if (response && response.type)
+            if (response.type == "REDIRECT") navigate(response.to);
+        navigate("/cart/" + data.slug);
     };
 
     return (
@@ -90,10 +116,25 @@ const ProductCard = ({ data, addToCart }) => {
                         <>
                             {data.storage && data.storage > 0 ? (
                                 <>
-                                    <SquareButton>Comprar</SquareButton>
-                                    <SquareButton onClick={handleAddToCart}>
-                                        <IoMdCart className="cart-icon" />
-                                        Adicionar ao carrinho
+                                    <SquareButton onClick={handleBuy}>
+                                        Comprar
+                                    </SquareButton>
+                                    <SquareButton
+                                        onClick={e =>
+                                            handleAddToCart(e, data.id)
+                                        }
+                                        id={"add-to-cart-button-" + data.id}
+                                        className="add-to-cart-button"
+                                    >
+                                        <span className="text-add-to-cart">
+                                            <IoMdCart className="cart-icon" />
+                                            Adicionar ao carrinho
+                                        </span>
+                                        <span className="added">
+                                            Adicionado
+                                        </span>
+                                        <IoMdCart className="cart-added-icon" />
+                                        <IoMdSquare className="square-added-icon" />
                                     </SquareButton>
                                 </>
                             ) : (

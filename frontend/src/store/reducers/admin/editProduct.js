@@ -15,7 +15,6 @@ const INITIAL_STATE = {
 };
 
 export default function editProductAdmin(state = INITIAL_STATE, action) {
-    console.log(action.payload);
     switch (action.type) {
         case types.UPDATE_INPUT_ADMIN_EDIT_PRODUCT:
             return {

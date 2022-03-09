@@ -158,6 +158,29 @@ exports.updateAddress = async (req, res) => {
     } catch (error) {
         res.json({
             status: 500,
+            msg: "Houve um erro interno ao tentar alterar endereço"
+        });
+    }
+};
+
+exports.recoveryPassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const { email } = req.body;
+        console.log(email);
+        await usersService.recoveryPassword(email);
+        res.json({
+            status: 200,
+            msg: "Houve um erro interno"
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            status: 500,
             msg: "Houve um erro interno"
         });
     }

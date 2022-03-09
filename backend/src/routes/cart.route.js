@@ -7,6 +7,7 @@ const cartController = require("../controllers/cart.controller");
 
 router.get("/", cartController.getAll);
 router.get("/data", cartController.getAllData);
+router.get("/get/total", cartController.getTotalSessionCart);
 router.post("/", cartValidator.create, cartController.create);
 router.post("/clear", cartController.clear);
 router.put("/", cartValidator.update, cartController.update);

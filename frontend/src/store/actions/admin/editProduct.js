@@ -14,7 +14,6 @@ export function editProduct(
     photos,
     toastId
 ) {
-    console.log(priceExtras);
     return async dispatch => {
         const token = localStorage.getItem("user_token");
         const dataForm = new FormData();
@@ -92,7 +91,6 @@ export function getProduct(slug, toastId) {
                 pe => pe.toString().replace(".", ",")
             );
         }
-        console.log(data);
 
         switch (data.status) {
             case 200:

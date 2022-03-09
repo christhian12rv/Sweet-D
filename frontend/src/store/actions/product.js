@@ -50,7 +50,6 @@ export function getProductBySlug(slug) {
         const response = await axios.get("/products/" + slug);
 
         const data = response.data;
-        console.log(data);
 
         switch (data.status) {
             case 200:

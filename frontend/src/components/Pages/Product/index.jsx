@@ -33,7 +33,7 @@ const Product = ({
 
     const selectOptions = [];
 
-    if (!isGettingProduct && !product.active) navigate("/error-404");
+    if (!isGettingProduct && product && !product.active) navigate("/error-404");
 
     useEffect(async () => {
         setIsGettingProduct(true);
@@ -51,7 +51,6 @@ const Product = ({
         setIsGettingProduct(false);
         response = await getProductBySlug(slug);
 
-        console.log(response);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
         }
@@ -85,13 +84,23 @@ const Product = ({
     };
 
     if (product && product.extras)
-        JSON.parse(product.extras).forEach(extra => {
-            selectOptions.push({ value: extra, label: extra });
+        JSON.parse(product.extras).forEach((extra, i) => {
+            selectOptions.push({
+                value: extra,
+                label:
+                    extra +
+                    " (R$ " +
+                    parseFloat(JSON.parse(product.priceExtras)[i])
+                        .toFixed(2)
+                        .toString()
+                        .replace(".", ",") +
+                    ")"
+            });
         });
 
     return (
         <>
-            {product.active && (
+            {!isGettingProduct && product && product.active && (
                 <div className="product-page">
                     <div className="product-container">
                         <div className="product-images-box">

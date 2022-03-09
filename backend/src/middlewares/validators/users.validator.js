@@ -378,3 +378,29 @@ exports.address = [
         .notEmpty()
         .withMessage("A Descrição informada é inválida")
 ];
+
+exports.recoveryPassword = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Email é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .isEmail()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .custom(value => {
+            return UserModel.findOne({ where: { email: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(user => {
+                    if (!user)
+                        return Promise.reject(
+                            "O Email informado não está cadastrado"
+                        );
+                });
+        })
+];

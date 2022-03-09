@@ -17,19 +17,13 @@ import ModalLoading from "../../ModalLoading";
 import "./index.scss";
 
 const Cart = ({
-    isBuyOneProduct,
     cart,
     address,
     getProductsDataCart,
-    getOneProductCart,
     updateToCart,
-    updateToCartBuyOne,
     removeToCart,
-    createOrder,
-    getTotalSessionCart,
-    clearStateCart
+    createOrder
 }) => {
-    console.log(cart);
     const { slug } = useParams();
 
     const toastId = useRef(null);
@@ -38,32 +32,22 @@ const Cart = ({
 
     useEffect(async () => {
         setIsLoading(true);
-        await clearStateCart();
-        await setTimeout(async () => {
-            if (!isBuyOneProduct) {
-                if (cart.products && cart.products.length) {
-                    const response = await getProductsDataCart(cart.products);
-                    if (response && response.type) {
-                        if (response.type == "REDIRECT") navigate(response.to);
-                    }
-                }
-            } else {
-                await getOneProductCart(slug);
+        if (cart.products && cart.products.length) {
+            const response = await getProductsDataCart(cart.products);
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
             }
-            await getTotalSessionCart();
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 500);
+        }
+        setTimeout(() => {
+            setIsLoading(false);
         }, 500);
     }, []);
 
     useEffect(async () => {
-        if (!isBuyOneProduct) {
-            if (cart.products && cart.products.length) {
-                const response = await getProductsDataCart(cart.products);
-                if (response && response.type) {
-                    if (response.type == "REDIRECT") navigate(response.to);
-                }
+        if (cart.products && cart.products.length) {
+            const response = await getProductsDataCart(cart.products);
+            if (response && response.type) {
+                if (response.type == "REDIRECT") navigate(response.to);
             }
         }
     }, [cart.products]);
@@ -76,30 +60,11 @@ const Cart = ({
         } else if (func == "remove") {
             if (newValue > 1) newValue -= 1;
         }
-
-        if (isBuyOneProduct)
-            await updateToCartBuyOne(
-                product.id,
-                product.extras,
-                product.priceExtras,
-                newValue,
-                cart.productsData[0].price,
-                cart.productsData[0]
-            );
-        else await updateToCart(product.id, product.extras, newValue);
+        await updateToCart(product.id, product.extras, newValue);
     };
 
     const handleExtrasChange = async (product, value) => {
-        if (isBuyOneProduct)
-            await updateToCartBuyOne(
-                product.id,
-                value,
-                product.priceExtras,
-                product.quantity,
-                cart.productsData[0].price,
-                cart.productsData[0]
-            );
-        else await updateToCart(product.id, value, product.quantity);
+        await updateToCart(product.id, value, product.quantity);
     };
 
     const handleRemoveProduct = async id => {
@@ -118,6 +83,8 @@ const Cart = ({
         setIsLoading(false);
     };
 
+    console.log(cart);
+
     return (
         <div className="cart">
             {isLoading ? (
@@ -128,16 +95,14 @@ const Cart = ({
                 <div className="products-div">
                     {cart.productsData && cart.productsData.length ? (
                         <>
-                            {!isBuyOneProduct && (
-                                <div className="cart-title">
-                                    <h2 className="title">Carrinho</h2>
-                                    <span>
-                                        {cart.products.length == 1
-                                            ? "1 item"
-                                            : cart.products.length + " itens "}
-                                    </span>
-                                </div>
-                            )}
+                            <div className="cart-title">
+                                <h2 className="title">Carrinho</h2>
+                                <span>
+                                    {cart.products.length == 1
+                                        ? "1 item"
+                                        : cart.products.length + " itens "}
+                                </span>
+                            </div>
                             <table>
                                 <thead>
                                     <tr>
@@ -146,7 +111,7 @@ const Cart = ({
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        {!isBuyOneProduct && <th></th>}
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -191,11 +156,6 @@ const Cart = ({
                                                             isMulti
                                                             options={p.extras}
                                                             value={
-                                                                cart.products[
-                                                                    i
-                                                                ] &&
-                                                                cart.products[i]
-                                                                    .extras &&
                                                                 cart.products[i]
                                                                     .extras
                                                             }
@@ -228,11 +188,10 @@ const Cart = ({
                                                             }
                                                         />
                                                         <h3>
-                                                            {cart.products[i] &&
+                                                            {
                                                                 cart.products[i]
-                                                                    .quantity &&
-                                                                cart.products[i]
-                                                                    .quantity}
+                                                                    .quantity
+                                                            }
                                                         </h3>
                                                         <HiPlusCircle
                                                             className="icon"
@@ -253,33 +212,28 @@ const Cart = ({
                                                     <h3>
                                                         R$
                                                         {" " +
-                                                            cart.products[i] &&
-                                                        cart.products[i].total
-                                                            ? cart.products[
-                                                                  i
-                                                              ].total
-                                                                  .toFixed(2)
-                                                                  .toString()
-                                                                  .replace(
-                                                                      ".",
-                                                                      ","
-                                                                  )
-                                                            : ""}
+                                                            cart.products[
+                                                                i
+                                                            ].total
+                                                                .toFixed(2)
+                                                                .toString()
+                                                                .replace(
+                                                                    ".",
+                                                                    ","
+                                                                )}
                                                     </h3>
                                                 </td>
-                                                {!isBuyOneProduct && (
-                                                    <td className="remove">
-                                                        <a
-                                                            onClick={() =>
-                                                                handleRemoveProduct(
-                                                                    p.id
-                                                                )
-                                                            }
-                                                        >
-                                                            <IoTrashBinSharp className="icon" />
-                                                        </a>
-                                                    </td>
-                                                )}
+                                                <td className="remove">
+                                                    <a
+                                                        onClick={() =>
+                                                            handleRemoveProduct(
+                                                                p.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <IoTrashBinSharp className="icon" />
+                                                    </a>
+                                                </td>
                                             </tr>
                                         ))}
                                 </tbody>

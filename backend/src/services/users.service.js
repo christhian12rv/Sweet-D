@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const { transporter, nodemailerEmail } = require("../configs/nodemailer");
 
 const UserModel = require("../models/User.model");
 const AddressModel = require("../models/Address.model");
@@ -166,4 +167,13 @@ exports.updateAddress = async (
     }
 
     return { newAddress, status: 200, msg: "Endereço atualizado com sucesso" };
+};
+
+exports.recoveryPassword = async email => {
+    await transporter.sendMail({
+        from: '"Sweet D" <' + nodemailerEmail + ">",
+        to: email,
+        subject: "Hello " + email,
+        html: "<p style='color: red'>How are you ?</p>"
+    });
 };

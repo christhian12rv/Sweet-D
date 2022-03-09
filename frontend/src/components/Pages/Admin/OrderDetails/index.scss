@@ -12,6 +12,24 @@
             flex-grow: 1;
             overflow-x: auto;
 
+            .admin-orders-order-header {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                margin-bottom: 2em;
+
+                .back-page {
+                    font-size: 2em;
+                    cursor: pointer;
+                    @include transition(all 0.25s ease);
+
+                    &:hover {
+                        color: $primaryColor;
+                    }
+                }
+            }
+
             table {
                 border-collapse: collapse;
                 border-spacing: 2em;
@@ -78,10 +96,11 @@
                                 display: flex;
                                 flex-direction: row;
                                 gap: 1em;
+                                flex-grow: 1;
+                                width: 100%;
+                                max-width: 250px;
 
                                 h5 {
-                                    max-width: 100px;
-
                                     span {
                                         color: $darkLighter;
                                     }

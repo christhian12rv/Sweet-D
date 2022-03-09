@@ -109,7 +109,7 @@ exports.update = [
                             req.session.products.products.find(
                                 p => p.id == product.id
                             );
-                        if (!productExistsInSession)
+                        if (!productExistsInSession && !req.body.isBuyProduct)
                             return Promise.reject(
                                 "Produto não está no carrinho"
                             );

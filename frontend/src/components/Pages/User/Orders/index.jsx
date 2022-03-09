@@ -22,7 +22,6 @@ const Orders = ({ orders, getOrdersByUser, clearState }) => {
             if (response.type == "REDIRECT") navigate(response.to);
         }
     }, []);
-
     return (
         <div className="user-orders">
             <UserSidebar active="orders" />

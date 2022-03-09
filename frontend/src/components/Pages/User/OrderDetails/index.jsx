@@ -23,7 +23,6 @@ const OrderDetails = ({ order, getOrder, clearState }) => {
             if (response.type == "REDIRECT") navigate(response.to);
         }
     }, []);
-
     return (
         <div className="user-orders-order">
             <UserSidebar active="orders" />
@@ -95,8 +94,42 @@ const OrderDetails = ({ order, getOrder, clearState }) => {
                                                                             {array.length -
                                                                                 1 ==
                                                                             i
-                                                                                ? e
+                                                                                ? e +
+                                                                                  " (R$ " +
+                                                                                  parseFloat(
+                                                                                      JSON.parse(
+                                                                                          o.priceExtras
+                                                                                      )[
+                                                                                          i
+                                                                                      ]
+                                                                                  )
+                                                                                      .toFixed(
+                                                                                          2
+                                                                                      )
+                                                                                      .toString()
+                                                                                      .replace(
+                                                                                          ".",
+                                                                                          ","
+                                                                                      ) +
+                                                                                  ")"
                                                                                 : e +
+                                                                                  " (R$ " +
+                                                                                  parseFloat(
+                                                                                      JSON.parse(
+                                                                                          o.priceExtras
+                                                                                      )[
+                                                                                          i
+                                                                                      ]
+                                                                                  )
+                                                                                      .toFixed(
+                                                                                          2
+                                                                                      )
+                                                                                      .toString()
+                                                                                      .replace(
+                                                                                          ".",
+                                                                                          ","
+                                                                                      ) +
+                                                                                  ")" +
                                                                                   ", "}
                                                                         </span>
                                                                     )
