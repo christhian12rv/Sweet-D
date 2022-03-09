@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import store from "./store";
 
+import Title from "./components/Title";
 import Layout from "./components/Pages/Layout";
 import Home from "./components/Pages/Home";
 import ProductsPage from "./components/Pages/ProductsPage";
@@ -43,6 +44,7 @@ function App() {
                         path="/"
                         element={
                             <>
+                                <Title value="Sweet-D" />
                                 <Layout activePage={1}>
                                     <Home />
                                 </Layout>
@@ -53,6 +55,7 @@ function App() {
                         path="/products"
                         element={
                             <>
+                                <Title value="Produtos" />
                                 <Layout activePage={2}>
                                     <ProductsPage />
                                 </Layout>
@@ -63,6 +66,7 @@ function App() {
                         path="/cart"
                         element={
                             <>
+                                <Title value="Carrinho de compras" />
                                 <Layout>
                                     <Cart />
                                 </Layout>
@@ -74,6 +78,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth>
+                                    <Title value="Sweet-D - Comprar produto" />
                                     <Layout isBuyOneProduct={true}>
                                         <Cart isBuyOneProduct={true} />
                                     </Layout>
@@ -85,6 +90,7 @@ function App() {
                         path="/products/:slug"
                         element={
                             <>
+                                <Title value="Sweet-D" />
                                 <Layout>
                                     <Product />
                                 </Layout>
@@ -96,6 +102,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth>
+                                    <Title value="Meus dados" />
                                     <Layout>
                                         <UserSettings />
                                     </Layout>
@@ -108,6 +115,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth>
+                                    <Title value="Pedidos" />
                                     <Layout>
                                         <UserOrders />
                                     </Layout>
@@ -120,6 +128,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth>
+                                    <Title value="Pedido #" param="id" />
                                     <Layout>
                                         <OrderDetails />
                                     </Layout>
@@ -133,6 +142,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title value="Sweet-D Admin - Painel de Controle" />
                                     <AdminLayout
                                         activePage="1"
                                         title={"Painel de Controle"}
@@ -148,6 +158,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title value="Sweet-D Admin - Produtos" />
                                     <AdminLayout
                                         activePage="2"
                                         title="Produtos"
@@ -163,6 +174,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title value="Sweet-D Admin - Adicionar produto" />
                                     <AdminLayout
                                         activePage="3"
                                         title="Adicionar Produto"
@@ -178,6 +190,10 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title
+                                        value="Sweet-D Admin - Editar produto #"
+                                        param="slug"
+                                    />
                                     <AdminLayout
                                         activePage="2"
                                         title="Editar produto #"
@@ -194,6 +210,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title value="Sweet-D Admin - Usuários" />
                                     <AdminLayout
                                         activePage="4"
                                         title="Usuários"
@@ -209,6 +226,7 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title value="Sweet-D Admin - Pedidos" />
                                     <AdminLayout activePage="5" title="Pedidos">
                                         <AdminListOrders />
                                     </AdminLayout>
@@ -221,6 +239,10 @@ function App() {
                         element={
                             <>
                                 <RequiredAuth isAdmin={true}>
+                                    <Title
+                                        value="Sweet-D Admin - Pedido #"
+                                        param="id"
+                                    />
                                     <AdminLayout
                                         activePage="5"
                                         title="Pedido #"
@@ -233,21 +255,51 @@ function App() {
                         }
                     />
 
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
                     <Route
-                        path="/recovery-password"
-                        element={<RecoveryPassword />}
+                        path="/login"
+                        element={
+                            <>
+                                <Title value="Login" />
+                                <Login />
+                            </>
+                        }
                     />
                     <Route
-                        path="/recovery-password/change/:id"
-                        element={<RecoveryPasswordChange />}
+                        path="/register"
+                        element={
+                            <>
+                                <Title value="Registrar" />
+                                <Register />
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/recovery-password"
+                        element={
+                            <>
+                                <Title value="Recuperação de senha" />
+                                <RecoveryPassword />
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/recovery-password/change/:email/:token"
+                        element={
+                            <>
+                                <Title
+                                    value="Recuperação de senha - "
+                                    param="email"
+                                />
+                                <RecoveryPasswordChange />
+                            </>
+                        }
                     />
 
                     <Route
                         path="/error/404"
                         element={
                             <>
+                                <Title value="Erro 404" />
                                 <Layout>
                                     <Error404 />
                                 </Layout>
@@ -258,6 +310,7 @@ function App() {
                         path="/error/500"
                         element={
                             <>
+                                <Title value="Erro 500" />
                                 <Layout>
                                     <Error500 />
                                 </Layout>

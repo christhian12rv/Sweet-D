@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import TelefoneBrasileiroInput from "react-telefone-brasileiro";
 import { BrazilMaskComponent } from "react-brazil";
 import axios from "axios";
+import { MdWarningAmber } from "react-icons/md";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as LoginActions from "../../../../store/actions/login";
 import * as UserSettingsActions from "../../../../store/actions/userSettings";
 
 import InputText from "../../../InputText";
@@ -26,14 +26,16 @@ const Settings = ({
     input,
     update,
     updateInput,
-    updateAddress
+    updateAddress,
+    deleteAccount
 }) => {
     const toastId = React.useRef(null);
     const navigate = useNavigate();
 
-    const [test, setTest] = useState("");
-
-    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsOpenUserSettings, setModalIsOpenUserSettings] =
+        useState(false);
+    const [modalIsOpenDeleteAccount, setModalIsOpenDeleteAccount] =
+        useState(false);
     const [fieldToChange, setFieldToChange] = useState({
         textField: "name",
         text: "Nome"
@@ -107,7 +109,8 @@ const Settings = ({
 
         if (response && response.type)
             if (response.type == "REDIRECT") navigate(response.to);
-            else if (response.type == "SUCCESS") setModalIsOpen(false);
+            else if (response.type == "SUCCESS")
+                setModalIsOpenUserSettings(false);
     };
 
     const handleInputUpdateClick = field => {
@@ -129,7 +132,7 @@ const Settings = ({
             default:
                 break;
         }
-        setModalIsOpen(true);
+        setModalIsOpenUserSettings(true);
     };
 
     const handleAddressUpdate = async e => {
@@ -138,6 +141,14 @@ const Settings = ({
 
         if (response && response.type)
             if (response.type == "REDIRECT") navigate(response.to);
+    };
+
+    const handleDeleteAccount = async e => {
+        e.preventDefault();
+        const response = await deleteAccount(input.delete, id, toastId);
+        if (response && response.type)
+            if (response.type == "SUCCESS") window.location.href = "/";
+            else if (response.type == "REDIRECT") navigate(response.to);
     };
 
     return (
@@ -298,11 +309,19 @@ const Settings = ({
                         <SquareButton submit={true}>Atualizar</SquareButton>
                     </form>
                 </div>
+                <div className="delete-account">
+                    <SquareButton
+                        onClick={() => setModalIsOpenDeleteAccount(true)}
+                    >
+                        <MdWarningAmber className="icon" />
+                        Excluir Conta
+                    </SquareButton>
+                </div>
             </div>
 
             <Modal
-                isOpen={modalIsOpen}
-                setIsOpen={setModalIsOpen}
+                isOpen={modalIsOpenUserSettings}
+                setIsOpen={setModalIsOpenUserSettings}
                 contentLabel="Example"
                 cancelButton={true}
                 confirmButton={true}
@@ -335,6 +354,36 @@ const Settings = ({
                     />
                 </div>
             </Modal>
+
+            <Modal
+                isOpen={modalIsOpenDeleteAccount}
+                setIsOpen={setModalIsOpenDeleteAccount}
+                contentLabel="Example"
+                cancelButton={true}
+                confirmButton={true}
+                confirmButtonText="Excluir"
+                confirmButtonOnClick={handleDeleteAccount}
+                form={true}
+            >
+                <div className="user-settings-field-change-div">
+                    <h3 className="modal-title">Excluir conta</h3>
+                    <p className="modal-text">
+                        Tem certeza que deseja excluir sua conta? Após a
+                        exclusão, todos os dados da sua conta, exceto pedidos,
+                        serão eliminados de nosso servidor. A decisão é
+                        permanente.
+                    </p>
+                    <p className="modal-text">
+                        Digite "excluir" abaixo e clique em Excluir.
+                    </p>
+                    <InputText
+                        className="modal-input"
+                        value={input.delete}
+                        onChange={e => handleInputChange(e, "delete")}
+                        placeholder={"excluir"}
+                    />
+                </div>
+            </Modal>
         </div>
     );
 };
@@ -358,7 +407,8 @@ const mapStateToProps = state => ({
     input: {
         name: state.userSettings.input.name,
         email: state.userSettings.input.email,
-        password: state.userSettings.input.password
+        password: state.userSettings.input.password,
+        delete: state.userSettings.input.delete
     }
 });
 

@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-var path = require("path");
+const path = require("path");
 const cloudinary = require("cloudinary").v2;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;

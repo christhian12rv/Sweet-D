@@ -2,7 +2,9 @@ import types from "../constants";
 
 const INITIAL_STATE = {
     input: {
-        email: ""
+        email: "",
+        password: "",
+        confirmPassword: ""
     }
 };
 

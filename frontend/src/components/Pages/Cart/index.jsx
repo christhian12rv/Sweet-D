@@ -33,7 +33,7 @@ const Cart = ({
     const { slug } = useParams();
 
     const toastId = useRef(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(async () => {
@@ -48,7 +48,7 @@ const Cart = ({
                     }
                 }
             } else {
-                await getOneProductCart(slug);
+                await getOneProductCart(slug, cart.products);
             }
             await getTotalSessionCart();
             setTimeout(() => {

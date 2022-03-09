@@ -26,7 +26,7 @@ const User = db.define("user", {
     isAdmin: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
@@ -38,6 +38,13 @@ User.associate = function (models) {
 
 User.associate = function (models) {
     User.hasMany(models.Address, { foreignKey: "userId", sourceKey: "id" });
+};
+
+User.associate = function (models) {
+    User.hasOne(models.ChangePasswordToken, {
+        foreignKey: "userId",
+        sourceKey: "id"
+    });
 };
 
 module.exports = User;

@@ -17,6 +17,7 @@ const Home = ({ products, getProducts }) => {
     const navigate = useNavigate();
 
     useEffect(async () => {
+        document.body.classList.add("bg-home");
         document.getElementById("navbar").classList.add("home");
 
         const response = await getProducts(
@@ -61,7 +62,10 @@ const Home = ({ products, getProducts }) => {
                     ></ProductsCardContent>
                 )}
 
-                <SquareButton className="view-more-products">
+                <SquareButton
+                    className="view-more-products"
+                    onClick={() => (window.location.href = "/products")}
+                >
                     Ver mais produtos
                 </SquareButton>
             </div>

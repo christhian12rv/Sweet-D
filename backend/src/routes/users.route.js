@@ -23,6 +23,22 @@ router.post(
     usersValidator.recoveryPassword,
     usersController.recoveryPassword
 );
+router.post(
+    "/recovery-password/change/verify",
+    usersValidator.getRecoveryPasswordChange,
+    usersController.getRecoveryPasswordChange
+);
+router.post(
+    "/recovery-password/change",
+    usersValidator.recoveryPasswordChange,
+    usersController.recoveryPasswordChange
+);
+router.post(
+    "/delete",
+    verifyJWT,
+    usersValidator.delete,
+    usersController.delete
+);
 router.put("/", verifyJWT, usersValidator.update, usersController.update);
 
 module.exports = router;

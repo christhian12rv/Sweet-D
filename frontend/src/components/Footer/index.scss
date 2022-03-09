@@ -28,15 +28,19 @@
             font-size: 1.3em;
             cursor: pointer;
 
-            &.facebook-icon:hover {
+            a {
+                color: $dark;
+            }
+
+            &.facebook-icon a:hover {
                 color: #4267b2;
             }
 
-            &.whatsapp-icon:hover {
+            &.whatsapp-icon a:hover {
                 color: #25d366;
             }
 
-            &.instagram-icon:hover {
+            &.instagram-icon a:hover {
                 color: #5851db;
                 background: linear-gradient(
                     45deg,

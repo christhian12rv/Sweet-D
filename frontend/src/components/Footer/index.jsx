@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { BsFacebook } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
@@ -9,22 +10,33 @@ import LogoImg from "../../img/Logo.png";
 import "./index.scss";
 
 const Footer = () => {
+    const navigate = useNavigate();
+
     return (
         <footer className="footer">
             <div id="contato" className="contato">
                 <h2>Formas de contato</h2>
                 <ul>
                     <li className="facebook-icon">
-                        <BsFacebook />
+                        <a href="https://www.facebook.com/" target="_blank">
+                            <BsFacebook />
+                        </a>
                     </li>
                     <li className="whatsapp-icon">
-                        <IoLogoWhatsapp />
+                        <a href="https://wa.me/5538999689339" target="_blank">
+                            <IoLogoWhatsapp />
+                        </a>
                     </li>
                     <li className="instagram-icon">
-                        <AiFillInstagram />
+                        <a
+                            href="https://www.instagram.com/fellypfn/"
+                            target="_blank"
+                        >
+                            <AiFillInstagram />
+                        </a>
                     </li>
                 </ul>
-                <p>+55 (11) 91234-1234</p>
+                <p>+55 (38) 99968-9339</p>
             </div>
             <hr />
             <div className="address">

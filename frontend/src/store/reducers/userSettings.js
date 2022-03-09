@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     input: {
         name: "",
         email: "",
-        password: ""
+        password: "",
+        delete: ""
     }
 };
 

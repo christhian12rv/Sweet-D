@@ -171,11 +171,73 @@ exports.recoveryPassword = async (req, res) => {
 
     try {
         const { email } = req.body;
-        console.log(email);
+
         await usersService.recoveryPassword(email);
+
         res.json({
             status: 200,
+            msg: "Foi enviado um email de solicitação de mudança de senha para seu endereço de email. Verifique também a caixa de spam"
+        });
+    } catch (error) {
+        res.json({
+            status: 500,
             msg: "Houve um erro interno"
+        });
+    }
+};
+
+exports.getRecoveryPasswordChange = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        res.json({
+            status: 200
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno"
+        });
+    }
+};
+
+exports.recoveryPasswordChange = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const { email, token, password } = req.body;
+        await usersService.recoveryPasswordChange(email, token, password);
+        res.json({
+            status: 200,
+            msg: "Senha alterada com sucesso! Faça login para continuar"
+        });
+    } catch (error) {
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno"
+        });
+    }
+};
+
+exports.delete = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const { id } = req.body;
+        await usersService.delete(id);
+        res.json({
+            status: 200,
+            msg: "Sua conta foi excluida com sucesso!"
         });
     } catch (error) {
         console.log(error);

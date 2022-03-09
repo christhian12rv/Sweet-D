@@ -1,11 +1,16 @@
+const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const { transporter, nodemailerEmail } = require("../configs/nodemailer");
+const { v4: uuidv4 } = require("uuid");
+const recoveryPasswordTemplate = require("../templates/recoveryPassword");
 
 const UserModel = require("../models/User.model");
 const AddressModel = require("../models/Address.model");
+const OrderModel = require("../models/Order.model");
+const ChangePasswordTokenModel = require("../models/ChangePasswordToken.model");
 
 exports.findAll = async (
     limit = -1,
@@ -170,10 +175,48 @@ exports.updateAddress = async (
 };
 
 exports.recoveryPassword = async email => {
+    const user = await UserModel.findOne({ where: { email } });
+    await ChangePasswordTokenModel.create({ userId: user.id, token: uuidv4() });
+    const changePasswordToken = await ChangePasswordTokenModel.findOne({
+        where: { userId: user.id }
+    });
     await transporter.sendMail({
         from: '"Sweet D" <' + nodemailerEmail + ">",
         to: email,
-        subject: "Hello " + email,
-        html: "<p style='color: red'>How are you ?</p>"
+        subject: "Olá " + user.name,
+        html: recoveryPasswordTemplate(
+            process.env.SITE_URL,
+            user.name,
+            email,
+            changePasswordToken.token
+        ),
+        attachments: [
+            {
+                filename: "Logo.png",
+                path: path.join(__dirname, "../public/img/Logo.png"),
+                cid: "unique@logo"
+            }
+        ]
     });
+};
+
+exports.recoveryPasswordChange = async (email, token, password) => {
+    const hashPassword = bcrypt.hashSync(password, 10);
+    await UserModel.update(
+        {
+            password: hashPassword
+        },
+        { where: { email } }
+    );
+    const user = await UserModel.findOne({ where: { email } });
+    console.log(user);
+    await ChangePasswordTokenModel.destroy({
+        where: { userId: user.id, token }
+    });
+};
+
+exports.delete = async id => {
+    await AddressModel.destroy({ where: { userId: id } });
+    await OrderModel.update({ userId: null }, { where: { userId: id } });
+    await UserModel.destroy({ where: { id } });
 };

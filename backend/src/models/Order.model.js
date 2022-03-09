@@ -12,7 +12,7 @@ const Order = db.define("order", {
     },
     userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: "users",
             key: "id"

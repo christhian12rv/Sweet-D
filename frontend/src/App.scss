@@ -16,9 +16,6 @@
 }
 
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-        url("./img/Home/kitchen.jpg") fixed center no-repeat;
-    background-size: cover;
     box-sizing: border-box;
     box-sizing: border-box;
     height: 100vh;
@@ -32,6 +29,12 @@ body {
             "Helvetica Neue", sans-serif !important;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    &.bg-home {
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+            url("./img/Home/kitchen.jpg") fixed center no-repeat;
+        background-size: cover;
     }
 }
 

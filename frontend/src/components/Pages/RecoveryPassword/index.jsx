@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import * as RecoveryPasswordActions from "../../../store/actions/recoveryPasswor
 import Logo from "../../Logo";
 import InputText from "../../InputText";
 import RoundedButton from "../../Buttons/RoundedButton";
+import ModalLoading from "../../ModalLoading";
 
 import "./index.scss";
 
@@ -17,21 +18,25 @@ const RecoveryPassword = ({ email, updateInput, sendEmail }) => {
     const toastId = useRef(null);
     const navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleInputChange = (e, stateProp) => {
         updateInput(e.target.value, stateProp);
     };
 
     const handleSendEMail = async () => {
+        setIsLoading(true);
         const response = await sendEmail(email, toastId);
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);
-            else if (response.type == "LOGIN_SUCCESS") navigate("/");
         }
+        setIsLoading(false);
     };
 
     return (
         <div className="recovery-password">
             <div className="content">
+                <ModalLoading modalShow={isLoading} />
                 <img className="donut-img" src={Donut} />
                 <div className="recovery-password-content-div">
                     <Logo />

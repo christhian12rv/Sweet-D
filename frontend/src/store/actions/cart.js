@@ -201,15 +201,40 @@ export function getProductsDataCart(productsCart) {
     };
 }
 
-export function getOneProductCart(slug) {
+export function getOneProductCart(slug, productsState) {
     return async dispatch => {
         const response = await axios.get("/products/" + slug);
 
         const data = response.data;
         data.product.photos = JSON.parse(data.product.photos);
+        let extras, priceExtras, priceExtrasTotal, quantity, total;
         if (data.product.extras) {
             data.product.extras = JSON.parse(data.product.extras);
             data.product.priceExtras = JSON.parse(data.product.priceExtras);
+
+            if (productsState[0]) {
+                extras = productsState[0].extras;
+                priceExtras = [];
+                priceExtrasTotal = 0;
+                productsState[0].extras.forEach((e, i) => {
+                    const eFindIndex = data.product.extras.indexOf(e.value);
+                    console.log(data.product);
+                    console.log(e.value);
+                    console.log(eFindIndex);
+                    priceExtras.push(data.product.priceExtras[eFindIndex]);
+                    priceExtrasTotal += parseFloat(
+                        data.product.priceExtras[eFindIndex]
+                    );
+                });
+                quantity = productsState[0].quantity;
+                total =
+                    data.product.price * quantity + priceExtrasTotal * quantity;
+            } else {
+                extras = [];
+                priceExtras = [];
+                quantity = 1;
+                total = data.product.price;
+            }
             data.product.extras = data.product.extras.map((e, i) => {
                 e = {
                     value: e,
@@ -233,14 +258,14 @@ export function getOneProductCart(slug) {
                         products: [
                             {
                                 id: data.product.id,
-                                extras: [],
-                                priceExtras: [],
-                                quantity: 1,
-                                total: data.product.price
+                                extras,
+                                priceExtras,
+                                quantity,
+                                total
                             }
                         ],
                         productsData: [data.product],
-                        total: data.product.price
+                        total
                     }
                 });
                 break;

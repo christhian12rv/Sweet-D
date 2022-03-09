@@ -114,6 +114,47 @@ export function updateAddress(userId, address, toastId) {
     };
 }
 
+export function deleteAccount(deleteInput, id, toastId) {
+    return async dispatch => {
+        const delay = toast.isActive(toastId.current) ? 1000 : 0;
+        toast.dismiss();
+
+        if (deleteInput !== "excluir")
+            return (toastId.current = toast.error("Valor inválido", {
+                delay: delay
+            }));
+
+        const token = localStorage.getItem("user_token");
+        const response = await axios.post("/users/delete", { id, token });
+        const data = response.data;
+        console.log(data);
+
+        switch (data.status) {
+            case 200:
+                toastId.current = toast.success(data.msg, { delay: delay });
+                dispatch({
+                    type: types.CLEAR_STATE_USER_SETTINGS
+                });
+                return {
+                    type: "SUCCESS"
+                };
+            case 400:
+                data.errors.forEach((error, i) => {
+                    toastId.current = toast.error(error.msg, {
+                        delay: delay,
+                        autoClose: 5000 * (i + 1)
+                    });
+                });
+                break;
+            default:
+                return {
+                    type: "REDIRECT",
+                    to: "/error/500"
+                };
+        }
+    };
+}
+
 export function updateInput(value, stateProp, address = false) {
     if (address)
         return {

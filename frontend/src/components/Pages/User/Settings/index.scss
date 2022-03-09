@@ -156,6 +156,38 @@
                 width: fit-content;
             }
         }
+
+        .delete-account {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 3em;
+
+            .square-button {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 0.3em;
+                width: fit-content;
+                padding-left: 2em;
+                padding-right: 2em;
+                @include bkg-img-transition(
+                    linear-gradient(
+                        45deg,
+                        $secondaryColor,
+                        $secondaryColorDark
+                    ),
+                    linear-gradient(
+                            45deg,
+                            $secondaryColorDark,
+                            $secondaryColorDarker
+                        )
+                        !important
+                );
+            }
+        }
     }
 }
 

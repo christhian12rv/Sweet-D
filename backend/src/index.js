@@ -3,6 +3,7 @@ const app = express();
 const PORT = 9090;
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
+const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequelize = require("./db");
@@ -27,6 +28,7 @@ app.use(
         cookie: { maxAge: 3 * 1000 * 60 * 60 * 24 }
     })
 );
+app.use(express.static(path.join(__dirname, "public")));
 
 sequelize
     .sync()
@@ -40,6 +42,8 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+require("./schedules/passwordChange")();
 
 app.use("/", indexRoute);
 app.use("/users", usersRoute);

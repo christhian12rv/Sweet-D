@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const axios = require("axios");
 
 const UserModel = require("../../models/User.model");
+const ChangePasswordTokenModel = require("../../models/ChangePasswordToken.model");
 
 const statesObj = {
     AC: "Acre",
@@ -401,6 +402,192 @@ exports.recoveryPassword = [
                         return Promise.reject(
                             "O Email informado não está cadastrado"
                         );
+                    else {
+                        return ChangePasswordTokenModel.findOne({
+                            where: { userId: user.id }
+                        })
+                            .catch(erro => {
+                                return Promise.reject(
+                                    "Ocorreu um erro interno"
+                                );
+                            })
+                            .then(changePasswordToken => {
+                                if (changePasswordToken)
+                                    return Promise.reject(
+                                        "Já foi enviado um email de mudança de senha para você. Você só poderá solicitar outra troca de senha após 24 horas da última vez que você solicitou. Caso ocorra algum problema, entre em contato conosco."
+                                    );
+                            });
+                    }
+                });
+        })
+];
+
+exports.getRecoveryPasswordChange = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Email é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .isEmail()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .custom(value => {
+            return UserModel.findOne({ where: { email: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(user => {
+                    if (!user)
+                        return Promise.reject(
+                            "O Email informado não está cadastrado"
+                        );
+                });
+        }),
+
+    body("token")
+        .trim()
+        .notEmpty()
+        .withMessage("O Token informado é inválido")
+        .bail()
+        .isString()
+        .withMessage("O Token informado é inválido")
+        .bail()
+        .bail()
+        .custom((value, { req }) => {
+            return ChangePasswordTokenModel.findOne({ where: { token: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(tokenRecord => {
+                    if (!tokenRecord)
+                        return Promise.reject("O Token informado é inválido");
+                    else {
+                        return UserModel.findOne({
+                            where: { id: tokenRecord.userId }
+                        })
+                            .catch(erro => {
+                                return Promise.reject(
+                                    "Ocorreu um erro interno"
+                                );
+                            })
+                            .then(user => {
+                                if (!user)
+                                    return Promise.reject(
+                                        "Esse email não está relacionado a esse token"
+                                    );
+                            });
+                    }
+                });
+        })
+];
+
+exports.recoveryPasswordChange = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Email é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .isEmail()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .custom(value => {
+            return UserModel.findOne({ where: { email: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(user => {
+                    if (!user)
+                        return Promise.reject(
+                            "O Email informado não está cadastrado"
+                        );
+                });
+        }),
+
+    body("token")
+        .trim()
+        .notEmpty()
+        .withMessage("O Token informado é inválido")
+        .bail()
+        .isString()
+        .withMessage("O Token informado é inválido")
+        .bail()
+        .bail()
+        .custom((value, { req }) => {
+            return ChangePasswordTokenModel.findOne({ where: { token: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(tokenRecord => {
+                    if (!tokenRecord)
+                        return Promise.reject("O Token informado é inválido");
+                    else {
+                        return UserModel.findOne({
+                            where: { id: tokenRecord.userId }
+                        })
+                            .catch(erro => {
+                                return Promise.reject(
+                                    "Ocorreu um erro interno"
+                                );
+                            })
+                            .then(user => {
+                                if (!user)
+                                    return Promise.reject(
+                                        "Esse email não está relacionado a esse token"
+                                    );
+                            });
+                    }
+                });
+        }),
+    body("password")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Senha é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("A Senha informada é inválida")
+        .bail()
+        .isLength({ min: 8 })
+        .withMessage("A Senha deve conter no mínimo 8 caracteres"),
+
+    body("confirmPassword")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Confirmar senha é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("A Senha do campo Confirmar Senha informada é inválida")
+        .bail()
+        .isLength({ min: 8 })
+        .withMessage("A Senha deve conter no mínimo 8 caracteres")
+        .bail()
+        .custom((value, { req }) => {
+            if (value !== req.body.password)
+                throw new Error("As senhas não correspondem");
+
+            return true;
+        })
+];
+
+exports.delete = [
+    body("id")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Id é obrigatório")
+        .bail()
+        .custom(value => {
+            return UserModel.findOne({ where: { id: value } })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(user => {
+                    if (!user)
+                        return Promise.reject("O Id informado é inválido");
                 });
         })
 ];

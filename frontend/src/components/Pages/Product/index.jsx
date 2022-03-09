@@ -24,7 +24,8 @@ const Product = ({
     addToCart,
     extrasInput,
     quantityInput,
-    updateInputProduct
+    updateInputProduct,
+    addToCartBuyOneProduct
 }) => {
     const { slug } = useParams();
     const navigate = useNavigate();
@@ -56,6 +57,10 @@ const Product = ({
         }
     }, []);
 
+    useEffect(() => {
+        document.title = "Sweet D - " + product.name;
+    }, [product]);
+
     const handleAddToCart = async () => {
         const newExtras = extrasInput.map(e => e.value);
         const response = await addToCart(
@@ -81,6 +86,19 @@ const Product = ({
             if (newValue > 1) newValue -= 1;
         }
         await updateInputProduct(newValue, "quantity");
+    };
+
+    const handleBuy = async () => {
+        const response = await addToCartBuyOneProduct(
+            product.id,
+            extrasInput,
+            product.priceExtras,
+            quantityInput,
+            product.price
+        );
+        if (response && response.type)
+            if (response.type == "REDIRECT") navigate(response.to);
+        navigate("/cart/" + slug);
     };
 
     if (product && product.extras)
@@ -186,7 +204,9 @@ const Product = ({
                                         <SquareButton onClick={handleAddToCart}>
                                             Adicionar ao Carrinho
                                         </SquareButton>
-                                        <SquareButton>Comprar</SquareButton>
+                                        <SquareButton onClick={handleBuy}>
+                                            Comprar
+                                        </SquareButton>
                                     </>
                                 ) : (
                                     <button className="zero-storage-button">
