@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export function getProducts(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
-            "/products?limit=" +
+            "/api/products?limit=" +
                 limit +
                 "&page=" +
                 page +

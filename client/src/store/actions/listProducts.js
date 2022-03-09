@@ -11,7 +11,7 @@ export function getProducts(
 ) {
     return async dispatch => {
         const response = await axios.get(
-            "/products?limit=" +
+            "/api/products?limit=" +
                 limit +
                 "&page=" +
                 page +

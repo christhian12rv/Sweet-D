@@ -158,7 +158,7 @@ export function getProductsDataCart(productsCart) {
         productsCart = productsCart.map(p => p.id);
 
         const response = await axios.get(
-            "/cart/data?productsIds=" + JSON.stringify(productsCart)
+            "/api/cart/data?productsIds=" + JSON.stringify(productsCart)
         );
 
         let data = response.data;

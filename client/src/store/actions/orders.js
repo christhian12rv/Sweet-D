@@ -63,7 +63,7 @@ export function createOrder(products, toastId) {
 export function getOrders(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
-            "/orders?limit=" +
+            "/api/orders?limit=" +
                 limit +
                 "&page=" +
                 page +

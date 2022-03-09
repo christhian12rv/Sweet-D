@@ -20,7 +20,7 @@ const cartRoute = require("./routes/cart.route");
 
 app.use(favicon(__dirname + "/build/favicon.ico"));
 app.use(express.static(__dirname));
-app.use(cors("http://localhost:3000"));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(

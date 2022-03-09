@@ -39,7 +39,7 @@ export function sendEmail(email, toastId) {
 export function getCheckValidateToken(email, token, toastId) {
     return async () => {
         const response = await axios.post(
-            "/users/recovery-password/change/verify",
+            "/api/users/recovery-password/change/verify",
             {
                 email,
                 token

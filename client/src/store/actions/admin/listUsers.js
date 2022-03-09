@@ -4,7 +4,7 @@ import axios from "axios";
 export function getUsers(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
-            "/users?limit=" +
+            "/api/users?limit=" +
                 limit +
                 "&page=" +
                 page +
