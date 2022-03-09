@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 9090;
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 const path = require("path");
+const favicon = require("express-favicon");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequelize = require("./db");
@@ -17,6 +18,8 @@ const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
 const cartRoute = require("./routes/cart.route");
 
+app.use(favicon(__dirname + "/build/favicon.ico"));
+app.use(express.static(__dirname));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(fileUpload());
@@ -51,6 +54,9 @@ app.use("/users", usersRoute);
 app.use("/products", productsRoute);
 app.use("/orders", ordersRoute);
 app.use("/cart", cartRoute);
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
