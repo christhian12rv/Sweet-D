@@ -1,0 +1,102 @@
+@import "../../../sassStyles/mixins";
+@import "../../../sassStyles/variables";
+
+.recovery-password {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8em;
+    background: url("../../../img/Login/background.jpg") no-repeat center;
+    background-size: cover;
+    min-height: 100vh;
+
+    .content {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-radius: 1em;
+        overflow: hidden;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+        width: 50%;
+        height: fit-content;
+
+        .donut-img {
+            position: absolute;
+            transform: rotateZ(180deg);
+            top: -50px;
+            right: -50px;
+            z-index: 999;
+        }
+
+        .recovery-password-content-div {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: $light;
+            gap: 1em;
+            padding: 4em 4em 3em 4em;
+            flex-grow: 1;
+
+            .recovery-password-title {
+                margin: 0.5em 0;
+            }
+
+            .email-div {
+                width: 100%;
+
+                h5 {
+                    flex-grow: 1;
+                    color: $secondaryColor;
+                    font-size: 0.9em;
+                }
+
+                .input-div {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    border-bottom: 2px solid $primaryColor;
+                    @include transition(all 0.25s ease);
+
+                    &:hover,
+                    &:focus,
+                    &:active {
+                        border-color: $primaryColorDark;
+                    }
+
+                    .icon {
+                        color: $primaryColor;
+                        font-size: 1.2em;
+                    }
+
+                    .input-text {
+                        border: none;
+                        border-radius: 0;
+                        padding-left: 0.5em;
+                        width: 100%;
+                        font-size: 0.85em;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include breakpoint-max(desktop) {
+    .recovery-password {
+        padding: 7em;
+
+        .content {
+            width: 100%;
+        }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .recovery-password {
+        padding: 1.5em;
+    }
+}

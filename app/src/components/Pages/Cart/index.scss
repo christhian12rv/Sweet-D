@@ -1,0 +1,285 @@
+@import "../../../sassStyles/mixins";
+@import "../../../sassStyles/variables";
+
+.cart {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .modal-box {
+        width: 100%;
+        height: 300px;
+        background-color: $light;
+    }
+
+    .products-div {
+        flex-grow: 1;
+        padding: 3em;
+        overflow-x: auto;
+
+        .cart-title {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 2em;
+
+            .title {
+                align-self: flex-end;
+                font-size: 1.8em;
+                flex-grow: 1;
+            }
+
+            span {
+                align-self: flex-end;
+                color: $darkLighter;
+                font-size: 1.1em;
+            }
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+
+            tbody {
+                tr {
+                    border-bottom: 1px solid $hrLine;
+                    border-top: 1px solid $hrLine;
+
+                    td {
+                        padding: 1em;
+                        &:not(:first-child) {
+                            text-align: center;
+                        }
+
+                        &.product {
+                            h4 {
+                                margin-top: 0.5em;
+                                font-size: 1.1em;
+                            }
+
+                            img {
+                                width: 150px;
+                                height: 100px;
+                                object-fit: cover;
+                                object-position: center;
+                                border-radius: 0.3em;
+                                cursor: pointer;
+                            }
+                        }
+
+                        &.name {
+                            padding-left: 0 !important;
+                            text-align: left !important;
+
+                            .box {
+                                display: flex;
+                                flex-direction: column;
+                                cursor: pointer;
+                                @include transition(all 0.25s ease);
+
+                                &:hover {
+                                    color: $primaryColor !important;
+                                }
+
+                                h4 {
+                                    font-size: 1.1em;
+                                }
+
+                                span {
+                                    color: $darkLighter;
+                                    font-size: 0.9em;
+                                }
+                            }
+                        }
+
+                        &.extra {
+                            max-width: 200px;
+                            .box {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 0.5em;
+                                color: $darkLighter;
+                                margin: 0.3em 0;
+                                font-size: 0.9em;
+
+                                .extras-select {
+                                    max-width: 250px;
+                                }
+                            }
+                        }
+
+                        &.quantity {
+                            .quantity-div {
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 1em;
+
+                                .icon {
+                                    color: $primaryColor;
+                                    font-size: 1.1em;
+                                    cursor: pointer;
+                                    transition: all 0.25s ease;
+
+                                    &:hover {
+                                        color: $primaryColorDark;
+                                    }
+                                }
+                            }
+                        }
+
+                        &.remove {
+                            a {
+                                color: $secondaryColor;
+                                font-size: 1.1em;
+                                text-decoration: none;
+                                cursor: pointer;
+                                transition: all 0.25s ease;
+
+                                &:hover {
+                                    color: $secondaryColorDark;
+                                }
+
+                                .icon {
+                                    margin-right: 5px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .product-img {
+                width: 140px;
+            }
+        }
+
+        .empty-cart {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            align-items: center;
+            justify-content: center;
+
+            .icon {
+                color: $darkLighter;
+                font-size: 10em;
+            }
+
+            h3 {
+                font-size: 1.3em;
+            }
+
+            h4 {
+                color: $darkLighter;
+            }
+
+            .square-button {
+                width: fit-content;
+                padding-left: 2em;
+                padding-right: 2em;
+            }
+        }
+    }
+
+    .checkout-div {
+        position: sticky;
+        position: -webkit-sticky;
+        height: 100vh;
+        top: 0;
+        flex-grow: 1;
+        background-color: $primaryColorLight;
+        padding: 3em 5em 5em 5em;
+
+        .content {
+            margin: auto;
+            max-width: 300px;
+        }
+
+        hr {
+            border: 2px solid #000;
+            margin-bottom: 3em;
+        }
+
+        h3 {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            font-size: 1em;
+
+            span {
+                &.lighter {
+                    flex-grow: 1;
+                    color: $darkLighter;
+                    letter-spacing: 1px;
+                }
+
+                &.price {
+                    font-size: 1.1em;
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .rounded-button {
+            margin-top: 3em;
+        }
+
+        .address-box {
+            display: flex;
+            flex-direction: column;
+            margin-top: 3em;
+
+            h3 {
+                font-size: 1.2em;
+                margin-bottom: 0.5em;
+            }
+
+            .box {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                column-gap: 0.35em;
+
+                .title {
+                    flex-grow: 1;
+                    font-weight: bold;
+                }
+            }
+
+            .change-address {
+                align-self: end;
+                width: fit-content;
+                color: #0000ee;
+                font-weight: bold;
+                cursor: pointer;
+
+                &:hover {
+                    color: #000085;
+                }
+            }
+
+            .add-address {
+                width: fit-content;
+                color: #0000ee;
+                font-weight: bold;
+                cursor: pointer;
+
+                &:hover {
+                    color: #000085;
+                }
+            }
+        }
+    }
+}
+
+@include breakpoint-max(desktop) {
+    .cart {
+        .checkout-div {
+            height: 100% !important;
+        }
+    }
+}

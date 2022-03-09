@@ -1,0 +1,16 @@
+@import "../../../../sassStyles/variables";
+
+.first-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    padding: 5em;
+    text-align: center;
+    background: url("../../../../img/Home/banner-bg.webp") center;
+    background-size: cover;
+
+    h1 {
+        color: $dark;
+    }
+}

@@ -1,0 +1,19 @@
+@import "../../../sassStyles/mixins";
+@import "../../../sassStyles/variables";
+
+.modal-confirm-button {
+    color: $light;
+    border: none;
+    border-radius: 0.2em;
+    overflow: hidden;
+    text-decoration: none;
+    padding: 0.5em 2em;
+    width: fit-content;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    @include bkg-img-transition(
+        linear-gradient(45deg, $green, $greenDark),
+        linear-gradient(45deg, $greenDark, $greenDarker)
+    );
+}

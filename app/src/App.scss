@@ -1,0 +1,75 @@
+@import "./sassStyles/variables";
+
+@font-face {
+    font-family: "AndadaPro";
+    src: url("./fonts/AndadaPro-Regular.ttf");
+}
+
+:root {
+    --toastify-z-index: 9999999999;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100vh;
+    min-height: 100%;
+    width: 100vw !important;
+    overflow-x: hidden;
+
+    * {
+        font-family: AndadaPro, BlinkMacSystemFont, "Segoe UI", "Roboto",
+            "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+            "Helvetica Neue", sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    &.bg-home {
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+            url("./img/Home/kitchen.jpg") fixed center no-repeat;
+        background-size: cover;
+    }
+}
+
+#root {
+    height: 100%;
+}
+
+.currency-input {
+    color: $dark;
+    background-color: transparent;
+    border: 2px solid $primaryColor;
+    border-radius: 0.25em;
+    padding: 0.75em 1em;
+    text-decoration: none;
+    outline: none;
+    transition: all 0.25s ease;
+
+    &:hover,
+    &:focus {
+        border-color: $primaryColorDark;
+    }
+}
+
+.brazil-mask-component {
+    color: $dark;
+    background-color: transparent;
+    border: 2px solid $primaryColor;
+    border-radius: 0.25em;
+    padding: 0.5em 0.8em;
+    text-decoration: none;
+    outline: none;
+    transition: all 0.25s ease;
+
+    &:hover,
+    &:focus {
+        border-color: $primaryColorDark;
+    }
+}

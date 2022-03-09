@@ -1,0 +1,40 @@
+@import "../../../../sassStyles/mixins";
+
+.header {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    .button-div {
+        padding: 0 2em;
+        width: 50%;
+    }
+
+    transition: all 2s ease;
+}
+
+@include breakpoint(tablet) {
+    .header {
+        height: 23em;
+
+        .button-div {
+            width: 40%;
+        }
+    }
+}
+
+@include breakpoint(desktop) {
+    .header {
+        .button-div {
+            width: 20%;
+        }
+    }
+}
+
+@include breakpoint-max(tablet) {
+    .header {
+        padding-bottom: 2em;
+    }
+}

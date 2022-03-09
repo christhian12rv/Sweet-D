@@ -1,0 +1,22 @@
+@import "../../sassStyles/variables";
+.logo-ul {
+    text-decoration: none;
+    list-style-type: none;
+    cursor: pointer;
+
+    .logo-li {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5em;
+        align-items: center;
+        color: $primaryColor !important;
+        font-size: 1em;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        .logo {
+            width: 70px;
+            height: 70px;
+        }
+    }
+}
