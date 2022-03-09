@@ -17,6 +17,10 @@
     ],
     "author": "Christhian Rezende Vieira",
     "license": "ISC",
+    "engines": {
+        "node": "12.x",
+        "npm": "6.x"
+    },
     "dependencies": {
         "axios": "^0.26.0",
         "bcrypt": "^5.0.1",
