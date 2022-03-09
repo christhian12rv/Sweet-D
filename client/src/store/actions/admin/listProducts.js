@@ -44,7 +44,7 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
 export function updateActive(id, active, toastId) {
     return async () => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.put("/products/active", {
+        const response = await axios.put("/api/products/active", {
             id,
             active,
             token

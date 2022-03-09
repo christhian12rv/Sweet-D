@@ -47,7 +47,7 @@ export function getProducts(
 
 export function getProductBySlug(slug) {
     return async dispatch => {
-        const response = await axios.get("/products/" + slug);
+        const response = await axios.get("/api/products/" + slug);
 
         const data = response.data;
 

@@ -9,7 +9,7 @@ export function createOrder(products, toastId) {
             p.extras = p.extras.map(e => e.value);
             return p;
         });
-        let response = await axios.post("/orders", {
+        let response = await axios.post("/api/orders", {
             products,
             token
         });
@@ -22,7 +22,7 @@ export function createOrder(products, toastId) {
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay });
-                response = await axios.post("/cart/clear");
+                response = await axios.post("/api/cart/clear");
                 data = response.data;
                 switch (data.status) {
                     case 200:
@@ -103,7 +103,7 @@ export function getOrders(limit, page, columnSort, directionSort, search) {
 export function getOrdersByUser() {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/orders/user", { token });
+        const response = await axios.post("/api/orders/user", { token });
 
         const data = response.data;
         switch (data.status) {
@@ -131,7 +131,7 @@ export function getOrdersByUser() {
 
 export function getOrder(id) {
     return async dispatch => {
-        const response = await axios.get("/orders/" + id);
+        const response = await axios.get("/api/orders/" + id);
 
         const data = response.data;
         switch (data.status) {
@@ -155,7 +155,7 @@ export function getOrder(id) {
 export function updateFinish(id, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.put("/orders", { id, token });
+        const response = await axios.put("/api/orders", { id, token });
 
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();

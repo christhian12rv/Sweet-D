@@ -34,7 +34,7 @@ export function editProduct(
         }
         dataForm.append("token", token);
 
-        const response = await axios.put("/products/", dataForm);
+        const response = await axios.put("/api/products/", dataForm);
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();
 
@@ -80,7 +80,7 @@ export function editProduct(
 
 export function getProduct(slug, toastId) {
     return async dispatch => {
-        const response = await axios.get("/products/" + slug);
+        const response = await axios.get("/api/products/" + slug);
 
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();

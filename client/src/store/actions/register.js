@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export function register(name, email, password, confirmPassword, toastId) {
     return async () => {
-        const response = await axios.post("/users", {
+        const response = await axios.post("/api/users", {
             name,
             email,
             password,

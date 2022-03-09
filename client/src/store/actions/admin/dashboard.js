@@ -3,7 +3,7 @@ import axios from "axios";
 
 export function getTotal() {
     return async dispatch => {
-        const response = await axios.get("/total");
+        const response = await axios.get("/api/total");
         console.log(response);
 
         const data = response.data;

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export function sendEmail(email, toastId) {
     return async () => {
-        const response = await axios.post("/users/recovery-password", {
+        const response = await axios.post("/api/users/recovery-password", {
             email
         });
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
@@ -80,12 +80,15 @@ export function changePassword(
     toastId
 ) {
     return async () => {
-        const response = await axios.post("/users/recovery-password/change", {
-            email,
-            token,
-            password,
-            confirmPassword
-        });
+        const response = await axios.post(
+            "/api/users/recovery-password/change",
+            {
+                email,
+                token,
+                password,
+                confirmPassword
+            }
+        );
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();
 

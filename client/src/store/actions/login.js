@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export function login(email, password, toastId) {
     return async dispatch => {
-        const response = await axios.post("/users/login", {
+        const response = await axios.post("/api/users/login", {
             email,
             password
         });
@@ -41,7 +41,7 @@ export function login(email, password, toastId) {
 export function logout() {
     return async () => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/users/logout", {
+        const response = await axios.post("/api/users/logout", {
             token
         });
         const data = response.data;
@@ -70,7 +70,7 @@ export function logout() {
 export function getUserAuth() {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/users/get-user-auth", {
+        const response = await axios.post("/api/users/get-user-auth", {
             token
         });
 

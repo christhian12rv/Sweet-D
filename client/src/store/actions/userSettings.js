@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export function update(id, field, password, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.put("/users", {
+        const response = await axios.put("/api/users", {
             userId: id,
             password,
             data: {
@@ -57,7 +57,7 @@ export function update(id, field, password, toastId) {
 export function updateAddress(userId, address, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/users/address", {
+        const response = await axios.post("/api/users/address", {
             userId,
             address: address.address,
             number: address.number,
@@ -125,7 +125,7 @@ export function deleteAccount(deleteInput, id, toastId) {
             }));
 
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/users/delete", { id, token });
+        const response = await axios.post("/api/users/delete", { id, token });
         const data = response.data;
         console.log(data);
 
