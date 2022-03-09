@@ -49,11 +49,11 @@ cloudinary.config({
 
 require("./schedules/passwordChange")();
 
-app.use("/", indexRoute);
-app.use("/users", usersRoute);
-app.use("/products", productsRoute);
-app.use("/orders", ordersRoute);
-app.use("/cart", cartRoute);
+app.use("/api", indexRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/products", productsRoute);
+app.use("/api/orders", ordersRoute);
+app.use("/api/cart", cartRoute);
 
 app.get("/*", function (req, res) {
     res.sendFile(path.join(__dirname, "../client/build/index.html"));
