@@ -1,7 +1,11 @@
 {
+    "root": "client/build/",
+    "routes": {
+        "/**": "index.html"
+    },
     "proxies": {
         "/api/": {
-            "origin": "http://sweet-d.herokuapp.com/api/"
+            "origin": "https://sweet-d.herokuapp.com/"
         }
     }
 }
