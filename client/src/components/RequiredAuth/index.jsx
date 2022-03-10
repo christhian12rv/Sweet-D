@@ -11,7 +11,7 @@ const RequiredAuth = ({ children, isAdmin }) => {
 
     const getUserAuth = async () => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/apiusers/get-user-auth", {
+        const response = await axios.post("/api/users/get-user-auth", {
             token
         });
         const data = response.data;
