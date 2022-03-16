@@ -146,7 +146,11 @@ const ListOrders = ({
                         .toFixed(2)
                         .toString()
                         .replace(".", ","),
-                user: order.user.name,
+                user: order.user ? (
+                    order.user.name
+                ) : (
+                    <span className="user-anonym">Anônimo</span>
+                ),
                 createdAt: (
                     <Moment
                         format="DD/MM/YYYY - HH:mm:ss"

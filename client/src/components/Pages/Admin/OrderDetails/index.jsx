@@ -156,11 +156,27 @@ const OrderDetails = ({ order, getOrder, clearState }) => {
                                     <div className="user-box">
                                         <div className="box">
                                             <p className="title">Email</p>
-                                            <p>{order.user.email}</p>
+                                            <p>
+                                                {order.user ? (
+                                                    order.user.email
+                                                ) : (
+                                                    <span className="user-anonym">
+                                                        Anônimo
+                                                    </span>
+                                                )}
+                                            </p>
                                         </div>
                                         <div className="box">
                                             <p className="title">Nome</p>
-                                            <p>{order.user.name}</p>
+                                            <p>
+                                                {order.user ? (
+                                                    order.user.name
+                                                ) : (
+                                                    <span className="user-anonym">
+                                                        Anônimo
+                                                    </span>
+                                                )}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

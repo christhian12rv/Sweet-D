@@ -47,7 +47,6 @@
         border-radius: 0.3em;
         color: $darkLighter;
         cursor: pointer;
-        overflow: hidden;
         @include transition(all 0.25s ease);
 
         &.dashboard {
@@ -97,14 +96,10 @@
     }
 }
 
-@include breakpoint(tablet) {
-    .admin-sidebar {
-        min-width: 275px;
-    }
-}
-
 @include breakpoint(desktop) {
     .admin-sidebar {
+        min-width: 275px;
+
         &.closed {
             align-items: center;
             padding: 1em 0.5em;

@@ -17,7 +17,8 @@ exports.findAll = async (
     columnSort = "id",
     directionSort = "asc",
     search = "",
-    priceFilter
+    priceFilter,
+    productNotFilterSlug
 ) => {
     const options = {
         ...(columnSort &&
@@ -36,6 +37,11 @@ exports.findAll = async (
             ...(priceFilter && {
                 price: {
                     [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
+                }
+            }),
+            ...(productNotFilterSlug && {
+                slug: {
+                    [Op.not]: productNotFilterSlug
                 }
             })
         }
@@ -63,7 +69,7 @@ exports.create = async (
     priceExtras,
     photos
 ) => {
-    if (!photos.length || photos.length < 1) {
+    if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
         let arrayAuxPhotos = [];
         arrayAuxPhotos.push(photos);
         photos = arrayAuxPhotos;
@@ -119,12 +125,18 @@ exports.update = async (
     filesPhotos
 ) => {
     let arrayAuxPhotos = [];
-    if (!bodyPhotos.length || bodyPhotos.length < 1) {
+    if (
+        (!bodyPhotos.length || bodyPhotos.length < 1) &&
+        !Array.isArray(bodyPhotos)
+    ) {
         arrayAuxPhotos.push(bodyPhotos);
         bodyPhotos = arrayAuxPhotos;
     }
 
-    if (!filesPhotos.length || filesPhotos.length < 1) {
+    if (
+        (!filesPhotos.length || filesPhotos.length < 1) &&
+        !Array.isArray(filesPhotos)
+    ) {
         arrayAuxPhotos.push(filesPhotos);
         filesPhotos = arrayAuxPhotos;
     }

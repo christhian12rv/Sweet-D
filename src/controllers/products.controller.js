@@ -22,8 +22,15 @@ exports.findBySlug = async (req, res) => {
 
 exports.findAll = async (req, res) => {
     try {
-        let { limit, page, columnSort, directionSort, search, priceFilter } =
-            req.query;
+        let {
+            limit,
+            page,
+            columnSort,
+            directionSort,
+            search,
+            priceFilter,
+            productNotFilterSlug
+        } = req.query;
 
         priceFilter =
             priceFilter && priceFilter == "undefined" ? undefined : priceFilter;
@@ -42,7 +49,8 @@ exports.findAll = async (req, res) => {
                 columnSort,
                 directionSort,
                 search,
-                priceFilter ? JSON.parse(priceFilter) : priceFilter
+                priceFilter ? JSON.parse(priceFilter) : priceFilter,
+                productNotFilterSlug
             );
         res.json({ status: 200, totalRows, products, minPrice, maxPrice });
     } catch (error) {
@@ -148,6 +156,8 @@ exports.update = async (req, res) => {
             msg: "Produto alterado com sucesso"
         });
     } catch (error) {
+        console.log("asdf");
+        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar alterar produto"

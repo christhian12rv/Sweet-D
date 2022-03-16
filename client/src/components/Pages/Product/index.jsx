@@ -44,7 +44,8 @@ const Product = ({
             "random",
             undefined,
             "",
-            undefined
+            undefined,
+            slug
         );
         if (response && response.type) {
             if (response.type == "REDIRECT") navigate(response.to);

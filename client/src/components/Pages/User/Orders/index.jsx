@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { MdAccessTime } from "react-icons/md";
 import { CgDetailsMore } from "react-icons/cg";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -90,9 +92,17 @@ const Orders = ({ orders, getOrdersByUser, clearState }) => {
                                                 }
                                             >
                                                 <div>
-                                                    {o.finished
-                                                        ? "Entregue"
-                                                        : "Em andamento"}
+                                                    {o.finished ? (
+                                                        <div className="status-answer">
+                                                            <IoMdCheckmarkCircleOutline />
+                                                            Entregue
+                                                        </div>
+                                                    ) : (
+                                                        <div className="status-answer">
+                                                            <MdAccessTime />
+                                                            Em andamento
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="details">

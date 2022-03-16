@@ -7,7 +7,8 @@ export function getProducts(
     columnSort,
     directionSort,
     search,
-    priceFilter
+    priceFilter,
+    productNotFilterSlug
 ) {
     return async dispatch => {
         const response = await axios.get(
@@ -22,10 +23,13 @@ export function getProducts(
                 "&search=" +
                 search +
                 "&priceFilter=" +
-                JSON.stringify(priceFilter)
+                JSON.stringify(priceFilter) +
+                "&productNotFilterSlug=" +
+                productNotFilterSlug
         );
 
         const data = response.data;
+        console.log(data);
 
         switch (data.status) {
             case 200:
