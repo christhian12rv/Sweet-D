@@ -28,7 +28,6 @@ const Navbar = ({
     getCart,
     getTotalSessionCart
 }) => {
-    console.log(auth);
     const navigate = useNavigate();
     let listener = null;
 
@@ -114,13 +113,13 @@ const Navbar = ({
             </li>
             <li
                 className={activePage == 3 ? "active" : ""}
-                onClick={() => handleNavigate("/")}
+                onClick={() => handleNavigate("/about-us")}
             >
                 Quem Somos
             </li>
             <li
                 className={activePage == 4 ? "active" : ""}
-                onClick={() => handleNavigate("/")}
+                onClick={() => handleNavigate("/contact")}
             >
                 Contato
             </li>

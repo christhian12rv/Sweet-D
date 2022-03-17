@@ -247,3 +247,24 @@ exports.delete = async (req, res) => {
         });
     }
 };
+
+exports.contactSendEmail = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json({ status: 400, errors: errors.array() });
+    }
+
+    try {
+        const { name, email, message } = req.body;
+        await usersService.contactSendEmail(name, email, message);
+        res.json({
+            status: 200,
+            msg: "Email enviado com sucesso! Aguarde e responderemos em até 1 (um) dia útil"
+        });
+    } catch (error) {
+        res.json({
+            status: 500,
+            msg: "Houve um erro interno"
+        });
+    }
+};

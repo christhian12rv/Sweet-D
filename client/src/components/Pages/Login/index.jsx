@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoLock } from "react-icons/go";
 import { MdAlternateEmail } from "react-icons/md";
@@ -18,7 +18,7 @@ import Donut from "../../../img/Login/Donut.png";
 
 const Login = ({ email, password, login, updateInput }) => {
     const navigate = useNavigate();
-    const toastId = React.useRef(null);
+    const toastId = useRef(null);
 
     const handleInputChange = (e, stateProp) => {
         updateInput(e.target.value, stateProp);

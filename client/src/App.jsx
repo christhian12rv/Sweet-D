@@ -27,6 +27,8 @@ import AdminListOrders from "./components/Pages/Admin/ListOrders";
 import AdminOrderDetails from "./components/Pages/Admin/OrderDetails";
 import AdminAddProduct from "./components/Pages/Admin/AddProduct";
 import AdminEditProduct from "./components/Pages/Admin/EditProduct";
+import AboutUs from "./components/Pages/AboutUs";
+import Contact from "./components/Pages/Contact";
 import Error404 from "./components/Pages/Error404";
 import Error500 from "./components/Pages/Error500";
 import RequiredAuth from "./components/RequiredAuth";
@@ -290,6 +292,30 @@ function App() {
                                     param="email"
                                 />
                                 <RecoveryPasswordChange />
+                            </>
+                        }
+                    />
+
+                    <Route
+                        path="/about-us"
+                        element={
+                            <>
+                                <Title value="Quem somos" />
+                                <Layout>
+                                    <AboutUs />
+                                </Layout>
+                            </>
+                        }
+                    />
+
+                    <Route
+                        path="/contact"
+                        element={
+                            <>
+                                <Title value="Contato" />
+                                <Layout>
+                                    <Contact />
+                                </Layout>
                             </>
                         }
                     />

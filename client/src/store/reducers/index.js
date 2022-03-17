@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import register from "./register";
 import login from "./login";
 import recoveryPassword from "./recoveryPassword";
+import contact from "./contact";
 import userSettings from "./userSettings";
 import listProducts from "./listProducts";
 import product from "./product";
@@ -19,6 +20,7 @@ export default combineReducers({
     register,
     login,
     recoveryPassword,
+    contact,
     userSettings,
     listProducts,
     product,

@@ -591,3 +591,48 @@ exports.delete = [
                 });
         })
 ];
+
+exports.contactSendEmail = [
+    body("name")
+        .trim()
+        .customSanitizer(value => {
+            return value
+                .toLowerCase()
+                .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
+                .replace(/ Da /g, " da ")
+                .replace(/ De /g, " de ")
+                .replace(/ Do /g, " do ")
+                .replace(/ Das /g, " das ")
+                .replace(/ Dos /g, " dos ");
+        })
+        .notEmpty()
+        .withMessage("O campo Nome é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Nome informado é inválido")
+        .bail()
+        .isLength({ min: 2 })
+        .withMessage("O campo Nome deve conter no mínimo 2 caracteres"),
+
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Email é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Email informado é inválido")
+        .bail()
+        .isEmail()
+        .withMessage("O Email informado é inválido"),
+
+    body("message")
+        .trim()
+        .notEmpty()
+        .withMessage("O campo Mensagem é obrigatório")
+        .bail()
+        .isString()
+        .withMessage("O Mensagem informado é inválido")
+        .bail()
+        .isLength({ min: 10 })
+        .withMessage("O campo Mensagem deve conter no mínimo 10 caracteres")
+];

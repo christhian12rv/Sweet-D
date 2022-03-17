@@ -39,6 +39,11 @@ router.post(
     usersValidator.delete,
     usersController.delete
 );
+router.post(
+    "/contact",
+    usersValidator.contactSendEmail,
+    usersController.contactSendEmail
+);
 router.put("/", verifyJWT, usersValidator.update, usersController.update);
 
 module.exports = router;

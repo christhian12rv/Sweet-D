@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 const { transporter, nodemailerEmail } = require("../configs/nodemailer");
 const { v4: uuidv4 } = require("uuid");
 const recoveryPasswordTemplate = require("../templates/recoveryPassword");
+const contactTemplate = require("../templates/contact");
 
 const UserModel = require("../models/User.model");
 const AddressModel = require("../models/Address.model");
@@ -219,4 +220,20 @@ exports.delete = async id => {
     await AddressModel.destroy({ where: { userId: id } });
     await OrderModel.update({ userId: null }, { where: { userId: id } });
     await UserModel.destroy({ where: { id } });
+};
+
+exports.contactSendEmail = async (name, email, message) => {
+    await transporter.sendMail({
+        from: '"' + name + '" <' + nodemailerEmail + ">",
+        to: nodemailerEmail,
+        subject: "Nova mensagem de " + name + " (" + email + ")",
+        html: contactTemplate(name, email, message),
+        attachments: [
+            {
+                filename: "Logo.png",
+                path: path.join(__dirname, "../public/img/Logo.png"),
+                cid: "unique@logo"
+            }
+        ]
+    });
 };
