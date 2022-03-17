@@ -39,7 +39,7 @@ const AboutUs = () => {
                     <hr />
                     <h3>NOSSA MISSÃO</h3>
                     <p>
-                        Nos acreditamos no potencial que os doces tem em
+                        Nós acreditamos no potencial que os doces tem em
                         inspirar e nutrir o espírito humano – uma pessoa, um
                         donut e uma comunidade de cada vez. Desde 2020, nossa
                         missão tem sido focada em levar as pessoas à um outro
