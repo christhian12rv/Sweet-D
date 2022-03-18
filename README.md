@@ -170,6 +170,10 @@ Or go to the /backend folder and run
 
 <p align="center">
   <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D-About-Us.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D-Contact-Us.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D-Products.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D-Product.png" alt="Sweet-D Logo">
 </p>
 
 <!-- CONTRIBUTING -->
