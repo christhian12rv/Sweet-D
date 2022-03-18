@@ -1,6 +1,6 @@
 <h1 align="center">Sweet-D</h1>
 <p align="center">
-  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Logo.png" alt="Sweet-D Logo">
+  <img width="200" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Logo.png" alt="Sweet-D Logo">
 </p>
 
 <!-- TABLE OF CONTENTS -->
