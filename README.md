@@ -1,6 +1,6 @@
 <h1 align="center">Sweet-D</h1>
 <p align="center">
-  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/Logo.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Logo.png" alt="Sweet-D Logo">
 </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -163,7 +163,7 @@ Or go to the /backend folder and run
 ## Illustrations
 
 <p align="center">
-  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/Logo.png" alt="Sweet-D Logo">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Sweet-D.png" alt="Sweet-D Logo">
 </p>
 
 <!-- CONTRIBUTING -->
