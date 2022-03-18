@@ -37,7 +37,7 @@
 ## About The Project
 
 This project is a Website created with **Nodejs**, **React** and **MySQL** to manage a confectionery.
-The architecture used in the project is the **MVCS (Models Views Controllers Services)**
+The architecture used in the project is the **MVCS (Models Views Controllers Services)**. The official project is working commercially. You can visit it by this link: ![https://sweet-d.herokuapp.com/](https://sweet-d.herokuapp.com/)
 
 ### Built With
 
