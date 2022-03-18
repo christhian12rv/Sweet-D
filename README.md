@@ -1,3 +1,8 @@
+<h1 align="center">Sweet-D</h1>
+<p align="center">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/Logo.png" alt="Sweet-D Logo">
+</p>
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -16,7 +21,7 @@
         <li><a href="#running-the-project">Running the project</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#illustrations">Illustrations</a></li>
     <li><a href="#contributing">Contributing</a></li>
   </ol>
 </details>
@@ -155,9 +160,11 @@ Or go to the /backend folder and run
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+## Illustrations
 
-Coming soon...
+<p align="center">
+  <img width="100%" src="https://github.com/christhian12rv/Sweet-D/Logo.png" alt="Sweet-D Logo">
+</p>
 
 <!-- CONTRIBUTING -->
 
