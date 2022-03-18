@@ -2,10 +2,10 @@
 <p align="center">
   <img width="90" src="https://github.com/christhian12rv/Sweet-D/blob/master/img/Logo.png" alt="Sweet-D Logo">
 </p>
-<p align="center">
+<div align="center">
 ![Version](<https://img.shields.io/static/v1?style=for-the-badge&label=Version&message=1.0.0&color=rgb(250,188,165)>)
 ![License](<https://img.shields.io/static/v1?style=for-the-badge&label=License&message=Creative%20Commons%20Zero%20v1.0%20Universal&color=rgb(250,188,165)>)
-</p>
+</div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
