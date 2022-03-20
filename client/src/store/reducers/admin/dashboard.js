@@ -8,7 +8,9 @@ const INITIAL_STATE = {
         totalPriceOrders: "",
         totalPriceOrdersToday: "",
         ordersTotalPerMonth: [],
-        ordersTotalCurrentMonth: []
+        ordersTotalCurrentMonth: [],
+        ordersTotalPricePerMonth: [],
+        ordersTotalPriceCurrentMonth: []
     }
 };
 

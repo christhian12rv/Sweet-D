@@ -10,7 +10,9 @@ exports.getTotal = async (req, res) => {
             totalPriceOrders,
             totalPriceOrdersToday,
             ordersTotalPerMonth,
-            ordersTotalCurrentMonth
+            ordersTotalCurrentMonth,
+            ordersTotalPricePerMonth,
+            ordersTotalPriceCurrentMonth
         } = await indexService.getTotal();
 
         res.json({
@@ -23,7 +25,9 @@ exports.getTotal = async (req, res) => {
                 totalPriceOrders,
                 totalPriceOrdersToday,
                 ordersTotalPerMonth,
-                ordersTotalCurrentMonth
+                ordersTotalCurrentMonth,
+                ordersTotalPricePerMonth,
+                ordersTotalPriceCurrentMonth
             },
             msg: "Total buscado com sucesso"
         });

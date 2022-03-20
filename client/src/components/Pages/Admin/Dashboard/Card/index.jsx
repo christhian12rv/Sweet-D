@@ -2,9 +2,16 @@ import React from "react";
 
 import "./index.scss";
 
-const Card = ({ children, title, boxIconColor, statistics, text }) => {
+const Card = ({
+    children,
+    title,
+    boxIconColor,
+    statistics,
+    text,
+    className
+}) => {
     return (
-        <div className="dashboard-card">
+        <div className={"dashboard-card " + (className ? className : "")}>
             <h5 className="title">{title}</h5>
             <div className="row-statistics">
                 <div

@@ -20,10 +20,24 @@ import "./index.scss";
 const Dashboard = ({ total, getTotal }) => {
     const chartOptionsOrdersYear = useRef(null);
     const chartOptionsOrdersMonth = useRef(null);
+    const chartOptionsOrdersPriceYear = useRef(null);
+    const chartOptionsOrdersPriceMonth = useRef(null);
+
     const [optionsOrdersYear, setOptionsOrdersYear] = useState({});
     const [optionsOrdersMonth, setOptionsOrdersMonth] = useState({});
-    const [data, setData] = useState({ datasets: [] });
+    const [optionsOrdersPriceYear, setOptionsOrdersPriceYear] = useState({});
+    const [optionsOrdersPriceMonth, setOptionsOrdersPriceMonth] = useState({});
+
+    const [dataTotalOrdersYear, setDataTotalOrdersYear] = useState({
+        datasets: []
+    });
     let [dataTotalOrdersMonth, setDataTotalOrdersMonth] = useState({
+        datasets: []
+    });
+    const [dataTotalOrdersPriceYear, setDataTotalOrdersPriceYear] = useState({
+        datasets: []
+    });
+    const [dataTotalOrdersPriceMonth, setDataTotalOrdersPriceMonth] = useState({
         datasets: []
     });
 
@@ -39,6 +53,7 @@ const Dashboard = ({ total, getTotal }) => {
         let month = moment().format("MMMM");
         month = month.charAt(0).toUpperCase() + month.slice(1);
 
+        // CHART 1
         setOptionsOrdersYear({
             responsive: true,
             plugins: {
@@ -47,13 +62,13 @@ const Dashboard = ({ total, getTotal }) => {
                 },
                 title: {
                     display: true,
-                    text: "Pedidos (" + year + ")"
+                    text: "Total de Pedidos (" + year + ")"
                 }
             }
         });
 
         let chart = chartOptionsOrdersYear.current;
-        function createGradient(ctx, area) {
+        let createGradient = (ctx, area) => {
             const colorStart = "#76ff03";
             const colorMid = "#76ff03";
             const colorEnd = "#b0ff57";
@@ -70,7 +85,7 @@ const Dashboard = ({ total, getTotal }) => {
             gradient.addColorStop(1, colorEnd);
 
             return gradient;
-        }
+        };
 
         const labelsTotalOrdersYear = [
             "Janeiro",
@@ -87,7 +102,7 @@ const Dashboard = ({ total, getTotal }) => {
             "Dezembro"
         ];
 
-        setData({
+        setDataTotalOrdersYear({
             labels: labelsTotalOrdersYear,
             datasets: [
                 {
@@ -98,6 +113,7 @@ const Dashboard = ({ total, getTotal }) => {
             ]
         });
 
+        // CHART 2
         setOptionsOrdersMonth({
             responsive: true,
             plugins: {
@@ -106,13 +122,13 @@ const Dashboard = ({ total, getTotal }) => {
                 },
                 title: {
                     display: true,
-                    text: "Pedidos (" + month + ")"
+                    text: "Total de Pedidos (" + month + ")"
                 }
             }
         });
 
         chart = chartOptionsOrdersMonth.current;
-        function createGradient(ctx, area) {
+        createGradient = (ctx, area) => {
             const colorStart = "#76ff03";
             const colorMid = "#76ff03";
             const colorEnd = "#b0ff57";
@@ -129,7 +145,7 @@ const Dashboard = ({ total, getTotal }) => {
             gradient.addColorStop(1, colorEnd);
 
             return gradient;
-        }
+        };
 
         const labelsTotalOrdersMonth = total.ordersTotalCurrentMonth.map(
             (o, i) => i + 1
@@ -145,9 +161,98 @@ const Dashboard = ({ total, getTotal }) => {
                 }
             ]
         });
-    }, [total]);
 
-    console.log(data);
+        // CHART 3
+        setOptionsOrdersPriceYear({
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Receita de Pedidos (" + year + ")"
+                }
+            }
+        });
+
+        chart = chartOptionsOrdersPriceYear.current;
+
+        createGradient = (ctx, area) => {
+            const colorStart = "#1a237e";
+            const colorMid = "#1a237e";
+            const colorEnd = "#c5cae9";
+
+            const gradient = ctx.createLinearGradient(
+                0,
+                area.bottom,
+                0,
+                area.top
+            );
+
+            gradient.addColorStop(0, colorStart);
+            gradient.addColorStop(0.5, colorMid);
+            gradient.addColorStop(1, colorEnd);
+
+            return gradient;
+        };
+
+        const labelsTotalOrdersPriceYear = [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junho",
+            "Julho",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
+        ];
+
+        setDataTotalOrdersPriceYear({
+            labels: labelsTotalOrdersPriceYear,
+            datasets: [
+                {
+                    label: "Pedidos (R$)",
+                    data: total.ordersTotalPricePerMonth,
+                    backgroundColor: createGradient(chart.ctx, chart.chartArea)
+                }
+            ]
+        });
+
+        // CHART 4
+        setOptionsOrdersPriceMonth({
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "top"
+                },
+                title: {
+                    display: true,
+                    text: "Receita de Pedidos (" + month + ")"
+                }
+            }
+        });
+
+        chart = chartOptionsOrdersPriceMonth.current;
+
+        const labelsTotalOrdersPriceMonth =
+            total.ordersTotalPriceCurrentMonth.map((o, i) => i + 1);
+
+        setDataTotalOrdersPriceMonth({
+            labels: labelsTotalOrdersPriceMonth,
+            datasets: [
+                {
+                    label: "Pedidos (R$)",
+                    data: total.ordersTotalPriceCurrentMonth,
+                    backgroundColor: createGradient(chart.ctx, chart.chartArea)
+                }
+            ]
+        });
+    }, [total]);
 
     return (
         <div className="admin-dashboard">
@@ -191,6 +296,7 @@ const Dashboard = ({ total, getTotal }) => {
                     />
                 </DashboardCard>
                 <DashboardCard
+                    className="receipt-card"
                     title="Receita"
                     boxIconColor="#f3e5f5"
                     statistics={"R$ " + total.totalPriceOrders}
@@ -199,6 +305,7 @@ const Dashboard = ({ total, getTotal }) => {
                     <BsCashCoin className="icon" style={{ color: "#4a148c" }} />
                 </DashboardCard>
                 <DashboardCard
+                    className="receipt-card"
                     title="Receita"
                     boxIconColor="#e0f7fa"
                     statistics={"R$ " + total.totalPriceOrdersToday}
@@ -206,19 +313,35 @@ const Dashboard = ({ total, getTotal }) => {
                 >
                     <MdToday className="icon" style={{ color: "#00e5ff" }} />
                 </DashboardCard>
+            </div>
 
-                <div className="total-orders-chart">
+            <div className="charts-container">
+                <div className="chart">
                     <Bar
                         ref={chartOptionsOrdersYear}
                         options={optionsOrdersYear}
-                        data={data}
+                        data={dataTotalOrdersYear}
                     />
                 </div>
-                <div className="total-orders-chart">
+                <div className="chart">
                     <Bar
                         ref={chartOptionsOrdersMonth}
                         options={optionsOrdersMonth}
                         data={dataTotalOrdersMonth}
+                    />
+                </div>
+                <div className="chart">
+                    <Bar
+                        ref={chartOptionsOrdersPriceYear}
+                        options={optionsOrdersPriceYear}
+                        data={dataTotalOrdersPriceYear}
+                    />
+                </div>
+                <div className="chart">
+                    <Bar
+                        ref={chartOptionsOrdersPriceMonth}
+                        options={optionsOrdersPriceMonth}
+                        data={dataTotalOrdersPriceMonth}
                     />
                 </div>
             </div>
