@@ -14,6 +14,7 @@
         padding: 3.8em 0;
         box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
         border-radius: 0.3em;
+        min-height: 640px;
 
         .product-images-box {
             display: flex;
@@ -24,7 +25,7 @@
             top: 2em;
             left: -2em;
             border-radius: 0.3em;
-            height: 470px;
+            height: 570px;
             width: 500px;
 
             .carousel-slider {
@@ -43,7 +44,8 @@
                 .img-parent {
                     img {
                         overflow: hidden;
-                        height: calc(400px - 4em);
+                        height: calc(500px - 4em);
+                        object-fit: cover;
                     }
                 }
 

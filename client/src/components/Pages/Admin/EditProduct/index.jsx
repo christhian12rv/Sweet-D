@@ -263,7 +263,7 @@ const EditProduct = ({
 
                     <div className="item edit-product">
                         <SquareButton submit={true}>
-                            Editar Produto
+                            Salvar Produto
                         </SquareButton>
                     </div>
                 </div>
