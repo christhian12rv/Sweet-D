@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer, Slide } from "react-toastify";
@@ -36,9 +36,34 @@ import RequiredAuth from "./components/RequiredAuth";
 import "./App.scss";
 
 function App() {
-    let productId;
+    const [showModal, setShowModal] = useState(true);
+
+    window.addEventListener("load", function () {
+        const modal = document.getElementById("modal-on-page-loading");
+        let opacity = 1;
+        let fade = setInterval(() => {
+            opacity -= 0.02;
+            modal.style.opacity = opacity;
+            if (opacity <= 0) {
+                clearInterval(fade);
+            }
+        }, 10);
+
+        setTimeout(() => {
+            setShowModal(false);
+        }, 500);
+    });
+
     return (
         <div className="App" id="app">
+            <div
+                className={"modal-on-page-loading" + (showModal ? " show" : "")}
+                id="modal-on-page-loading"
+            >
+                <div className="loader-container">
+                    <div className="loader"></div>
+                </div>
+            </div>
             <Provider store={store}>
                 <Routes>
                     <Route

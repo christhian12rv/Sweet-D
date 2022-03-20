@@ -4,7 +4,11 @@ const INITIAL_STATE = {
     total: {
         products: "",
         users: "",
-        orders: ""
+        orders: "",
+        totalPriceOrders: "",
+        totalPriceOrdersToday: "",
+        ordersTotalPerMonth: [],
+        ordersTotalCurrentMonth: []
     }
 };
 

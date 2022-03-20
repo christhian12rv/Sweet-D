@@ -1,3 +1,5 @@
+@import "../../../../sassStyles/variables";
+
 .admin-dashboard {
     display: flex;
     flex-direction: column;
@@ -9,5 +11,15 @@
         flex-wrap: wrap;
         justify-content: stretch;
         gap: 2em;
+    }
+
+    .total-orders-chart {
+        background-color: $light;
+        width: 100%;
+        padding: 1em;
+        border-radius: 0.3em;
+        box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%);
+        flex-basis: 45%;
+        flex-grow: 1;
     }
 }

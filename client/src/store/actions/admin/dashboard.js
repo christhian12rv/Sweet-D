@@ -4,9 +4,20 @@ import axios from "axios";
 export function getTotal() {
     return async dispatch => {
         const response = await axios.get("/api/total");
-        console.log(response);
 
-        const data = response.data;
+        let data = response.data;
+        data.total.totalPriceOrders = data.total.totalPriceOrders
+            .toFixed(2)
+            .toString()
+            .replace(".", ",");
+
+        data.total.totalPriceOrdersToday = data.total.totalPriceOrdersToday
+            ? data.total.totalPriceOrdersToday
+                  .toFixed(2)
+                  .toString()
+                  .replace(".", ",")
+            : 0;
+
         switch (data.status) {
             case 200:
                 dispatch({
