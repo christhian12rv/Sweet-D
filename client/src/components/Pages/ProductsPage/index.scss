@@ -49,6 +49,13 @@
     padding-bottom: 5em;
     background-color: $light;
 
+    .modal-loading-promise-container {
+        position: relative !important;
+        padding-top: 10em;
+        padding-bottom: 10em;
+        background-color: transparent !important;
+    }
+
     .no-products {
         padding-top: 5em;
         display: flex;

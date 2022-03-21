@@ -15,6 +15,7 @@ import InputText from "../../InputText";
 import InputNumber from "../../InputNumber";
 import ProductsCardContent from "../../ProductsCardContent";
 import Select from "../../Select";
+import ModalLoading from "../../ModalLoading";
 
 import "./index.scss";
 import SquareButton from "../../Buttons/SquareButton";
@@ -188,7 +189,12 @@ const ProductsPage = ({
             <div className="products-div">
                 {products.length ? (
                     <>
-                        <ProductsCardContent data={products} />
+                        {!isLoading ? (
+                            <ProductsCardContent data={products} />
+                        ) : (
+                            <ModalLoading modalShow={true} />
+                        )}
+
                         <div className="paginate-div">
                             <Pagination
                                 className="paginate"
