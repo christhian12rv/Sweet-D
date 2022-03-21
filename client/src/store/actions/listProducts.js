@@ -26,7 +26,7 @@ export function getProducts(
         );
 
         const data = response.data;
-
+        console.log(data);
         switch (data.status) {
             case 200:
                 dispatch({

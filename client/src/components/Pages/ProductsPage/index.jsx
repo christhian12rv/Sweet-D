@@ -4,7 +4,7 @@ import Slider from "rc-slider";
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
 const Range = createSliderWithTooltip(Slider.Range);
 import "rc-slider/assets/index.css";
-import ReactPaginate from "react-paginate";
+import Pagination from "rc-pagination";
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs";
 
 import { connect } from "react-redux";
@@ -38,8 +38,6 @@ const ProductsPage = ({
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const pageCount = Math.ceil(totalRows / limit);
-
     const handleInputChange = (e, stateProp) => {
         updateInput(e.target.value, stateProp);
     };
@@ -48,8 +46,8 @@ const ProductsPage = ({
         updateInput(value, "price");
     };
 
-    const handlePageClick = async event => {
-        const pageSelected = event.selected + 1;
+    const handlePageClick = async page => {
+        const pageSelected = page;
         setIsLoading(true);
         const response = await getProducts(
             limit,
@@ -88,7 +86,7 @@ const ProductsPage = ({
 
     useEffect(async () => {
         setIsLoading(true);
-        const response = await getProducts(12, 1, "id", "asc", "", undefined);
+        const response = await getProducts(2, 1, "id", "asc", "", undefined);
         setIsLoading(false);
         handleInputPriceChange([response.minPrice, response.maxPrice]);
         if (response && response.type) {
@@ -192,21 +190,16 @@ const ProductsPage = ({
                     <>
                         <ProductsCardContent data={products} />
                         <div className="paginate-div">
-                            <ReactPaginate
-                                breakLabel="..."
-                                previousLabel={<BsFillCaretLeftFill />}
-                                nextLabel={<BsFillCaretRightFill />}
-                                onPageChange={handlePageClick}
-                                pageRangeDisplayed={5}
-                                pageCount={pageCount}
-                                renderOnZeroPageCount={null}
-                                className="paginate"
-                                breakClassName="paginate-break"
-                                breakLinkClassName="paginate-break-link"
-                                containerClassName="paginate-container"
-                                pageLinkClassName="paginate-page-link"
-                                activeClassName="paginate-active"
-                                pageClassName="paginate-item-li"
+                            <Pagination
+                                className="paginate2"
+                                current={page}
+                                total={totalRows}
+                                pageSize={limit}
+                                jumpNextIcon="..."
+                                jumpPrevIcon="..."
+                                prevIcon={<BsFillCaretLeftFill />}
+                                nextIcon={<BsFillCaretRightFill />}
+                                onChange={handlePageClick}
                             />
                         </div>
                     </>

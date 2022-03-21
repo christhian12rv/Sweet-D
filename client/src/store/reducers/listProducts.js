@@ -2,7 +2,7 @@ import types from "../constants";
 
 const INITIAL_STATE = {
     products: [],
-    limit: 6,
+    limit: 2,
     page: 1,
     totalRows: 0,
     columnSort: "id",
