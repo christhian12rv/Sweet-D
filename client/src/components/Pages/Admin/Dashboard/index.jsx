@@ -288,7 +288,7 @@ const Dashboard = ({ total, getTotal }) => {
                 </DashboardCard>
                 <DashboardCard
                     title="Pedidos"
-                    boxIconColor="#ffffb3#ffffb3"
+                    boxIconColor="#f9fbe7"
                     statistics={total.ordersToday}
                     text="Pedidos (Hoje)"
                 >

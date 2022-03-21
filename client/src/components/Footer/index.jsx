@@ -44,7 +44,7 @@ const Footer = () => {
                     Sweet D - Endereço: Rua Prefeito Leopoldo da Silva, 101 -
                     Santa Mônica - Uberlândia - MG/Brasil
                 </p>
-                <p> © Direitos Reservados www.sweetd.com.br</p>
+                <p> © Direitos Reservados sweet-d.herokuapp.com</p>
             </div>
             <div className="footer-logo">
                 <img className="logo" src={LogoImg} alt="" />
