@@ -24,13 +24,7 @@ exports.getTotal = async () => {
 
     let totalPriceOrders = await OrderModel.findAll({
         attributes: [
-            [
-                Sequelize.fn(
-                    "SUM",
-                    Sequelize.cast(Sequelize.col("total"), "float")
-                ),
-                "totalPriceOrders"
-            ]
+            [Sequelize.fn("SUM", Sequelize.col("total")), "totalPriceOrders"]
         ]
     });
 
@@ -40,10 +34,7 @@ exports.getTotal = async () => {
     let totalPriceOrdersToday = await OrderModel.findAll({
         attributes: [
             [
-                Sequelize.fn(
-                    "SUM",
-                    Sequelize.cast(Sequelize.col("total"), "float")
-                ),
+                Sequelize.fn("SUM", Sequelize.col("total")),
                 "totalPriceOrdersToday"
             ]
         ],
@@ -80,10 +71,7 @@ exports.getTotal = async () => {
         let currMonthPrice = await OrderModel.findAll({
             attributes: [
                 [
-                    Sequelize.fn(
-                        "SUM",
-                        Sequelize.cast(Sequelize.col("total"), "float")
-                    ),
+                    Sequelize.fn("SUM", Sequelize.col("total")),
                     "totalPriceOrdersMonth"
                 ]
             ],
@@ -152,10 +140,7 @@ exports.getTotal = async () => {
         let currDayPrice = await OrderModel.findAll({
             attributes: [
                 [
-                    Sequelize.fn(
-                        "SUM",
-                        Sequelize.cast(Sequelize.col("total"), "float")
-                    ),
+                    Sequelize.fn("SUM", Sequelize.col("total")),
                     "totalPriceOrdersDay"
                 ]
             ],
