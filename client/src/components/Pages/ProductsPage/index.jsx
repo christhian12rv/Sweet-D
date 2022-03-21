@@ -86,7 +86,7 @@ const ProductsPage = ({
 
     useEffect(async () => {
         setIsLoading(true);
-        const response = await getProducts(2, 1, "id", "asc", "", undefined);
+        const response = await getProducts(6, 1, "id", "asc", "", undefined);
         setIsLoading(false);
         handleInputPriceChange([response.minPrice, response.maxPrice]);
         if (response && response.type) {
@@ -191,7 +191,7 @@ const ProductsPage = ({
                         <ProductsCardContent data={products} />
                         <div className="paginate-div">
                             <Pagination
-                                className="paginate2"
+                                className="paginate"
                                 current={page}
                                 total={totalRows}
                                 pageSize={limit}
