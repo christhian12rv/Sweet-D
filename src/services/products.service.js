@@ -20,7 +20,6 @@ exports.findAll = async (
     priceFilter,
     productNotFilterSlug
 ) => {
-    console.log(limit);
     const options = {
         ...(columnSort &&
             directionSort && {

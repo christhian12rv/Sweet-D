@@ -72,7 +72,6 @@ exports.create = async (req, res) => {
         const response = await ordersService.create(user.id, products);
         res.json(response);
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar fazer pedido"

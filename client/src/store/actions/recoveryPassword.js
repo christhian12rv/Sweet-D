@@ -50,7 +50,6 @@ export function getCheckValidateToken(email, token, toastId) {
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200: {
                 return {

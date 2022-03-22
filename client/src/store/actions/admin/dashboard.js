@@ -6,7 +6,6 @@ export function getTotal() {
         const response = await axios.get("/api/total");
 
         let data = response.data;
-        console.log(data);
         data.total.totalPriceOrders = data.total.totalPriceOrders
             ? data.total.totalPriceOrders
                   .toFixed(2)
@@ -20,7 +19,6 @@ export function getTotal() {
                   .toString()
                   .replace(".", ",")
             : 0;
-        console.log(data);
 
         switch (data.status) {
             case 200:

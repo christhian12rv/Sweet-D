@@ -126,7 +126,6 @@ export function getCart() {
         const response = await axios.get("/api/cart");
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 data.session_products.products =
@@ -191,6 +190,7 @@ export function getProductsDataCart(productsCart) {
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
+                        products: productsCart,
                         productsData: data.products,
                         sessionTotalProducts: data.products.length
                     }
@@ -222,9 +222,7 @@ export function getOneProductCart(slug, productsState) {
                 priceExtrasTotal = 0;
                 productsState[0].extras.forEach((e, i) => {
                     const eFindIndex = data.product.extras.indexOf(e.value);
-                    console.log(data.product);
-                    console.log(e.value);
-                    console.log(eFindIndex);
+
                     priceExtras.push(data.product.priceExtras[eFindIndex]);
                     priceExtrasTotal += parseFloat(
                         data.product.priceExtras[eFindIndex]
@@ -319,9 +317,6 @@ export function updateToCartBuyOne(
             priceExtras.push({ ...productData.priceExtras[eFindIndex] });
         });
     }
-    console.log(productPrice);
-    console.log(quantity);
-    console.log(extrasPriceTotal);
 
     return {
         type: types.CART_ADD_PRODUCT,
@@ -343,8 +338,8 @@ export function updateToCartBuyOne(
 export function getTotalSessionCart() {
     return async dispatch => {
         const response = await axios.get("/api/cart/get/total");
+
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 dispatch({
@@ -364,7 +359,6 @@ export function getTotalSessionCart() {
 }
 
 export function clearStateCart() {
-    console.log("a");
     return {
         type: types.CART_CLEAR
     };

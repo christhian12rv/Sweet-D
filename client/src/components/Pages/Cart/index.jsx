@@ -29,7 +29,6 @@ const Cart = ({
     getTotalSessionCart,
     clearStateCart
 }) => {
-    console.log(cart);
     const { slug } = useParams();
 
     const toastId = useRef(null);

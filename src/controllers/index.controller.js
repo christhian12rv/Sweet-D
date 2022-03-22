@@ -32,7 +32,6 @@ exports.getTotal = async (req, res) => {
             msg: "Total buscado com sucesso"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao procurar total"

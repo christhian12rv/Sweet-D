@@ -254,8 +254,6 @@ const Dashboard = ({ total, getTotal }) => {
         });
     }, [total]);
 
-    console.log(total);
-
     return (
         <div className="admin-dashboard">
             <div className="first-statistics">

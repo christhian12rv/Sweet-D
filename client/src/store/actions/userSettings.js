@@ -127,7 +127,6 @@ export function deleteAccount(deleteInput, id, toastId) {
         const token = localStorage.getItem("user_token");
         const response = await axios.post("/api/users/delete", { id, token });
         const data = response.data;
-        console.log(data);
 
         switch (data.status) {
             case 200:

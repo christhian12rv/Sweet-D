@@ -54,7 +54,6 @@ exports.findAll = async (req, res) => {
             );
         res.json({ status: 200, totalRows, products, minPrice, maxPrice });
     } catch (error) {
-        console.log(error);
         res.json({ status: 500, msg: "Houve um erro interno" });
     }
 };
@@ -156,8 +155,6 @@ exports.update = async (req, res) => {
             msg: "Produto alterado com sucesso"
         });
     } catch (error) {
-        console.log("asdf");
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno ao tentar alterar produto"

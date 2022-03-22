@@ -210,7 +210,6 @@ exports.recoveryPasswordChange = async (email, token, password) => {
         { where: { email } }
     );
     const user = await UserModel.findOne({ where: { email } });
-    console.log(user);
     await ChangePasswordTokenModel.destroy({
         where: { userId: user.id, token }
     });

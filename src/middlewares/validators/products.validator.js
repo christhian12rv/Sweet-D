@@ -113,7 +113,6 @@ exports.create = [
         .withMessage("O campo Preço do Extra é inválido")
         .bail()
         .custom((value, { req }) => {
-            console.log(value);
             if (value.length != req.body.extras.length)
                 throw new Error("Quantidade de preços dos extras inválidos");
 

@@ -83,8 +83,6 @@ const Cart = ({
         setIsLoading(false);
     };
 
-    console.log(cart);
-
     return (
         <div className="cart">
             {isLoading ? (

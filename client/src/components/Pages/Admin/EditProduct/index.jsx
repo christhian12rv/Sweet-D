@@ -33,7 +33,6 @@ const EditProduct = ({
     getProduct,
     updateInputPriceExtras
 }) => {
-    console.log(priceExtras);
     const toastId = React.useRef(null);
     const navigate = useNavigate();
     const { slug: slugParam } = useParams();

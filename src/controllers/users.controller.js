@@ -197,7 +197,6 @@ exports.getRecoveryPasswordChange = async (req, res) => {
             status: 200
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno"
@@ -240,7 +239,6 @@ exports.delete = async (req, res) => {
             msg: "Sua conta foi excluida com sucesso!"
         });
     } catch (error) {
-        console.log(error);
         res.json({
             status: 500,
             msg: "Houve um erro interno"

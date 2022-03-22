@@ -39,7 +39,6 @@ export function editProduct(
         toast.dismiss();
 
         const data = response.data;
-        console.log(data);
         switch (data.status) {
             case 200:
                 toastId.current = toast.success(data.msg, { delay: delay });
