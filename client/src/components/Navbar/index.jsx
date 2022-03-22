@@ -213,7 +213,10 @@ const Navbar = ({
                         )}
                     </>
                 )}
-                <li className="cart-li" onClick={() => handleNavigate("/cart")}>
+                <li
+                    className="cart-li"
+                    onClick={() => (window.location = "/cart")}
+                >
                     <IoMdCart className="cart-icon" />
                     <span
                         className={

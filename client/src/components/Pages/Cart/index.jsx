@@ -30,7 +30,6 @@ const Cart = ({
     clearStateCart
 }) => {
     const { slug } = useParams();
-
     const toastId = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();

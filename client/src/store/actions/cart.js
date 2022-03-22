@@ -156,6 +156,7 @@ export function getCart() {
 
 export function getProductsDataCart(productsCart) {
     return async dispatch => {
+        const productsCartData = productsCart;
         productsCart = productsCart.map(p => p.id);
 
         const response = await axios.get(
@@ -190,7 +191,7 @@ export function getProductsDataCart(productsCart) {
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
-                        products: productsCart,
+                        products: productsCartData,
                         productsData: data.products,
                         sessionTotalProducts: data.products.length
                     }
@@ -222,7 +223,6 @@ export function getOneProductCart(slug, productsState) {
                 priceExtrasTotal = 0;
                 productsState[0].extras.forEach((e, i) => {
                     const eFindIndex = data.product.extras.indexOf(e.value);
-
                     priceExtras.push(data.product.priceExtras[eFindIndex]);
                     priceExtrasTotal += parseFloat(
                         data.product.priceExtras[eFindIndex]
@@ -251,9 +251,14 @@ export function getOneProductCart(slug, productsState) {
                       };
                       return e;
                   })
-                : data.product.extras;
+                : [];
+        } else {
+            extras = [];
+            priceExtras = [];
+            priceExtrasTotal = 0;
+            quantity = 1;
+            total = data.product.price;
         }
-
         switch (data.status) {
             case 200:
                 dispatch({
@@ -338,7 +343,6 @@ export function updateToCartBuyOne(
 export function getTotalSessionCart() {
     return async dispatch => {
         const response = await axios.get("/api/cart/get/total");
-
         const data = response.data;
         switch (data.status) {
             case 200:
