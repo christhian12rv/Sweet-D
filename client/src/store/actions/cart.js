@@ -65,10 +65,12 @@ export function updateToCart(id, extras, quantity) {
             case 200:
                 data.session_products.products =
                     data.session_products.products.map(p => {
-                        p.extras = p.extras.map(e => {
-                            e = { value: e, label: e };
-                            return e;
-                        });
+                        p.extras = p.extras
+                            ? p.extras.map(e => {
+                                  e = { value: e, label: e };
+                                  return e;
+                              })
+                            : p.extras;
 
                         return p;
                     });
@@ -167,19 +169,21 @@ export function getProductsDataCart(productsCart) {
             p.photos = JSON.parse(p.photos);
             p.extras = JSON.parse(p.extras);
             p.priceExtras = JSON.parse(p.priceExtras);
-            p.extras = p.extras.map((e, i) => {
-                e = {
-                    value: e,
-                    label:
-                        e +
-                        " - R$ " +
-                        parseFloat(p.priceExtras[i])
-                            .toFixed(2)
-                            .toString()
-                            .replace(".", ",")
-                };
-                return e;
-            });
+            p.extras = p.extras
+                ? p.extras.map((e, i) => {
+                      e = {
+                          value: e,
+                          label:
+                              e +
+                              " - R$ " +
+                              parseFloat(p.priceExtras[i])
+                                  .toFixed(2)
+                                  .toString()
+                                  .replace(".", ",")
+                      };
+                      return e;
+                  })
+                : p.extras;
             return p;
         });
         switch (data.status) {
@@ -235,19 +239,21 @@ export function getOneProductCart(slug, productsState) {
                 quantity = 1;
                 total = data.product.price;
             }
-            data.product.extras = data.product.extras.map((e, i) => {
-                e = {
-                    value: e,
-                    label:
-                        e +
-                        " - R$ " +
-                        parseFloat(data.product.priceExtras[i])
-                            .toFixed(2)
-                            .toString()
-                            .replace(".", ",")
-                };
-                return e;
-            });
+            data.product.extras = data.product.extras
+                ? data.product.extras.map((e, i) => {
+                      e = {
+                          value: e,
+                          label:
+                              e +
+                              " - R$ " +
+                              parseFloat(data.product.priceExtras[i])
+                                  .toFixed(2)
+                                  .toString()
+                                  .replace(".", ",")
+                      };
+                      return e;
+                  })
+                : data.product.extras;
         }
 
         switch (data.status) {
