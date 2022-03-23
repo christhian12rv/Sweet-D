@@ -59,9 +59,11 @@ exports.getTotal = async () => {
             where: {
                 createdAt: {
                     [Op.gte]: moment("0101", "MMDD")
+                        .tz("America/Sao_Paulo")
                         .add(month - 1, "months")
                         .toDate(),
                     [Op.lt]: moment("0101", "MMDD")
+                        .tz("America/Sao_Paulo")
                         .add(month, "months")
                         .toDate()
                 }
@@ -78,9 +80,11 @@ exports.getTotal = async () => {
             where: {
                 createdAt: {
                     [Op.gte]: moment("0101", "MMDD")
+                        .tz("America/Sao_Paulo")
                         .add(month - 1, "months")
                         .toDate(),
                     [Op.lt]: moment("0101", "MMDD")
+                        .tz("America/Sao_Paulo")
                         .add(month, "months")
                         .toDate()
                 }
@@ -105,12 +109,12 @@ exports.getTotal = async () => {
     let ordersTotalCurrentMonth = [];
     let ordersTotalPriceCurrentMonth = [];
 
-    let daysIsMonth = moment().daysInMonth();
-    let currentYear = moment().year();
-    let currentMonth = moment().month();
+    let daysIsMonth = moment().tz("America/Sao_Paulo").daysInMonth();
+    let currentYear = moment().tz("America/Sao_Paulo").year();
+    let currentMonth = moment().tz("America/Sao_Paulo").month();
     let day = 1;
     while (day <= daysIsMonth) {
-        let today = moment().toDate();
+        let today = moment().tz("America/Sao_Paulo").toDate();
         today.setFullYear(currentYear);
         today.setMonth(currentMonth);
         today.setDate(day);
@@ -119,7 +123,7 @@ exports.getTotal = async () => {
         today.setSeconds(0);
         today.setMilliseconds(0);
 
-        let tomorrow = moment().toDate();
+        let tomorrow = moment().tz("America/Sao_Paulo").toDate();
         tomorrow.setFullYear(currentYear);
         tomorrow.setMonth(currentMonth);
         tomorrow.setDate(day + 1);
