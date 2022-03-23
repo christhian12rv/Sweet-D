@@ -83,7 +83,9 @@ const ListOrders = ({
             name: "Produtos",
             selector: row => row.products,
             sortable: true,
-            nameOnDB: "products"
+            nameOnDB: "products",
+            minWidth: "100px",
+            maxWidth: "100px"
         },
         {
             name: "Total",
@@ -94,7 +96,9 @@ const ListOrders = ({
         {
             name: "Usuário",
             selector: row => row.user,
-            sortable: true
+            sortable: true,
+            minWidth: "100px",
+            maxWidth: "100px"
         },
         {
             name: "Data",
