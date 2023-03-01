@@ -245,7 +245,7 @@ exports.address = [
                 .get(
                     "https://viacep.com.br/ws/" +
                         value.replace("-", "").replace(".", "") +
-                        "/json/unicode/"
+                        "/json/"
                 )
                 .catch(erro => {
                     return Promise.reject("Ocorreu um erro interno");

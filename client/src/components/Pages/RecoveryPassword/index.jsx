@@ -53,7 +53,7 @@ const RecoveryPassword = ({ email, updateInput, sendEmail }) => {
                     <RoundedButton onClick={handleSendEMail}>
                         Recuperar Senha
                     </RoundedButton>
-                    <RoundedButton>Login</RoundedButton>
+                    <RoundedButton onClick={() => navigate("/login")}>Login</RoundedButton>
                 </div>
             </div>
         </div>

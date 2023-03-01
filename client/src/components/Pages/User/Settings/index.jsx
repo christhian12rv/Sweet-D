@@ -84,7 +84,7 @@ const Settings = ({
         const response = await axios.get(
             "https://viacep.com.br/ws/" +
                 address.postalCode.replace("-", "").replace(".", "") +
-                "/json/unicode/"
+                "/json/"
         );
         const data = response.data;
         if (!("erro" in data)) {
