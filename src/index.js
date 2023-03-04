@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 9090;
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 const path = require("path");
 const favicon = require("express-favicon");
