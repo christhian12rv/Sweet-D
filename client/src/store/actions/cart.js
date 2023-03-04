@@ -16,21 +16,25 @@ export function addToCart(id, extras, quantity, toastId) {
 
         switch (data.status) {
             case 200:
-                data.session_products.products =
-                    !!data.session_products ? data.session_products.products.map(p => {
-                        p.extras = p.extras.map(e => {
-                            e = { value: e, label: e };
-                            return e;
-                        });
+                if (data.session_products && data.session_products.products) {
+                    data.session_products.products =
+                        data.session_products.products.map(p => {
+                            p.extras = p.extras.map(e => {
+                                e = { value: e, label: e };
+                                return e;
+                            });
 
-                        return p;
-                    }) : [];
+                            return p;
+                        });
+                }
+
+                const productsLenght = (data.session_products && data.session_products.products) ?
+                    data.session_products.products.length : 0;
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
                         ...data.session_products,
-                        sessionTotalProducts:
-                            data.session_products.products.length
+                        sessionTotalProducts:  productsLenght
                     }
                 });
                 break;
@@ -64,23 +68,26 @@ export function updateToCart(id, extras, quantity) {
         let data = response.data;
         switch (data.status) {
             case 200:
-                data.session_products.products =
-                    !!data.session_products ? data.session_products.products.map(p => {
-                        p.extras = p.extras
-                            ? p.extras.map(e => {
-                                  e = { value: e, label: e };
-                                  return e;
-                              })
-                            : p.extras;
+                if (data.session_products && data.session_products.products) {
+                    data.session_products.products =
+                        data.session_products.products.map(p => {
+                            p.extras = p.extras
+                                ? p.extras.map(e => {
+                                    e = { value: e, label: e };
+                                    return e;
+                                })
+                                : p.extras;
 
-                        return p;
-                    }) : [];
+                            return p;
+                        });
+                }
+                const productsLenght = (data.session_products && data.session_products.products) ?
+                    data.session_products.products.length : 0;
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
                         ...data.session_products,
-                        sessionTotalProducts:
-                            data.session_products.products.length
+                        sessionTotalProducts: productsLenght
                     }
                 });
                 break;
@@ -129,21 +136,24 @@ export function getCart() {
         const data = response.data;
         switch (data.status) {
             case 200:
-                data.session_products.products =
-                    !!data.session_products ? data.session_products.products.map(p => {
-                        p.extras = p.extras.map(e => {
-                            e = { value: e, label: e };
-                            return e;
-                        });
+                if (data.session_products && data.session_products.products) {
+                    data.session_products.products =
+                        data.session_products.products.map(p => {
+                            p.extras = p.extras.map(e => {
+                                e = { value: e, label: e };
+                                return e;
+                            });
 
-                        return p;
-                    }) : [];
+                            return p;
+                        });
+                }
+                const productsLenght = (data.session_products && data.session_products.products) ?
+                    data.session_products.products.length : 0;
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
                         ...data.session_products,
-                        sessionTotalProducts:
-                            data.session_products.products.length
+                        sessionTotalProducts: productsLenght
                     }
                 });
             default:
