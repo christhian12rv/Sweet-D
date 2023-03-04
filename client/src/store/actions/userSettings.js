@@ -1,11 +1,12 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function update(id, field, password, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.put("/api/users", {
+        const response = await axios.put(config.serverUrl + "/api/users", {
             userId: id,
             password,
             data: {
@@ -57,7 +58,7 @@ export function update(id, field, password, toastId) {
 export function updateAddress(userId, address, toastId) {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/api/users/address", {
+        const response = await axios.post(config.serverUrl + "/api/users/address", {
             userId,
             address: address.address,
             number: address.number,
@@ -125,7 +126,7 @@ export function deleteAccount(deleteInput, id, toastId) {
             }));
 
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/api/users/delete", { id, token });
+        const response = await axios.post(config.serverUrl + "/api/users/delete", { id, token });
         const data = response.data;
 
         switch (data.status) {

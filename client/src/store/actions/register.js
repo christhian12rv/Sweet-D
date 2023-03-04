@@ -1,10 +1,11 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function register(name, email, password, confirmPassword, toastId) {
     return async () => {
-        const response = await axios.post("/api/users", {
+        const response = await axios.post(config.serverUrl + "/api/users", {
             name,
             email,
             password,

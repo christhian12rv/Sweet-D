@@ -1,10 +1,11 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function sendContactEmail(name, email, message, toastId) {
     return async dispatch => {
-        const response = await axios.post("/api/users/contact", {
+        const response = await axios.post(config.serverUrl + "/api/users/contact", {
             name,
             email,
             message

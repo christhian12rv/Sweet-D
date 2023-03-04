@@ -1,11 +1,12 @@
 import types from "../../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../../configs/config';
 
 export function getProducts(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
-            "/api/products?limit=" +
+            config.serverUrl + "/api/products?limit=" +
                 limit +
                 "&page=" +
                 page +
@@ -44,7 +45,7 @@ export function getProducts(limit, page, columnSort, directionSort, search) {
 export function updateActive(id, active, toastId) {
     return async () => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.put("/api/products/active", {
+        const response = await axios.put(config.serverUrl + "/api/products/active", {
             id,
             active,
             token

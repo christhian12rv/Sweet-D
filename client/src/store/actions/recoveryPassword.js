@@ -1,10 +1,11 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function sendEmail(email, toastId) {
     return async () => {
-        const response = await axios.post("/api/users/recovery-password", {
+        const response = await axios.post(config.serverUrl + "/api/users/recovery-password", {
             email
         });
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
@@ -39,7 +40,7 @@ export function sendEmail(email, toastId) {
 export function getCheckValidateToken(email, token, toastId) {
     return async () => {
         const response = await axios.post(
-            "/api/users/recovery-password/change/verify",
+            config.serverUrl + "/api/users/recovery-password/change/verify",
             {
                 email,
                 token
@@ -80,7 +81,7 @@ export function changePassword(
 ) {
     return async () => {
         const response = await axios.post(
-            "/api/users/recovery-password/change",
+            config.serverUrl + "/api/users/recovery-password/change",
             {
                 email,
                 token,

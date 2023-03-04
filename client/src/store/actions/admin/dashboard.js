@@ -1,9 +1,10 @@
 import types from "../../constants";
 import axios from "axios";
+import config from '../../../configs/config';
 
 export function getTotal() {
     return async dispatch => {
-        const response = await axios.get("/api/total");
+        const response = await axios.get(config.serverUrl + "/api/total");
 
         let data = response.data;
         data.total.totalPriceOrders = data.total.totalPriceOrders

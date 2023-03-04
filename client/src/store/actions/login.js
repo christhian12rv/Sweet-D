@@ -1,10 +1,11 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function login(email, password, toastId) {
     return async dispatch => {
-        const response = await axios.post("/api/users/login", {
+        const response = await axios.post(config.serverUrl + "/api/users/login", {
             email,
             password
         });
@@ -41,7 +42,7 @@ export function login(email, password, toastId) {
 export function logout() {
     return async () => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/api/users/logout", {
+        const response = await axios.post(config.serverUrl + "/api/users/logout", {
             token
         });
         const data = response.data;
@@ -70,7 +71,7 @@ export function logout() {
 export function getUserAuth() {
     return async dispatch => {
         const token = localStorage.getItem("user_token");
-        const response = await axios.post("/api/users/get-user-auth", {
+        const response = await axios.post(config.serverUrl + "/api/users/get-user-auth", {
             token
         });
 

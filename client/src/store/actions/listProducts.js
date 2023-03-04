@@ -1,5 +1,6 @@
 import types from "../constants";
 import axios from "axios";
+import config from '../../configs/config';
 
 export function getProducts(
     limit,
@@ -11,7 +12,7 @@ export function getProducts(
 ) {
     return async dispatch => {
         const response = await axios.get(
-            "/api/products?limit=" +
+            config.serverUrl + "/api/products?limit=" +
                 limit +
                 "&page=" +
                 page +

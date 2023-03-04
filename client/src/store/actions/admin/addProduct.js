@@ -1,6 +1,7 @@
 import types from "../../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../../configs/config';
 
 export function addProduct(
     name,
@@ -30,7 +31,7 @@ export function addProduct(
         }
         dataForm.append("token", token);
 
-        const response = await axios.post("/api/products/", dataForm);
+        const response = await axios.post(config.serverUrl + "/api/products/", dataForm);
         const delay = toast.isActive(toastId.current) ? 1000 : 0;
         toast.dismiss();
 

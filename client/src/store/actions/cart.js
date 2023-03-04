@@ -1,10 +1,11 @@
 import types from "../constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 export function addToCart(id, extras, quantity, toastId) {
     return async dispatch => {
-        const response = await axios.post("/api/cart", {
+        const response = await axios.post(config.serverUrl + "/api/cart", {
             product: { id, extras, quantity }
         });
 
@@ -55,7 +56,7 @@ export function addToCart(id, extras, quantity, toastId) {
 export function updateToCart(id, extras, quantity) {
     return async dispatch => {
         extras = extras.map(e => e.value);
-        const response = await axios.put("/api/cart", {
+        const response = await axios.put(config.serverUrl + "/api/cart", {
             product: { id, extras, quantity },
             isBuyProduct: false
         });
@@ -94,7 +95,7 @@ export function updateToCart(id, extras, quantity) {
 
 export function removeToCart(id, productsData) {
     return async dispatch => {
-        const response = await axios.delete("/api/cart/" + id);
+        const response = await axios.delete(config.serverUrl + "/api/cart/" + id);
 
         let data = response.data;
 
@@ -123,7 +124,7 @@ export function removeToCart(id, productsData) {
 
 export function getCart() {
     return async dispatch => {
-        const response = await axios.get("/api/cart");
+        const response = await axios.get(config.serverUrl + "/api/cart");
 
         const data = response.data;
         switch (data.status) {
@@ -160,7 +161,7 @@ export function getProductsDataCart(productsCart) {
         productsCart = productsCart.map(p => p.id);
 
         const response = await axios.get(
-            "/api/cart/data?productsIds=" + JSON.stringify(productsCart)
+            config.serverUrl + "/api/cart/data?productsIds=" + JSON.stringify(productsCart)
         );
 
         let data = response.data;
@@ -208,7 +209,7 @@ export function getProductsDataCart(productsCart) {
 
 export function getOneProductCart(slug, productsState) {
     return async dispatch => {
-        const response = await axios.get("/api/products/" + slug);
+        const response = await axios.get(config.serverUrl + "/api/products/" + slug);
 
         const data = response.data;
         data.product.photos = JSON.parse(data.product.photos);
@@ -342,7 +343,7 @@ export function updateToCartBuyOne(
 
 export function getTotalSessionCart() {
     return async dispatch => {
-        const response = await axios.get("/api/cart/get/total");
+        const response = await axios.get(config.serverUrl + "/api/cart/get/total");
         const data = response.data;
         switch (data.status) {
             case 200:

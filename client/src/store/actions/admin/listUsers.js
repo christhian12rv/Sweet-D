@@ -1,10 +1,11 @@
 import types from "../../constants";
 import axios from "axios";
+import config from '../../../configs/config';
 
 export function getUsers(limit, page, columnSort, directionSort, search) {
     return async dispatch => {
         const response = await axios.get(
-            "/api/users?limit=" +
+            config.serverUrl + "/api/users?limit=" +
                 limit +
                 "&page=" +
                 page +
