@@ -17,7 +17,7 @@ export function addToCart(id, extras, quantity, toastId) {
         switch (data.status) {
             case 200:
                 data.session_products.products =
-                    !!data.session_products.products ? data.session_products.products.map(p => {
+                    !!data.session_products ? data.session_products.products.map(p => {
                         p.extras = p.extras.map(e => {
                             e = { value: e, label: e };
                             return e;
@@ -65,7 +65,7 @@ export function updateToCart(id, extras, quantity) {
         switch (data.status) {
             case 200:
                 data.session_products.products =
-                    !!data.session_products.products ? data.session_products.products.map(p => {
+                    !!data.session_products ? data.session_products.products.map(p => {
                         p.extras = p.extras
                             ? p.extras.map(e => {
                                   e = { value: e, label: e };
@@ -130,7 +130,7 @@ export function getCart() {
         switch (data.status) {
             case 200:
                 data.session_products.products =
-                    !!data.session_products.products ? data.session_products.products.map(p => {
+                    !!data.session_products ? data.session_products.products.map(p => {
                         p.extras = p.extras.map(e => {
                             e = { value: e, label: e };
                             return e;
