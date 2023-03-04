@@ -1,6 +1,7 @@
 const express = require("express");
+const config = require('./configs/config');
 const app = express();
-const PORT = process.env.PORT || 9090;
+const PORT = config.port || 9090;
 
 const path = require("path");
 const favicon = require("express-favicon");
@@ -18,7 +19,6 @@ const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
 const cartRoute = require("./routes/cart.route");
-const config = require('./configs/config');
 
 const corsOptions = {
     origin: config.clientUrl,  //access-control-allow-credentials:true
