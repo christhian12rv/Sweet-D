@@ -4,7 +4,7 @@
     "description": "Website created with Nodejs, React and MySQL to manage a confectionery",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon ./src/index.js",
+        "start": "node src/index.js",
         "dev": "nodemon ./src/index.js",
         "both:dev": "concurrently --kill-others-on-fail \"npm run server:dev\" \"npm run client\"",
         "both:prod": "concurrently --kill-others-on-fail \"npm run server:prod\" \"npm run client\"",
