@@ -5,6 +5,8 @@ const PORT = process.env.PORT || 9090;
 const path = require("path");
 const favicon = require("express-favicon");
 const cors = require("cors");
+const compression = require("compression");
+const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const sequelize = require("./configs/db");
 const fileUpload = require("express-fileupload");
@@ -20,6 +22,8 @@ const cartRoute = require("./routes/cart.route");
 app.use(favicon(__dirname + "/build/favicon.ico"));
 app.use(express.static(__dirname));
 app.use(cors());
+app.use(compression());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(
