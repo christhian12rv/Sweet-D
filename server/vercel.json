@@ -2,20 +2,14 @@
 	"version": 2,
    "builds": [
     {
-        "src": "/api/index.js",
+        "src": "./api/index.js",
         "use": "@vercel/node"
     }
    ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "access-control-allow-origin",
-          "value": "*"
-        }
-      ]
-    }
-  ],
-	"rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
+  "routes": [
+		{
+			"src": "/(.*)",
+			"dest": "/"
+		}
+	]
 }
