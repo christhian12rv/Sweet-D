@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const db = require("../db");
+const db = require("../configs/db");
 
 const OrderAddress = db.define("orderAddress", {
     id: {

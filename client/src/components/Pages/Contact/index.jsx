@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { BsFacebook } from "react-icons/bs";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { AiFillInstagram } from "react-icons/ai";
 import { MdPhone, MdEmail } from "react-icons/md";
@@ -60,14 +59,6 @@ const Contact = ({ name, email, message, updateInput, sendContactEmail }) => {
                             uma dessas redes sociais!
                         </h3>
                         <ul>
-                            <li className="facebook-icon">
-                                <a
-                                    href="https://www.facebook.com/"
-                                    target="_blank"
-                                >
-                                    <BsFacebook />
-                                </a>
-                            </li>
                             <li className="whatsapp-icon">
                                 <a
                                     href="https://wa.me/5538999689339"
@@ -78,7 +69,7 @@ const Contact = ({ name, email, message, updateInput, sendContactEmail }) => {
                             </li>
                             <li className="instagram-icon">
                                 <a
-                                    href="https://www.instagram.com/fellypfn/"
+                                    href="https://www.instagram.com/fellpzzzz/"
                                     target="_blank"
                                 >
                                     <AiFillInstagram />
