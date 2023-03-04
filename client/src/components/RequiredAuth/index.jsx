@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from '../../configs/config';
 
 const RequiredAuth = ({ children, isAdmin }) => {
     const toastId = React.useRef(null);

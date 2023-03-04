@@ -17,14 +17,14 @@ export function addToCart(id, extras, quantity, toastId) {
         switch (data.status) {
             case 200:
                 data.session_products.products =
-                    data.session_products.products.map(p => {
+                    !!data.session_products.products ? data.session_products.products.map(p => {
                         p.extras = p.extras.map(e => {
                             e = { value: e, label: e };
                             return e;
                         });
 
                         return p;
-                    });
+                    }) : [];
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
