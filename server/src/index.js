@@ -22,6 +22,8 @@ const config = require('./configs/config');
 
 const corsOptions = {
     origin: config.clientUrl,
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
 };
 
 app.use(favicon(__dirname + "/build/favicon.ico"));
