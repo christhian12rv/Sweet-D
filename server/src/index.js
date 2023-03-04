@@ -18,10 +18,15 @@ const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
 const cartRoute = require("./routes/cart.route");
+const config = require('./configs/config');
+
+const corsOptions = {
+    origin: config.clientUrl,
+};
 
 app.use(favicon(__dirname + "/build/favicon.ico"));
 app.use(express.static(__dirname));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.json());

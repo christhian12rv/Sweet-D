@@ -9,4 +9,5 @@ module.exports = {
 	dbPort: process.env.DB_PORT,
 	nodemailerUser: process.env.NODEMAILER_USER,
 	nodemailerPassword: process.env.NODEMAILER_PASSWORD,
+	clientUrl: process.env.CLIENT_URL,
 };

@@ -6,8 +6,10 @@
     "scripts": {
         "start": "npm run server",
         "dev": "nodemon ./src/index.js",
-        "both-dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-        "server": "pm2 start --no-daemon ./src/index.js --watch --name sweetd-server",
+        "both:dev": "concurrently --kill-others-on-fail \"npm run server:dev\" \"npm run client\"",
+        "both:prod": "concurrently --kill-others-on-fail \"npm run server:prod\" \"npm run client\"",
+        "server:dev": "nodemon ./src/index.js",
+        "server:prod": "pm2 start --no-daemon ./src/index.js --watch --name sweetd-server",
         "client": "cd ../client && npm start",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
