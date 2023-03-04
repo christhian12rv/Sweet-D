@@ -74,7 +74,7 @@ export function updateToCart(id, extras, quantity) {
                             : p.extras;
 
                         return p;
-                    });
+                    }) : [];
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
@@ -137,7 +137,7 @@ export function getCart() {
                         });
 
                         return p;
-                    });
+                    }) : [];
                 dispatch({
                     type: types.CART_ADD_PRODUCT,
                     payload: {
