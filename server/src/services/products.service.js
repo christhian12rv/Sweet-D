@@ -3,6 +3,7 @@ const path = require("path");
 const cloudinary = require("cloudinary").v2;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const fs = require("fs");
 
 const ProductModel = require("../models/Product.model");
 
@@ -82,6 +83,7 @@ exports.create = async (
         await new Promise(resolve => {
             const imageName = uuidv4() + path.extname(photo.name);
             const imagePath = uploadPath + imageName;
+
             photo.mv(imagePath, async error => {
                 if (error) throw error;
                 else {
@@ -93,6 +95,8 @@ exports.create = async (
                         url: cloudinaryResponse.secure_url,
                         public_id: cloudinaryResponse.public_id
                     });
+
+                    fs.unlinkSync(imagePath);
                 }
                 resolve(true);
             });

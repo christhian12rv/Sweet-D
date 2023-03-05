@@ -26,6 +26,6 @@ exports.verifyJWTAdmin = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.json({ status: 500, msg: "Usuário inválido" });
+        return res.json({ status: 500, msg: "Usuário inválido" });
     }
 };
