@@ -1,5 +1,5 @@
 import { Storefront } from '@mui/icons-material';
-import { AppBar, Box, Button, Grid, Typography } from '@mui/material';
+import { AppBar, Box, Button, ButtonProps, Grid, ListItem, ListItemProps, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 type AppBarProps = {
@@ -7,10 +7,14 @@ type AppBarProps = {
 	scrollTrigger: boolean;
 }
 
-export const AppBarCustom = styled(AppBar)<AppBarProps>(({ scrollTrigger, }) => ({
+export const AppBarCustom = styled(AppBar)<AppBarProps>(({ theme, scrollTrigger, }) => ({
+	left: '50% !important',
+	transform: 'translate(-50%, 0)',
+	alignItems: 'center',
+	justifyContent: 'center',
 	padding: '.75em',
-	backgroundColor:  scrollTrigger ? 'red !important' : 'transparent !important',
-	boxShadow: 'none !important',
+	backgroundColor:  scrollTrigger ? 'white !important' : 'transparent !important',
+	boxShadow: scrollTrigger ? '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%) !important' : 'none !important',
 }));
 
 type LogoImgProps = {
@@ -45,7 +49,8 @@ export const LogoTitle = styled(Typography)(({ theme, }) => ({
 }));
 
 export const CartIcon = styled(Storefront)(({ theme, }) => ({
-	color: theme.palette.common.black,
+	marginTop: '5px',
+	color: theme.palette.primary.dark,
 	fontWeight: 'bold',
 	'&:hover': {
 		color: theme.palette.primary.darker,
@@ -53,8 +58,25 @@ export const CartIcon = styled(Storefront)(({ theme, }) => ({
 	transition: 'all .25s',
 }));
 
-export const NavItem = styled(Button)(({ theme, }) => ({
-	color: theme.palette.common.black,
+type NavItemProps = {
+	active: boolean;
+} & ButtonProps;
+
+export const NavItem = styled(Button)<NavItemProps>(({ active, theme, }) => ({
+	color: !active ? theme.palette.common.black : theme.palette.primary.dark,
+	'&:hover': {
+		color: theme.palette.primary.darker,
+	},
+	transition: 'all .25s',
+}));
+
+type NavItemMobileProps = {
+	active: boolean;
+} & ListItemProps;
+
+export const NavItemMobile = styled(ListItem)<NavItemMobileProps>(({ active, theme, }) => ({
+	color: !active ? theme.palette.common.black : theme.palette.primary.dark,
+	padding: 0,
 	'&:hover': {
 		color: theme.palette.primary.darker,
 	},
@@ -67,4 +89,10 @@ export const LoginButton = styled(Button)(({ theme, }) => ({
 		color: theme.palette.primary.darker,
 	},
 	transition: 'all .25s',
+}));
+
+export const BoxSidebarMobile = styled(Box)(({ theme, }) => ({
+	textAlign: 'center',
+	backgroundColor: theme.palette.primary.lighter,
+	height: '100%',
 }));

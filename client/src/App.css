@@ -1,3 +1,32 @@
+@font-face {
+  font-family: "AndadaPro";
+  src: url("./assets/fonts/AndadaPro-Regular.ttf");
+}
+
+#root {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: AndadaPro, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100vh;
+  /* min-height: 100%; */
+  min-height: 3000px;
+  width: 100vw !important;
+}
+
 .App {
   text-align: center;
 }

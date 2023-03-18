@@ -1,15 +1,11 @@
 import React from 'react';
-import { LinkUnstyled } from './LinkUnstyled.styled';
+import { LinkProps } from 'react-router-dom';
+import { LinkStyled } from './LinkUnstyled.styled';
 
-type Props = {
-	to: string;
-	children: any
-};
-
-export const Navbar: React.FunctionComponent<Props> = (props) => {
+export const LinkUnstyled: React.FunctionComponent<LinkProps> = (props) => {
 	return (
-		<LinkUnstyled to={props.to}>
+		<LinkStyled {...props}>
 			{props.children}
-		</LinkUnstyled>
+		</LinkStyled>
 	);
 };

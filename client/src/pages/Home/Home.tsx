@@ -1,21 +1,28 @@
-import { GlobalStyles } from '@mui/material';
+import { Box, GlobalStyles, Grid, Typography } from '@mui/material';
 import React from 'react';
 import MultipleBubblesBackground from '../../assets/svg/MultipleBubblesBackground.svg';
-import MultipleWaves from '../../assets/svg/MultipleWaves';
+import DonutImg from '../../assets/img/Donut.png';
+import { MainButton } from '../../components/MainButton';
 import { BoxArea, GridContainer } from './Home.styled';
+import { Lead } from './Lead';
+import { Products } from './Products';
+import { SizesSection } from './SizesSection';
 
 export const Home: React.FunctionComponent = () => {
 	return (
 		<>
 			<BoxArea>
-				<GlobalStyles styles={(theme): any => ({
+				<GlobalStyles styles={(): any => ({
 					body: {
 						backgroundImage: `url(${MultipleBubblesBackground})`,
 						backgroundSize: '600px',
 					},
 				})}/>
 				<GridContainer>
-					<MultipleWaves/>
+					<Lead/>
+					<SizesSection/>
+					<Products/>
+					{/* <MultipleWaves/> */}
 				</GridContainer>
 			</BoxArea>
 		</>

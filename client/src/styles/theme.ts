@@ -20,9 +20,11 @@ declare module '@mui/material/styles' {
 
   interface PaletteColor {
     darker: string;
+		lighter: string;
   }
   interface SimplePaletteColorOptions {
     darker?: string;
+		lighter?: string;
   }
 
 	interface CommonColors {
@@ -43,6 +45,7 @@ export default createTheme({
 			dark: '#c49280',
 			darker: '#8f6a5c',
 			light: '#ffcfbd',
+			lighter: '#ffdccf',
 		},
 		// secondary: {
 		// 	main: '#f35151',
