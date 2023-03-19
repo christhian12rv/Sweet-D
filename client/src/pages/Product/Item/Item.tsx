@@ -1,4 +1,4 @@
-import { Box, Dialog, Divider, Grid, MenuItem, TextField, Typography, Checkbox } from '@mui/material';
+import { Box, Dialog, Divider, Grid, MenuItem, TextField, Typography, Checkbox, Snackbar, Alert } from '@mui/material';
 import React, { useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { LinkUnstyled } from '../../../components/LinkUnstyled';
@@ -33,6 +33,11 @@ const itemPastasArray = [
 		label: 'Baunilha',
 		value: 'Baunilha',
 		price: '0,00',
+	},
+	{
+		label: 'Misto',
+		value: 'Misto',
+		price: '0,00',
 	}
 ];
 
@@ -46,15 +51,26 @@ const itemFillingsArray = [
 		label: 'Ninho',
 		value: 'Ninho',
 		price: '2,00',
+	},
+	{
+		label: 'Morango',
+		value: 'Morango',
+		price: '3,00',
 	}
 ];
+
+const itemSizesArray = ['250ml', '500ml'];
 
 export const Item: React.FunctionComponent = () => {
 	const [openBuyItemDialog, setOpenBuyItemDialog] = useState(false);
 	const [isBuyAction, setIsBuyAction] = useState(false);
 	const [itemPastas, setItemPastas] = useState<string[]>([]);
 	const [itemFillings, setItemFillings] = useState<string[]>([]);
+	const [openItemPastasSnackbar, setOpenItemPastasSnackbar] = useState(false);
+	const [openItemFillingsSnackbar, setOpenItemFillingsSnackbar] = useState(false);
 	const [quantity, setQuantity] = useState(1);
+	const [size, setSize] = useState('');
+	
 
 	const handleOpenBuyItemDialog = (): void => {
 		setOpenBuyItemDialog(true);
@@ -74,17 +90,38 @@ export const Item: React.FunctionComponent = () => {
 	};
 
 	const handleChangeItemPastas = (event): void => {
+		if (event.target.value.length >= 3) {
+			handleChangeOpenItemPastasSnackbar(true);
+			return;
+		}
+
 		setItemPastas(event.target.value);
 	};
 
 	const handleChangeItemFillings = (event): void => {
+		if (event.target.value.length >= 3) {
+			handleChangeOpenItemFillingsSnackbar(true);
+			return;
+		}
+
 		setItemFillings(event.target.value);
+	};
+
+	const handleChangeOpenItemPastasSnackbar = (value): void => {
+		setOpenItemPastasSnackbar(value);
+	};
+
+	const handleChangeOpenItemFillingsSnackbar = (value): void => {
+		setOpenItemFillingsSnackbar(value);
 	};
 
 	const handleChangeQuantity = (event): void => {
 		setQuantity(Number(event.target.value));
 	};
 
+	const handleChangeSize = (event): void => {
+		setSize(event.target.value);
+	};
 
 	return (
 		<Grid display="flex" flexWrap="wrap" justifyContent="space-around" gap={10} px={2} sx={{ width: '100%', }}>
@@ -163,10 +200,18 @@ export const Item: React.FunctionComponent = () => {
 								</MenuItem>
 							))}
 						</TextField>
+						<Snackbar
+							open={openItemPastasSnackbar}
+							autoHideDuration={6000}
+							onClose={(): any => handleChangeOpenItemPastasSnackbar(false)}
+							anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+						>
+							<Alert onClose={(): any => handleChangeOpenItemPastasSnackbar(false)} severity="error" sx={{ width: '100%', }}>
+								Você só pode escolher no máximo 2 massas
+							</Alert>
+						</Snackbar>
 
-						<Divider sx={{ my: 2, }}/>
-
-						<Typography sx={{ mb: 1, }}>Recheios</Typography>
+						<Typography sx={{ mb: 1, mt: 2, }}>Recheios</Typography>
 						<TextField
 							fullWidth
 							select
@@ -190,6 +235,16 @@ export const Item: React.FunctionComponent = () => {
 								</MenuItem>
 							))}
 						</TextField>
+						<Snackbar
+							open={openItemFillingsSnackbar}
+							autoHideDuration={6000}
+							onClose={(): any => handleChangeOpenItemFillingsSnackbar(false)}
+							anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+						>
+							<Alert onClose={(): any => handleChangeOpenItemFillingsSnackbar(false)} severity="error" sx={{ width: '100%', }}>
+								Você só pode escolher no máximo 2 recheios
+							</Alert>
+						</Snackbar>
 						
 						<Divider sx={{ my: 2, }}/>
 
@@ -200,6 +255,25 @@ export const Item: React.FunctionComponent = () => {
 							value={quantity}
 							onChange={handleChangeQuantity}
 							InputProps={{ inputProps: { min: 1, }, }}/>
+
+						<Typography sx={{ mb: 1, mt: 2, }}>Tamanho</Typography>
+						<TextField
+							fullWidth
+							select
+							SelectProps={{
+								value: size,
+								onChange: handleChangeSize,
+							}}
+							label="Tamanho"
+						>
+							{itemSizesArray.map((option) => (
+								<MenuItem key={option} value={option}>
+									<Box component="span" sx={{ flexGrow: 1, }}>
+										{option}
+									</Box>
+								</MenuItem>
+							))}
+						</TextField>
 
 						<MainButton style={{ marginTop: '1em', }}>Concluir</MainButton>
 					</FormControlStyled>

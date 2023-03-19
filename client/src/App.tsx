@@ -11,6 +11,7 @@ import { Products } from './pages/Products';
 import RoutesEnum from './types/enums/RoutesEnum';
 import { ScrollToTop } from './components/utils/ScrollToTop';
 import { Product } from './pages/Product';
+import { Cart } from './pages/Cart';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -23,6 +24,7 @@ export const App: React.FunctionComponent<object> = () => {
 						<Route index element={<Home/>} />
 						<Route path={RoutesEnum.PRODUCTS} element={<Products/>} />
 						<Route path={`${RoutesEnum.PRODUCT}:slug`} element={<Product/>} />
+						<Route path={`${RoutesEnum.CART}`} element={<Cart/>} />
 					</Route>
 				</Routes>
 			</BrowserRouter >

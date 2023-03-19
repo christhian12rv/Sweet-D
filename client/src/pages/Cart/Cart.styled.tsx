@@ -4,19 +4,19 @@ import { Box, Grid, styled } from '@mui/material';
 export const BoxArea = styled(Box)(() => ({
 	width: '100%',
 	display: 'flex',
+	flexDirection: 'column',
 	minHeight: 400,
 	alignItems: 'center',
 	justifyContent: 'center',
 	margin: '0 !important',
-	padding: '2em 0 0 0 !important',
+	padding: '1em !important',
 }));
 
 export const GridContainer = styled(Grid)(() => ({
 	display: 'flex',
-	flexDirection: 'column',
-	gap: '3em',
-	alignItems: 'center',
+	flexWrap: 'wrap',
 	justifyContent: 'center',
+	gap: '3em',
 	maxWidth: 1280,
 	width: '100%',
 	margin: '0 !important',
