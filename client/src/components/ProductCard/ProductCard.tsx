@@ -5,6 +5,7 @@ import { BoxImg, CardContentStyled, CardStyled, Title, Price, Description, CardA
 import DonutImg from '../../assets/img/donut-example.jpg';
 import { ExitToAppRounded, ShoppingBagOutlined, StorefrontOutlined } from '@mui/icons-material';
 import { LinkUnstyled } from '../LinkUnstyled';
+import RoutesEnum from '../../types/enums/RoutesEnum';
 
 const images = [
 	{
@@ -23,21 +24,6 @@ const images = [
 
 export const ProductCard: React.FunctionComponent = () => {
 
-	const [activeStep, setActiveStep] = React.useState(0);
-	const maxSteps = images.length;
-
-	const handleNext = (): void => {
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-	};
-
-	const handleBack = (): void => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
-	};
-
-	const handleStepChange = (step: number): void => {
-		setActiveStep(step);
-	};
-
 	return (
 		<CardStyled>
 			<CardContentStyled>
@@ -47,7 +33,7 @@ export const ProductCard: React.FunctionComponent = () => {
 					},
 				}}>
 					{images.map((step, index) => (
-						<LinkUnstyled key={index} to="/products/teste">
+						<LinkUnstyled key={index} to={RoutesEnum.PRODUCT + 'teste'}>
 							<BoxImg component="div" sx={{ backgroundImage: `url(${step.imgPath})`, }}/>
 						</LinkUnstyled>
 					))}
@@ -67,19 +53,18 @@ export const ProductCard: React.FunctionComponent = () => {
 				</Grid>
 			</CardContentStyled>
 			<CardActionsStyled>
-				{/* <MainButton style={{ width: '100%', flexGrow: 1, }}>Visitar</MainButton> */}
 				<BoxActionIcon component="div" sx={{ flexGrow: 1, }}>
-					<BoxActionLink className="boxActionLink" to="/products/teste">
+					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
 						<ExitToAppRounded sx={{ fontSize: '1.7em', }}/>
 					</BoxActionLink>
 				</BoxActionIcon>
 				<BoxActionIcon component="div">
-					<BoxActionLink className="boxActionLink" to="/products/teste">
+					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
 						<ShoppingBagOutlined sx={{ fontSize: '1.7em', }}/>
 					</BoxActionLink>
 				</BoxActionIcon>
 				<BoxActionIcon component="div">
-					<BoxActionLink className="boxActionLink" to="/products/teste">
+					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
 						<StorefrontOutlined sx={{ fontSize: '1.7em', }}/>
 					</BoxActionLink>
 				</BoxActionIcon>

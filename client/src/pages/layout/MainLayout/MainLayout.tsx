@@ -1,7 +1,8 @@
 import { Box, Toolbar } from '@mui/material';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Navbar } from '../../../components/Navbar';
+import { Footer } from './Footer';
+import { Navbar } from './Navbar';
 
 export const MainLayout: React.FunctionComponent<object> = () => {
 	return (
@@ -11,6 +12,7 @@ export const MainLayout: React.FunctionComponent<object> = () => {
 				<Toolbar/>
 				<Outlet/>
 			</Box>
+			<Footer/>
 		</>
 	);
 };

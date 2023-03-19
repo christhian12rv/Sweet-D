@@ -1,4 +1,7 @@
 import { createTheme } from '@mui/material';
+import { ptBR as dataGridPtBR } from '@mui/x-data-grid';
+import { ptBR as corePtBR } from '@mui/material/locale';
+import { ptBR } from '@mui/x-date-pickers';
 
 interface InputColors {
 	readOnly: string;
@@ -6,6 +9,10 @@ interface InputColors {
 
 interface FormColors {
 	input: InputColors;
+}
+
+interface CardShadows {
+	main: string;
 }
 
 declare module '@mui/material/styles' {
@@ -36,16 +43,26 @@ declare module '@mui/material/styles' {
 		greenDark: string;
 		greenDarker: string;
 	}
+
+
+	interface Shadows {
+		card: CardShadows;
+	}
 }
 
 export default createTheme({
 	palette: {
 		primary: {
-			main: '#fabca5',
-			dark: '#c49280',
-			darker: '#8f6a5c',
-			light: '#ffcfbd',
-			lighter: '#ffdccf',
+			// main: '#fabca5',
+			// dark: '#c49280',
+			// darker: '#8f6a5c',
+			// light: '#ffcfbd',
+			// lighter: '#ffdccf',
+			main: '#ffb1c6',
+			dark: '#ff94b1',
+			darker: '#ff7c9f',
+			light: '#ffd4e0',
+			lighter: '#ffedf2',
 		},
 		// secondary: {
 		// 	main: '#f35151',
@@ -54,6 +71,7 @@ export default createTheme({
 		// },
 		secondary: {
 			main: '#cb365e',
+			dark: '#c51645',
 		},
 		common: {
 			black: 'rgb(22, 22, 22)',
@@ -71,4 +89,7 @@ export default createTheme({
 			},
 		},
 	},
-});
+},
+ptBR,
+dataGridPtBR,
+corePtBR);

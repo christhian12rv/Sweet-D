@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Box, CssBaseline, Toolbar, IconButton, Typography, Drawer, Divider, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, useMediaQuery } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Face from '@mui/icons-material/Face';
-import Logo from '../../assets/img/Logo.png';
+import Logo from '../../../../assets/img/Logo.png';
 import { AppBarCustom, BoxArea, CartIcon, LogoImg, LogoTitle, NavItem, LoginButton, NavItemMobile, BoxSidebarMobile } from './Navbar.styled';
-import RoutesEnum from '../../types/enums/RoutesEnum';
-import ScreenSizeQuerysEnum from '../../types/enums/ScreenSizeQuerysEnum';
-import { LinkUnstyled } from '../LinkUnstyled';
+import RoutesEnum from '../../../../types/enums/RoutesEnum';
+import ScreenSizeQuerysEnum from '../../../../types/enums/ScreenSizeQuerysEnum';
+import { LinkUnstyled } from '../../../../components/LinkUnstyled';
 import { useLocation } from 'react-router-dom';
 
 type Props = {
@@ -82,7 +82,7 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 	return (
 		<BoxArea>
 			<CssBaseline />
-			<AppBarCustom component="nav" scrollTrigger={scrollTrigger}>
+			<AppBarCustom component="nav" scrolltrigger={scrollTrigger}>
 				<Toolbar sx={{ display: 'flex', width: '100%', maxWidth: '1280px', }}>
 					<IconButton
 						color="inherit"

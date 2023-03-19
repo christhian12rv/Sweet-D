@@ -1,11 +1,11 @@
 import { Box, BoxProps, Card, CardProps, styled } from '@mui/material';
 
 type CardStyledProps = {
-	backgroundColor: string;
+	backgroundcolor: string;
 } & CardProps;
 
-export const CardStyled = styled(Card)<CardStyledProps>(({ backgroundColor, theme, }) => ({
-	backgroundColor,
+export const CardStyled = styled(Card)<CardStyledProps>(({ backgroundcolor, theme, }) => ({
+	backgroundColor: backgroundcolor,
 	borderRadius: '17.5px',
 	boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px !important',
 	width: '170px',

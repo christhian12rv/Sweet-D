@@ -4,17 +4,17 @@ import { styled } from '@mui/system';
 
 type AppBarProps = {
 	component: string;
-	scrollTrigger: boolean;
+	scrolltrigger: boolean;
 }
 
-export const AppBarCustom = styled(AppBar)<AppBarProps>(({ theme, scrollTrigger, }) => ({
+export const AppBarCustom = styled(AppBar)<AppBarProps>(({ theme, scrolltrigger, }) => ({
 	left: '50% !important',
 	transform: 'translate(-50%, 0)',
 	alignItems: 'center',
 	justifyContent: 'center',
 	padding: '.75em',
-	backgroundColor:  scrollTrigger ? 'white !important' : 'transparent !important',
-	boxShadow: scrollTrigger ? '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%) !important' : 'none !important',
+	backgroundColor:  scrolltrigger ? 'white !important' : 'transparent !important',
+	boxShadow: scrolltrigger ? '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%) !important' : 'none !important',
 }));
 
 type LogoImgProps = {

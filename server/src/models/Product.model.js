@@ -24,22 +24,22 @@ const Product = db.define("product", {
         type: Sequelize.FLOAT,
         allowNull: false
     },
-    storage: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
+    // storage: {
+    //     type: Sequelize.INTEGER,
+    //     allowNull: false
+    // },
     slug: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    extras: {
-        type: Sequelize.STRING(500),
-        allowNull: true
-    },
-    priceExtras: {
-        type: Sequelize.STRING(500),
-        allowNull: true
-    },
+    // extras: {
+    //     type: Sequelize.STRING(500),
+    //     allowNull: true
+    // },
+    // priceExtras: {
+    //     type: Sequelize.STRING(500),
+    //     allowNull: true
+    // },
     active: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

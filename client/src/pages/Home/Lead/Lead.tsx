@@ -4,7 +4,8 @@ import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import { MainButton } from '../../../components/MainButton';
 import { InstagramIcon, WhatsAppIcon } from './Lead.styled';
 import SocialNetworksLinksEnum from '../../../types/enums/SocialNetworksLinksEnum';
-import DonutImg from '../../../assets/img/Donut.png';
+import PotCake from '../../../assets/img/pote_v1.png';
+import RoutesEnum from '../../../types/enums/RoutesEnum';
 
 export const Lead: React.FunctionComponent = () => {
 	return (
@@ -18,7 +19,9 @@ export const Lead: React.FunctionComponent = () => {
 				</Typography>
 				<Grid display="flex" alignItems="center" gap={1} marginTop={1.5}>
 					<Box sx={{ flexGrow: '1', }}>
-						<MainButton style={{ width: 'fit-content', }}>Ver Produtos</MainButton>
+						<LinkUnstyled to={RoutesEnum.PRODUCTS}>
+							<MainButton style={{ width: 'fit-content', }}>Ver Produtos</MainButton>
+						</LinkUnstyled>
 					</Box>
 					<LinkUnstyled to={SocialNetworksLinksEnum.INSTAGRAM}>
 						<InstagramIcon/>
@@ -29,7 +32,7 @@ export const Lead: React.FunctionComponent = () => {
 				</Grid>
 			</Grid>
 			<Grid display="flex" flexDirection="column" gap={4} maxWidth="600px">
-				<Box component="img" src={DonutImg} sx={{ width: '300px', }}/>
+				<Box component="img" src={PotCake} sx={{ width: '400px', }}/>
 			</Grid>
 		</Grid>
 	);

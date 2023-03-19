@@ -7,6 +7,7 @@ import { BoxArea, GridContainer } from './Home.styled';
 import { Lead } from './Lead';
 import { Products } from './Products';
 import { SizesSection } from './SizesSection';
+import { DateVisualization } from './DateVisualization';
 
 export const Home: React.FunctionComponent = () => {
 	return (
@@ -22,7 +23,7 @@ export const Home: React.FunctionComponent = () => {
 					<Lead/>
 					<SizesSection/>
 					<Products/>
-					{/* <MultipleWaves/> */}
+					<DateVisualization/>
 				</GridContainer>
 			</BoxArea>
 		</>

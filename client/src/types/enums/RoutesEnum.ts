@@ -1,6 +1,6 @@
 enum RoutesEnum {
 	PRODUCTS = '/products',
-	PRODUCT = '/products/:slug',
+	PRODUCT = '/products/',
 
 	ABOUT_US = '/about-us',
 	CONTACT = '/contact',
