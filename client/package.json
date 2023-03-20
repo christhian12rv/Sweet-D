@@ -17,6 +17,7 @@
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "dayjs": "^1.11.7",
+    "libphonenumber-js": "^1.10.24",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-material-ui-carousel": "^3.4.2",
