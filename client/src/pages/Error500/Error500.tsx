@@ -3,6 +3,7 @@ import React from 'react';
 import { BoxArea, GridContainer } from './Error500.styled';
 import ScaredPineappleImg from '../../assets/img/Scared-Pineapple.png';
 import { MainButton } from '../../components/MainButton';
+import { LinkUnstyled } from '../../components/LinkUnstyled';
 
 export const Error500: React.FunctionComponent = () => {
 	return (
@@ -16,7 +17,9 @@ export const Error500: React.FunctionComponent = () => {
 					<Typography variant="h5" sx={{ mb: 1, }}>Erro interno</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], })}>Ocorreu um erro interno do servidor.</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], mb: 2, })}>Tente novamente mais tarde ou entre em contato.</Typography>
-					<MainButton design="rounded">Página Inicial</MainButton>
+					<LinkUnstyled to="/">
+						<MainButton design="rounded">Página Inicial</MainButton>
+					</LinkUnstyled>
 				</Grid>
 			</GridContainer>
 		</BoxArea>

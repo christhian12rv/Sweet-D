@@ -58,7 +58,7 @@ export const Products: React.FunctionComponent = () => {
 			<BoxArea>
 				<GridContainer>
 					{/* <MainButton style={{ alignSelf: 'flex-start', }} onClick={handleOpenFilterModal}>Filtrar</MainButton> */}
-
+					<Typography variant="h4">Produtos</Typography>
 					<Grid display="flex" flexWrap="wrap" alignItems="center" justifyContent="center" gap={5} width="100%">
 						{array.map(a => (
 							<ProductCard key={a}/>
@@ -68,7 +68,7 @@ export const Products: React.FunctionComponent = () => {
 					{/* <Pagination count={10} size="large" page={page} onChange={handleChangePage} /> */}
 				</GridContainer>
 
-				<Modal
+				{/* <Modal
 					open={openFilterModal}
 					onClose={handleCloseFilterModal}
 					aria-labelledby="modal-modal-title"
@@ -158,7 +158,7 @@ export const Products: React.FunctionComponent = () => {
 							<MainButton style={{ margin: '1em 1em 0 1em', }}>Aplicar Filtros</MainButton>
 						</FormControlStyled>
 					</BoxModal>
-				</Modal>
+				</Modal> */}
 			</BoxArea>
 		</>
 	);

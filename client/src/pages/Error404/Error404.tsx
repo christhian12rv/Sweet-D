@@ -3,6 +3,7 @@ import React from 'react';
 import { BoxArea, GridContainer } from './Error404.styled';
 import ScaredWatermelonImg from '../../assets/img/Scared-Watermelon.png';
 import { MainButton } from '../../components/MainButton';
+import { LinkUnstyled } from '../../components/LinkUnstyled';
 
 export const Error404: React.FunctionComponent = () => {
 	return (
@@ -16,7 +17,9 @@ export const Error404: React.FunctionComponent = () => {
 					<Typography variant="h5" sx={{ mb: 1, }}>Página não encontrada</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], })}>Oops... A página que você tentou acessar não existe.</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], mb: 2, })}>Você pode voltar à página inicial ou tentar acessar uma nova página.</Typography>
-					<MainButton design="rounded">Página Inicial</MainButton>
+					<LinkUnstyled to="/">
+						<MainButton design="rounded">Página Inicial</MainButton>
+					</LinkUnstyled>
 				</Grid>
 			</GridContainer>
 		</BoxArea>

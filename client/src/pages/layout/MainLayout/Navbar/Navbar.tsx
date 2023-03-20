@@ -23,10 +23,6 @@ const navItems = [
 		link: RoutesEnum.PRODUCTS,
 	},
 	{
-		title: 'Quem Somos',
-		link: RoutesEnum.ABOUT_US,
-	},
-	{
 		title: 'Contato',
 		link: RoutesEnum.CONTACT,
 	}
@@ -138,7 +134,7 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 
 						{!isMobile &&
 						<>
-							<LinkUnstyled to={RoutesEnum.CART}>
+							<LinkUnstyled to={RoutesEnum.LOGIN}>
 								<LoginButton>
 									<Face sx={{ mr: 1, }}/>
 									Login

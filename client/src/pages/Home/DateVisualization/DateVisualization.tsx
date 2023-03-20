@@ -12,8 +12,8 @@ export const DateVisualization: React.FunctionComponent = () => {
 			<Typography>
 				Todas as nossas entregas são feitas no Bloco 1B na Universidade Federal de Uberlândia!
 			</Typography>
-			<CardBox mt={8}>
-				<DateTimePicker okButtonLabel="OK" orientation="landscape"/>
+			<CardBox mt={8} sx={{ maxWidth: '90vw', overflowX: 'auto', }}>
+				<DateTimePicker okButtonLabel="OK"/>
 			</CardBox>
 		</Grid>
 	);

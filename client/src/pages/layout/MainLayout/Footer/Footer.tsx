@@ -21,10 +21,10 @@ export const Footer: React.FunctionComponent = () => {
 			<Grid display="flex" alignItems="center" justifyContent="center" gap={3} mt={3} mb={1}>
 				<Grid display="flex" alignItems="center" justifyContent="center" gap={1}>
 					<Typography variant="body1" sx={{ mr: 1, }}>Rafael</Typography>
-					<LinkUnstyled to={SocialNetworksLinksEnum.INSTAGRAM_RAFAEL}>
+					<LinkUnstyled to={SocialNetworksLinksEnum.INSTAGRAM_RAFAEL} style={{ lineHeight: 'normal', }}>
 						<InstagramIcon/>
 					</LinkUnstyled>
-					<LinkUnstyled to={SocialNetworksLinksEnum.WHATSAPP_RAFAEL}>
+					<LinkUnstyled to={SocialNetworksLinksEnum.WHATSAPP_RAFAEL} style={{ lineHeight: 'normal', }}>
 						<WhatsAppIcon/>
 					</LinkUnstyled>
 				</Grid>
@@ -33,10 +33,10 @@ export const Footer: React.FunctionComponent = () => {
 
 				<Grid display="flex" alignItems="center" justifyContent="center" gap={1}>
 					<Typography variant="body1" sx={{ mr: 1, }}>Fellype</Typography>
-					<LinkUnstyled to={SocialNetworksLinksEnum.INSTAGRAM_FELLYPE}>
+					<LinkUnstyled to={SocialNetworksLinksEnum.INSTAGRAM_FELLYPE} style={{ lineHeight: 'normal', }}>
 						<InstagramIcon/>
 					</LinkUnstyled>
-					<LinkUnstyled to={SocialNetworksLinksEnum.WHATSAPP_FELLYPE}>
+					<LinkUnstyled to={SocialNetworksLinksEnum.WHATSAPP_FELLYPE} style={{ lineHeight: 'normal', }}>
 						<WhatsAppIcon/>
 					</LinkUnstyled>
 				</Grid>

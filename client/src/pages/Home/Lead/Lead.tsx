@@ -4,7 +4,7 @@ import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import { MainButton } from '../../../components/MainButton';
 import { InstagramIcon, WhatsAppIcon } from './Lead.styled';
 import SocialNetworksLinksEnum from '../../../types/enums/SocialNetworksLinksEnum';
-import PotCake from '../../../assets/img/pote_v1.png';
+import PotCakeImg from '../../../assets/img/pote_v1.png';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
 
 export const Lead: React.FunctionComponent = () => {
@@ -32,7 +32,7 @@ export const Lead: React.FunctionComponent = () => {
 				</Grid>
 			</Grid>
 			<Grid display="flex" flexDirection="column" gap={4} maxWidth="600px">
-				<Box component="img" src={PotCake} sx={{ width: '400px', }}/>
+				<Box component="img" src={PotCakeImg} sx={{ width: '400px', maxWidth: '100vw', }}/>
 			</Grid>
 		</Grid>
 	);

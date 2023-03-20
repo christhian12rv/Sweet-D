@@ -1,6 +1,5 @@
 import { Box, Grid, styled } from '@mui/material';
 
-
 export const BoxArea = styled(Box)(() => ({
 	width: '100%',
 	display: 'flex',

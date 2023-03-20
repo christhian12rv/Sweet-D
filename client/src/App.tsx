@@ -16,6 +16,7 @@ import { Error404 } from './pages/Error404';
 import { Error500 } from './pages/Error500';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Contact } from './pages/Contact';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -31,6 +32,7 @@ export const App: React.FunctionComponent<object> = () => {
 						<Route path={RoutesEnum.CART} element={<Cart/>} />
 						<Route path={RoutesEnum.LOGIN} element={<Login/>} />
 						<Route path={RoutesEnum.REGISTER} element={<Register/>} />
+						<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
 						<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
 						<Route path="*" element={<Error404 />} />
 					</Route>
