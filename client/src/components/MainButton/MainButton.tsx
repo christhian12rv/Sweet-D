@@ -3,12 +3,12 @@ import React from 'react';
 import { ButtonStyled } from './MainButton.styled';
 
 type Props = {
-	design: ['square', 'rounded']
-}
+	design?: 'square' | 'rounded' | undefined;
+} & ButtonProps;
 
-export const MainButton: React.FunctionComponent<ButtonProps> = (props) => {
+export const MainButton: React.FunctionComponent<Props> = (props) => {
 	return (
-		<ButtonStyled onClick={props.onClick} style={props.style}>
+		<ButtonStyled onClick={props.onClick} style={props.style} design={props.design ? props.design : 'square'}>
 			{props.children}
 		</ButtonStyled>
 	);

@@ -8,8 +8,11 @@ enum RoutesEnum {
 
 	LOGIN = '/login',
 	REGISTER = '/register',
+	FORGOT_PASSWORD = '/forgot-password',
 
 	CART = '/cart',
+
+	ERROR_500 = '/error/500'
 }
 
 export default RoutesEnum;

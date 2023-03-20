@@ -1,7 +1,12 @@
-import { Button } from '@mui/material';
+import { Button, ButtonProps } from '@mui/material';
 import { styled } from '@mui/system';
 
-export const ButtonStyled = styled(Button)(({ theme, }) => ({
+type Props = {
+	design?: 'square' | 'rounded' | undefined;
+} & ButtonProps;
+
+export const ButtonStyled = styled(Button)<Props>(({ theme, design, }) => ({
+	...(design && design == 'rounded' && { borderRadius: '20px', }) ,
 	backgroundColor: theme.palette.primary.light,
 	color: theme.palette.secondary.main,
 	fontWeight: 'bold',
