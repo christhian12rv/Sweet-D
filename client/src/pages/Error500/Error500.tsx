@@ -9,11 +9,11 @@ export const Error500: React.FunctionComponent = () => {
 	return (
 		<BoxArea>
 			<GridContainer>
-				<Grid display="flex" alignItems="center" justifyContent="center">
+				<Grid display="flex" flexWrap="wrap" alignItems="center" justifyContent="center" textAlign="center">
 					<Box component="img" src={ScaredPineappleImg} sx={{ width: '250px', }}/>
 					<Typography variant="h1" sx={(theme): any => ({ color: theme.palette.secondary.dark, fontSize: '8em', })}>500</Typography>
 				</Grid>
-				<Grid display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+				<Grid display="flex" flexDirection="column" alignItems="center" justifyContent="center" textAlign="center">
 					<Typography variant="h5" sx={{ mb: 1, }}>Erro interno</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], })}>Ocorreu um erro interno do servidor.</Typography>
 					<Typography variant="body1" sx={(theme): any => ({ color: theme.palette.grey[800], mb: 2, })}>Tente novamente mais tarde ou entre em contato.</Typography>

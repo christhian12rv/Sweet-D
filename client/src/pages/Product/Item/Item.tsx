@@ -208,6 +208,7 @@ export const Item: React.FunctionComponent = () => {
 			<Dialog
 				open={openBuyItemDialog}
 				onClose={handleCloseBuyItemDialog}
+				disableScrollLock={true}
 			>
 				<BoxDialog>
 					<Grid display="flex" alignItems="center" justifyContent="center" mb="1em">

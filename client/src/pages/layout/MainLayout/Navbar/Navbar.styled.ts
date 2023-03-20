@@ -1,5 +1,5 @@
 import { Storefront } from '@mui/icons-material';
-import { AppBar, Box, Button, ButtonProps, Grid, ListItem, ListItemProps, Typography } from '@mui/material';
+import { Accordion, AppBar, Box, Button, ButtonProps, Grid, ListItem, ListItemProps, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 type AppBarProps = {
@@ -95,4 +95,9 @@ export const BoxSidebarMobile = styled(Box)(({ theme, }) => ({
 	textAlign: 'center',
 	backgroundColor: theme.palette.primary.lighter,
 	height: '100%',
+}));
+
+export const AccordionSidebarMobile = styled(Accordion)(({ theme, }) => ({
+	backgroundColor: 'transparent',
+	boxShadow: 'none',
 }));

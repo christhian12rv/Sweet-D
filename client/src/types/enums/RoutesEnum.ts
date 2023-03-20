@@ -5,10 +5,11 @@ enum RoutesEnum {
 	ABOUT_US = '/about-us',
 	CONTACT = '/contact',
 	
-
 	LOGIN = '/login',
 	REGISTER = '/register',
 	FORGOT_PASSWORD = '/forgot-password',
+	PROFILE = '/profile',
+	ORDERS = '/orders',
 
 	CART = '/cart',
 

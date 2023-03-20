@@ -139,6 +139,7 @@ export const EditItem: React.FunctionComponent<Props> = ({ openEditItemDialog, s
 		<Dialog
 			open={openEditItemDialog}
 			onClose={handleCloseEditItemDialog}
+			disableScrollLock={true}
 		>
 			<BoxDialog>
 				<Grid display="flex" alignItems="center" justifyContent="center" mb="1em">
