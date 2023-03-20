@@ -1,8 +1,6 @@
-import { Box, GlobalStyles, Grid, Typography } from '@mui/material';
+import { GlobalStyles } from '@mui/material';
 import React from 'react';
 import MultipleBubblesBackground from '../../assets/svg/MultipleBubblesBackground.svg';
-import DonutImg from '../../assets/img/Donut.png';
-import { MainButton } from '../../components/MainButton';
 import { BoxArea, GridContainer } from './Home.styled';
 import { Lead } from './Lead';
 import { Products } from './Products';
