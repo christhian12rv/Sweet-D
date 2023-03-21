@@ -10,6 +10,7 @@ enum RoutesEnum {
 	FORGOT_PASSWORD = '/forgot-password',
 	PROFILE = '/profile',
 	ORDERS = '/orders',
+	ORDER = '/orders/',
 
 	CART = '/cart',
 

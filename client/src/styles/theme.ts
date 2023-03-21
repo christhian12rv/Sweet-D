@@ -92,4 +92,5 @@ export default createTheme({
 },
 ptBR,
 dataGridPtBR,
-corePtBR);
+corePtBR,
+dataGridPtBR);

@@ -1,8 +1,7 @@
-import { Box, Paper, Divider, Grid, Typography } from '@mui/material';
+import { Divider, Grid } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import React from 'react';
 import { BoxImg, CardContentStyled, CardStyled, Title, Price, Description, CardActionsStyled, BoxActionIcon, BoxActionLink } from './ProductCard.styled';
-import DonutImg from '../../assets/img/donut-example.jpg';
 import { ExitToAppRounded, ShoppingBagOutlined, StorefrontOutlined } from '@mui/icons-material';
 import { LinkUnstyled } from '../LinkUnstyled';
 import RoutesEnum from '../../types/enums/RoutesEnum';

@@ -36,7 +36,6 @@ export const BoxArea = styled(Box)(() => ({
 export const GridContainer = styled(Grid)(() => ({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: '3em',
 	maxWidth: 1280,
 	width: '100%',
 	margin: '0 !important',
@@ -46,7 +45,6 @@ export const GridContainer = styled(Grid)(() => ({
 export const DrawerHeader = styled('div')(({ theme, }) => ({
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'flex-end',
 	padding: theme.spacing(0, 1),
 	...theme.mixins.toolbar,
 }));
@@ -73,34 +71,28 @@ export const AppBarStyled = styled(AppBar, {
 	}),
 }));
 
-// export const DrawerStyled = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open', })(
-// 	({ theme, open, }) => ({
-// 		zIndex: 1,
-// 		position: 'sticky',
-// 		top: '90px',
-// 		left: 0,
-// 		'& .MuiPaper-root': {
-// 			width: 240,
-// 			position: 'relative',
-// 			transition: 'none !important',
-// 		},
-// 		width: drawerWidth,
-// 		flexShrink: 0,
-// 		whiteSpace: 'nowrap',
-// 		boxSizing: 'border-box',
-// 		...(open && {
-// 			...openedMixin(theme),
-// 			'& .MuiDrawer-paper': openedMixin(theme),
-// 		}),
-// 		...(!open && {
-// 			...closedMixin(theme),
-// 			'& .MuiDrawer-paper': closedMixin(theme),
-// 		}),
-// 	})
-// );
-
 export const DrawerStyled = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open', })(
 	({ theme, open, }) => ({
-		
+		zIndex: 1,
+		position: 'sticky',
+		top: '90px',
+		left: 0,
+		'& .MuiPaper-root': {
+			width: 240,
+			position: 'relative',
+			transition: 'none !important',
+		},
+		width: drawerWidth,
+		flexShrink: 0,
+		whiteSpace: 'nowrap',
+		boxSizing: 'border-box',
+		...(open && {
+			...openedMixin(theme),
+			'& .MuiDrawer-paper': openedMixin(theme),
+		}),
+		...(!open && {
+			...closedMixin(theme),
+			'& .MuiDrawer-paper': closedMixin(theme),
+		}),
 	})
 );

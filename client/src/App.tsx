@@ -20,6 +20,7 @@ import { Contact } from './pages/Contact';
 import { Profile } from './pages/Profile';
 import { Orders } from './pages/Orders';
 import { ProfileLayout } from './pages/layout/ProfileLayout';
+import { Order } from './pages/Order';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -39,6 +40,7 @@ export const App: React.FunctionComponent<object> = () => {
 						<Route element={<ProfileLayout/>} >
 							<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
 							<Route path={RoutesEnum.ORDERS} element={<Orders/>} />
+							<Route path={`${RoutesEnum.ORDER}:id`} element={<Order/>} />
 						</Route>
 						<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
 						<Route path="*" element={<Error404 />} />
