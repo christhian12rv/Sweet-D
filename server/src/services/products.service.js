@@ -6,6 +6,9 @@ const Op = Sequelize.Op;
 const fs = require("fs");
 
 const ProductModel = require("../models/Product/Product.model");
+const ProductSizeModel = require('../models/Product/ProductSize.model');
+const ProductIngredientTypeModel = require('../models/Product/ProductIngredientType.model');
+const ProductIngredientModel = require('../models/Product/ProductIngredient.model');
 
 exports.findBySlug = async slug => {
     const product = await ProductModel.findOne({ where: { slug } });
@@ -63,57 +66,85 @@ exports.findAll = async (
 exports.create = async (
     name,
     description,
-    price,
-    storage,
     slug,
-    extras,
-    priceExtras,
-    photos
+    sizes,
+    ingredientTypes,
+    ingredients
+    // photos
 ) => {
-    if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
-        let arrayAuxPhotos = [];
-        arrayAuxPhotos.push(photos);
-        photos = arrayAuxPhotos;
-    }
+    // if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
+    //     let arrayAuxPhotos = [];
+    //     arrayAuxPhotos.push(photos);
+    //     photos = arrayAuxPhotos;
+    // }
 
-    let newPhotos = [];
+    // let newPhotos = [];
 
-    const uploadPath = __dirname + "/../public/img/product/";
-    for (const photo of photos) {
-        await new Promise(resolve => {
-            const imageName = uuidv4() + path.extname(photo.name);
-            const imagePath = uploadPath + imageName;
+    // const uploadPath = __dirname + "/../public/img/product/";
+    // for (const photo of photos) {
+    //     await new Promise(resolve => {
+    //         const imageName = uuidv4() + path.extname(photo.name);
+    //         const imagePath = uploadPath + imageName;
 
-            photo.mv(imagePath, async error => {
-                if (error) throw error;
-                else {
-                    const cloudinaryResponse = await cloudinary.uploader.upload(
-                        imagePath,
-                        { folder: "Products/" }
-                    );
-                    newPhotos.push({
-                        url: cloudinaryResponse.secure_url,
-                        public_id: cloudinaryResponse.public_id
-                    });
+    //         photo.mv(imagePath, async error => {
+    //             if (error) throw error;
+    //             else {
+    //                 const cloudinaryResponse = await cloudinary.uploader.upload(
+    //                     imagePath,
+    //                     { folder: "Products/" }
+    //                 );
+    //                 newPhotos.push({
+    //                     url: cloudinaryResponse.secure_url,
+    //                     public_id: cloudinaryResponse.public_id
+    //                 });
 
-                    fs.unlinkSync(imagePath);
-                }
-                resolve(true);
-            });
-        });
-    }
+    //                 fs.unlinkSync(imagePath);
+    //             }
+    //             resolve(true);
+    //         });
+    //     });
+    // }
 
     const product = await ProductModel.create({
         name,
-        ...(description && { description }),
-        photos: JSON.stringify(newPhotos),
-        price,
-        storage,
+        description,
         slug,
-        ...(extras && { extras: JSON.stringify(extras) }),
-        ...(priceExtras && { priceExtras: JSON.stringify(priceExtras) })
+        // photos: JSON.stringify(newPhotos),
+        photos: 'Teste',
     });
-    return product;
+
+    const createdSizes = await Promise.all(sizes.map( async size => {
+        return await ProductSizeModel.create({
+            productId: product.id,
+            name: size.name,
+            price: size.price,
+        });
+    }));
+
+    const createdIngredientTypes = await Promise.all(ingredientTypes.map( async ingredientType => {
+        return await ProductIngredientTypeModel.create({
+            productId: product.id,
+            min: ingredientType.min,
+            max: ingredientType.max,
+            type: ingredientType.type,
+        });
+    }));
+
+    const createdIngredients = await Promise.all(ingredients.map( async ingredient => {
+        return await ProductIngredientModel.create({
+            productId: product.id,
+            name: ingredient.name,
+            price: ingredient.price,
+            type: ingredient.type,
+        });
+    }));
+
+    return {
+        ...product.dataValues,
+        sizes: createdSizes,
+        ingredients: createdIngredients,
+        ingredientTypes: createdIngredientTypes,
+    };
 };
 
 exports.update = async (

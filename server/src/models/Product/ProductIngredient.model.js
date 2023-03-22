@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const db = require("../configs/db");
+const db = require("../../configs/db");
 
 const ProductIngredient = db.define("productIngredient", {
     id: {
@@ -25,7 +25,7 @@ const ProductIngredient = db.define("productIngredient", {
         allowNull: false,
     },
     type: {
-        type: Sequelize.ENUM('Dough', 'Filling'),
+        type: Sequelize.STRING,
         allowNull: false,
     },
     createdAt: Sequelize.DATE,

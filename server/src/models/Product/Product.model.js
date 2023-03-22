@@ -22,7 +22,8 @@ const Product = db.define("product", {
     },
     slug: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     active: {
         type: Sequelize.BOOLEAN,
@@ -34,9 +35,9 @@ const Product = db.define("product", {
 });
 
 Product.associate = function (models) {
-    Product.hasMany(models.ProductSize, { as: "productSizes" });
-    Product.hasMany(models.ProductIngredient, { as: "productIngredients" });
-    Product.hasMany(models.ProductIngredientType, { as: "productIngredientTypes" });
+    Product.hasMany(models.ProductSize, { as: "sizes" });
+    Product.hasMany(models.ProductIngredient, { as: "ingredients" });
+    Product.hasMany(models.ProductIngredientType, { as: "ingredientTypes" });
     Product.hasMany(models.OrderProduct, { as: "orderProducts" });
 };
 

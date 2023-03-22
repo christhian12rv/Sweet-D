@@ -35,7 +35,7 @@ exports.findAll = async (req, res) => {
         res.status(200).send({ totalRows, users, message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao buscar usuários';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -63,7 +63,7 @@ exports.create = async (req, res) => {
         res.status(200).send({ user, message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao criar usuário';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -91,7 +91,7 @@ exports.auth = async (req, res) => {
         res.status(200).send({ token, user, message });
     } catch (error) {
         const message = 'Ocorreram erros internos ao logar usuário';
-        logger.error(error);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -109,7 +109,7 @@ exports.logout = async (req, res) => {
         res.status(200).send({ message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao deslogar usuário';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -137,7 +137,7 @@ exports.update = async (req, res) => {
         res.status(200).send({ user, message });
     } catch (error) {
         const message = 'Ocorreram erros internos ao atualizar usuário';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -155,7 +155,7 @@ exports.getUserAuth = async (req, res) => {
         return res.status(200).send({ user, message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao verificar usuário';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -183,7 +183,7 @@ exports.sendRecoveryPasswordEmail = async (req, res) => {
         res.status(200).send({ message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao enviar email de recuperação de senha';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -207,7 +207,7 @@ exports.verifyRecoveryPasswordEmailAndToken = async (req, res) => {
         res.status(200).send({ message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao acessar a alteração de senha';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -234,7 +234,7 @@ exports.recoveryPasswordChange = async (req, res) => {
         res.status(200).send({ message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao fazer a alteração de senha';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -261,7 +261,7 @@ exports.delete = async (req, res) => {
         res.status(200).send({ message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao deletar usuário';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(a).send({ message, });
     }
@@ -288,7 +288,7 @@ exports.contactSendEmail = async (req, res) => {
         res.status(200).send({ message: responseMessage, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao enviar email';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }

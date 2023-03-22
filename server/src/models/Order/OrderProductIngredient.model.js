@@ -25,7 +25,7 @@ const OrderProductIngredient = db.define("orderProductIngredient", {
         allowNull: false,
     },
     type: {
-        type: Sequelize.ENUM('Dough', 'Filling'),
+        type: Sequelize.STRING,
         allowNull: false,
     },
     createdAt: Sequelize.DATE,

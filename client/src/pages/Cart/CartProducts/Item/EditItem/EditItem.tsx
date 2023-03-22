@@ -95,7 +95,6 @@ export const EditItem: React.FunctionComponent<Props> = ({ openEditItemDialog, s
 	};
 
 	const handleChangeProductChoicesPastas = (event): void => {
-		console.log(event.target.value);
 		if (product.ingredients?.pastas) {
 			const pastasMaxQuantity = product.ingredients?.pastasMaxQuantity ?? 0;
 			if (event.target.value.length > pastasMaxQuantity) {

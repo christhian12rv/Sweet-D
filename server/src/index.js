@@ -19,6 +19,7 @@ const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
 const cartRoute = require("./routes/cart.route");
+const logger = require('./configs/logger');
 
 const corsOptions = {
     origin: config.clientUrl,  //access-control-allow-credentials:true
@@ -46,9 +47,9 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 sequelize
     .sync()
     .then((s) => {
-        console.log(`Conectado ao Banco de Dados: ${s.options.dialect}`);
+        logger.info(`Conectado ao Banco de Dados: ${s.options.dialect}`);
     })
-    .catch(error => console.log(error));
+    .catch(error => logger.error(error));
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -65,9 +66,9 @@ app.use("/api/orders", ordersRoute);
 app.use("/api/cart", cartRoute);
 
 app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+    res.status(404).send({  message: `A rota ${req.originalUrl} não existe`, });
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    logger.info(`Servidor rodando na porta ${PORT}`);
 });

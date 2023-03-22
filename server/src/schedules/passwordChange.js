@@ -1,5 +1,6 @@
 const schedule = require("node-schedule");
 const Sequelize = require("sequelize");
+const logger = require('../configs/logger');
 const Op = Sequelize.Op;
 const ChangePasswordTokenModel = require("../models/User/ChangePasswordToken.model");
 
@@ -14,7 +15,7 @@ module.exports = () => {
                 where: { createdAt: { [Op.lt]: last24Hours } }
             });
         } catch (error) {
-            console.log(error);
+            logger.error(error);
         }
     });
 };
