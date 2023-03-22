@@ -138,8 +138,22 @@ export const Order: React.FunctionComponent = () => {
 	return (
 		<Grid display="flex" flexDirection="column">
 			<Typography variant="h4">Detalhes do Pedido</Typography>
-			<Typography variant="body1" sx={(theme): object => ({ mb: 5, fontSize: '1.1em', color: theme.palette.grey[600], })}>Número do pedido: #3213</Typography>
-		
+			<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.1em', color: theme.palette.grey[600], })}>Número do pedido: #3213</Typography>
+			<Grid display="flex" alignItems="center">
+				<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Total:</Typography>
+				<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.dark, })}>
+				&nbsp;R$ 37,90
+				</Typography>
+			</Grid>
+			
+			<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Quantidade de produtos: 2</Typography>
+			<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Data: 23/03/2023 - 10:00:00</Typography>
+			<Typography variant="body1" sx={{ mb: 5, fontSize: '1.2em', }}>Status:
+				<Box component="span" sx={{ color: '#00C853', }}>
+				&nbsp;Finalizado
+				</Box>
+			</Typography>
+
 			<TableContainer sx={{ border: '1px solid rgba(224, 224, 224, 1)', borderRadius: '4px', }} >
 				<Table sx={{ minWidth: 650, }} aria-label="simple table">
 					<TableHead>

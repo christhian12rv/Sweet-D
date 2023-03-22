@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../configs/db");
 
-const ChangePasswordToken = db.define("changePasswordToken", {
+const Order = db.define("order", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -10,25 +10,30 @@ const ChangePasswordToken = db.define("changePasswordToken", {
     },
     userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: "users",
             key: "id"
         }
     },
-    token: {
-        type: Sequelize.STRING(300),
-        required: true
+    finished: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
 });
 
-ChangePasswordToken.associate = function (models) {
-    ChangePasswordToken.belongsTo(models.User, {
-        foreignKey: "userId",
-        targetKey: "id"
+Order.associate = function (models) {
+    Order.belongsTo(models.User, {
+        foreignKey: 'userId',
+        as: 'user',
     });
 };
 
-module.exports = ChangePasswordToken;
+Order.associate = function (models) {
+    Order.hasMany(models.OrderProduct, { as: "orderProducts" });
+};
+
+module.exports = Order;

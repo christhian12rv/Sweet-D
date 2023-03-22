@@ -1,8 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../configs/db");
 
-const OrderModel = require("./Order.model");
-
 const User = db.define("user", {
     id: {
         type: Sequelize.INTEGER,
@@ -23,6 +21,10 @@ const User = db.define("user", {
         allowNull: false,
         unique: true
     },
+    phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     isAdmin: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -33,17 +35,9 @@ const User = db.define("user", {
 });
 
 User.associate = function (models) {
-    User.belongsTo(models.Order, { foreignKey: "userId", as: "user" });
-};
-
-User.associate = function (models) {
-    User.hasMany(models.Address, { foreignKey: "userId", sourceKey: "id" });
-};
-
-User.associate = function (models) {
+    User.hasMany(models.Order, { as: "orders" });
     User.hasOne(models.ChangePasswordToken, {
         foreignKey: "userId",
-        sourceKey: "id"
     });
 };
 

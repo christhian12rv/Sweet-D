@@ -8,6 +8,7 @@ enum RoutesEnum {
 	LOGIN = '/login',
 	REGISTER = '/register',
 	FORGOT_PASSWORD = '/forgot-password',
+	FORGOT_PASSWORD__NEW = '/forgot-password/new',
 	PROFILE = '/profile',
 	ORDERS = '/orders',
 	ORDER = '/orders/',

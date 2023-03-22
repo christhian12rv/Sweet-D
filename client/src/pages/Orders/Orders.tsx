@@ -76,7 +76,7 @@ const columns: GridColDef[] = [
 ];
 
 const rows = [
-	{ id: 1, total: brlCurrencyFormatter.format(24.90), products: 'Bolo de pote, Cookie de chocolate, Bolo de Cenoura', finished: true, totalQuantity: 35, createdAt: dayjs(new Date()).format('DD/MM/YYYY HH:mm:ss').toString(), }
+	{ id: 1, total: brlCurrencyFormatter.format(24.90), products: 'Bolo de pote, Cookie de chocolate, Bolo de Cenoura', finished: true, totalQuantity: 35, createdAt: dayjs(new Date()).format('DD/MM/YYYY - HH:mm:ss').toString(), }
 ];
 
 export const Orders: React.FunctionComponent = () => {

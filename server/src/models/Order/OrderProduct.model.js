@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../configs/db");
 
-const Order = db.define("orderProduct", {
+const OrderProduct = db.define("orderProduct", {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -24,13 +24,13 @@ const Order = db.define("orderProduct", {
             key: "id"
         }
     },
-    extras: {
-        type: Sequelize.STRING(500),
-        allowNull: true
+    sizeName: {
+        type: Sequelize.STRING,
+        allowNull: false,
     },
-    priceExtras: {
-        type: Sequelize.STRING(500),
-        allowNull: true
+    sizePrice: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
     },
     quantity: {
         type: Sequelize.INTEGER,
@@ -39,15 +39,20 @@ const Order = db.define("orderProduct", {
             min: 1
         }
     },
-    total: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-        validate: {
-            min: 0.01
-        }
-    },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
 });
+
+OrderProduct.associate = function (models) {
+    OrderProduct.belongsTo(models.Order, {
+        foreignKey: 'orderId',
+        as: 'order',
+    });
+    OrderProduct.belongsTo(models.Product, {
+        foreignKey: 'productId',
+        as: 'product',
+    });
+    OrderProduct.hasMany(models.OrderProductIngredient, { as: "orderProductIngredients" });
+};
 
 module.exports = Order;

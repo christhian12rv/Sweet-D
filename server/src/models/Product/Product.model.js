@@ -18,28 +18,12 @@ const Product = db.define("product", {
     },
     photos: {
         type: Sequelize.TEXT,
-        allowNull: true
-    },
-    price: {
-        type: Sequelize.FLOAT,
         allowNull: false
     },
-    // storage: {
-    //     type: Sequelize.INTEGER,
-    //     allowNull: false
-    // },
     slug: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    // extras: {
-    //     type: Sequelize.STRING(500),
-    //     allowNull: true
-    // },
-    // priceExtras: {
-    //     type: Sequelize.STRING(500),
-    //     allowNull: true
-    // },
     active: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -48,5 +32,12 @@ const Product = db.define("product", {
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
 });
+
+Product.associate = function (models) {
+    Product.hasMany(models.ProductSize, { as: "productSizes" });
+    Product.hasMany(models.ProductIngredient, { as: "productIngredients" });
+    Product.hasMany(models.ProductIngredientType, { as: "productIngredientTypes" });
+    Product.hasMany(models.OrderProduct, { as: "orderProducts" });
+};
 
 module.exports = Product;

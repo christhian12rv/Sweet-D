@@ -21,6 +21,7 @@ import { Profile } from './pages/Profile';
 import { Orders } from './pages/Orders';
 import { ProfileLayout } from './pages/layout/ProfileLayout';
 import { Order } from './pages/Order';
+import { ForgotPassword } from './pages/ForgotPassword';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -36,6 +37,7 @@ export const App: React.FunctionComponent<object> = () => {
 						<Route path={RoutesEnum.CART} element={<Cart/>} />
 						<Route path={RoutesEnum.LOGIN} element={<Login/>} />
 						<Route path={RoutesEnum.REGISTER} element={<Register/>} />
+						<Route path={RoutesEnum.FORGOT_PASSWORD} element={<ForgotPassword/>} />
 						<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
 						<Route element={<ProfileLayout/>} >
 							<Route path={RoutesEnum.PROFILE} element={<Profile/>} />

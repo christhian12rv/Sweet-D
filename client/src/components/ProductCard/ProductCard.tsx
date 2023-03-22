@@ -5,6 +5,7 @@ import { BoxImg, CardContentStyled, CardStyled, Title, Price, Description, CardA
 import { ExitToAppRounded, ShoppingBagOutlined, StorefrontOutlined } from '@mui/icons-material';
 import { LinkUnstyled } from '../LinkUnstyled';
 import RoutesEnum from '../../types/enums/RoutesEnum';
+import { MainButton } from '../MainButton';
 
 const images = [
 	{
@@ -53,18 +54,11 @@ export const ProductCard: React.FunctionComponent = () => {
 			</CardContentStyled>
 			<CardActionsStyled>
 				<BoxActionIcon component="div" sx={{ flexGrow: 1, }}>
-					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
-						<ExitToAppRounded sx={{ fontSize: '1.7em', }}/>
-					</BoxActionLink>
-				</BoxActionIcon>
-				<BoxActionIcon component="div">
-					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
-						<ShoppingBagOutlined sx={{ fontSize: '1.7em', }}/>
-					</BoxActionLink>
-				</BoxActionIcon>
-				<BoxActionIcon component="div">
-					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'}>
-						<StorefrontOutlined sx={{ fontSize: '1.7em', }}/>
+					<BoxActionLink className="boxActionLink" to={RoutesEnum.PRODUCT + 'teste'} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
+						<MainButton style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, width: '100%', }}>
+							<ExitToAppRounded sx={{ fontSize: '1.7em', }}/>
+							VISITAR
+						</MainButton>
 					</BoxActionLink>
 				</BoxActionIcon>
 			</CardActionsStyled>
