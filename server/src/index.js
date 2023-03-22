@@ -45,8 +45,8 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 
 sequelize
     .sync()
-    .then(() => {
-        console.log("Conectado ao MySQL");
+    .then((s) => {
+        console.log(`Conectado ao Banco de Dados: ${s.options.dialect}`);
     })
     .catch(error => console.log(error));
 

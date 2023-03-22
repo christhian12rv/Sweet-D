@@ -8,4 +8,4 @@ log4js.configure({
 	categories: { default: { appenders: ['out', 'cheese'], level: 'info', }, },
 });
 
-export default log4js.getLogger();
+module.exports = log4js.getLogger();

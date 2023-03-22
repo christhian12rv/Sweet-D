@@ -9,6 +9,7 @@ module.exports = {
 	dbPort: process.env.DB_PORT,
 	nodemailerUser: process.env.NODEMAILER_USER,
 	nodemailerPassword: process.env.NODEMAILER_PASSWORD,
+	jwtSecret: process.env.JWT_SECRET,
 	clientUrl: process.env.CLIENT_URL,
 	port: process.env.PORT,
 };

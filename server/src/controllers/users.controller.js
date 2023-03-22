@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const logger = require('../configs/logger');
 const formatErrors = require('../utils/formatErrors');
@@ -42,49 +41,57 @@ exports.findAll = async (req, res) => {
     }
 };
 
-exports.register = async (req, res) => {
-    logger.info(`Chamando register de ${req.originalUrl}`);
+exports.create = async (req, res) => {
+    logger.info(`Chamando create de ${req.originalUrl}`);
     
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const message = 'Ocorreram alguns erros ao registrar usuário';
+        const message = 'Ocorreram alguns erros ao criar usuário';
         logger.info(message);
 
         return res.status(400).send({ errors: formatErrors(errors.array()), message });
     }
 
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, phone } = req.body;
 
-        const user = await usersService.create(name, email, password);
+        const user = await usersService.create(name, email, password, phone);
         
-        const message = 'Usuário cadastrado com sucesso';
+        const message = 'Usuário criado com sucesso';
         logger.info(message);
 
         res.status(200).send({ user, message, });
     } catch (error) {
-        const message = 'Ocorreram erros internos ao registrar usuário';
+        const message = 'Ocorreram erros internos ao criar usuário';
         logger.error(message);
 
         res.status(500).send({ message, });
     }
 };
 
-exports.login = async (req, res) => {
-    logger.info(`Chamando login de ${req.originalUrl}`);
+exports.auth = async (req, res) => {
+    logger.info(`Chamando auth de ${req.originalUrl}`);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const message = 'Ocorreram alguns erros ao logar usuário';
+        logger.info(message);
+
+        return res.status(400).send({ errors: formatErrors(errors.array()), message });
+    }
 
     try {
-        const { email, password } = req.body;
+        const { email } = req.body;
         
-        const { auth, token, user } = await usersService.auth(email, password);
+        const { token, user } = await usersService.auth(email);
 
         const message = 'Usuário logado com sucesso';
         logger.info(message);
 
-        res.status(200).send({ auth, token, user, message });
+        res.status(200).send({ token, user, message });
     } catch (error) {
         const message = 'Ocorreram erros internos ao logar usuário';
-        logger.error(message);
+        logger.error(error);
 
         res.status(500).send({ message, });
     }
@@ -122,7 +129,7 @@ exports.update = async (req, res) => {
     try {
         const { userId, data } = req.body;
 
-        const { user } = await usersService.update(userId, data);
+        const user = await usersService.update(userId, data);
 
         const message = 'Usuário atualizado com sucesso';
         logger.info(message);
@@ -139,30 +146,27 @@ exports.update = async (req, res) => {
 exports.getUserAuth = async (req, res) => {
     logger.info(`Chamando getUserAuth de ${req.originalUrl}`);
 
-    const { token } = req.body;
+    const user = req.user;
 
     try {
-        const { user, address, auth, } =
-            await usersService.getUserAuth(token);
-
         const message = 'Usuário logado';
         logger.info(message);
 
-        return res.status(200).send({ user, address, auth, message, });
+        return res.status(200).send({ user, message, });
     } catch (error) {
-        const message = 'Ocorreram errors internos ao verificar usuário';
+        const message = 'Ocorreram erros internos ao verificar usuário';
         logger.error(message);
 
         res.status(500).send({ message, });
     }
 };
 
-exports.recoveryPassword = async (req, res) => {
-    logger.info(`Chamando recoveryPassword de ${req.originalUrl}`);
+exports.sendRecoveryPasswordEmail = async (req, res) => {
+    logger.info(`Chamando sendRecoveryPasswordEmail de ${req.originalUrl}`);
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const message = 'Ocorreram alguns erros ao fazer a recuperação de senha';
+        const message = 'Ocorreram alguns erros ao enviar email de recuperação de senha';
         logger.info(message);
 
         return res.status(400).send({ errors: formatErrors(errors.array()), message, });
@@ -171,26 +175,26 @@ exports.recoveryPassword = async (req, res) => {
     try {
         const { email } = req.body;
 
-        await usersService.recoveryPassword(email);
+        await usersService.sendRecoveryPasswordEmail(email);
 
-        const message = 'Recuperação de senha enviada com sucesso';
+        const message = 'Email de recuperação de senha enviado com sucesso';
         logger.info(message);
 
         res.status(200).send({ message, });
     } catch (error) {
-        const message = 'Ocorreram erros internos ao fazer a recuperação de senha';
+        const message = 'Ocorreram erros internos ao enviar email de recuperação de senha';
         logger.error(message);
 
         res.status(500).send({ message, });
     }
 };
 
-exports.getRecoveryPasswordChange = async (req, res) => {
-    logger.info(`Chamando getRecoveryPasswordChange de ${req.originalUrl}`);
+exports.verifyRecoveryPasswordEmailAndToken = async (req, res) => {
+    logger.info(`Chamando verifyRecoveryPasswordEmailAndToken de ${req.originalUrl}`);
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const message = 'Ocorreram alguns erros ao fazer a troca de senha';
+        const message = 'Ocorreram alguns erros ao acessar a alteração de senha';
         logger.info(message);
 
         return res.status(400).send({ errors: formatErrors(errors.array()), message });
@@ -202,7 +206,7 @@ exports.getRecoveryPasswordChange = async (req, res) => {
 
         res.status(200).send({ message, });
     } catch (error) {
-        const message = 'Ocorreram erros internos ao fazer a troca de senha';
+        const message = 'Ocorreram erros internos ao acessar a alteração de senha';
         logger.error(message);
 
         res.status(500).send({ message, });
@@ -214,7 +218,7 @@ exports.recoveryPasswordChange = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const message = 'Ocorreram alguns erros ao fazer a troca de senha';
+        const message = 'Ocorreram alguns erros ao fazer a alteração de senha';
         logger.info(message);
 
         return res.status(400).send({ errors: formatErrors(errors.array()), message });
@@ -229,7 +233,7 @@ exports.recoveryPasswordChange = async (req, res) => {
 
         res.status(200).send({ message, });
     } catch (error) {
-        const message = 'Ocorreram erros internos ao fazer a troca de senha';
+        const message = 'Ocorreram erros internos ao fazer a alteração de senha';
         logger.error(message);
 
         res.status(500).send({ message, });
@@ -275,13 +279,13 @@ exports.contactSendEmail = async (req, res) => {
     }
 
     try {
-        const { name, email, } = req.body;
+        const { name, email, message } = req.body;
         await usersService.contactSendEmail(name, email, message);
 
-        const message = 'Email enviado com sucesso';
-        logger.info(message);
+        const responseMessage = 'Email enviado com sucesso';
+        logger.info(responseMessage);
 
-        res.status(200).send({ message, });
+        res.status(200).send({ message: responseMessage, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao enviar email';
         logger.error(message);

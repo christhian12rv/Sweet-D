@@ -1,7 +1,7 @@
 const schedule = require("node-schedule");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-const ChangePasswordTokenModel = require("../models/ChangePasswordToken.model");
+const ChangePasswordTokenModel = require("../models/User/ChangePasswordToken.model");
 
 module.exports = () => {
     schedule.scheduleJob("* * * * *", async () => {

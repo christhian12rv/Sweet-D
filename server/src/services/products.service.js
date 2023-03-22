@@ -5,7 +5,7 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const fs = require("fs");
 
-const ProductModel = require("../models/Product.model");
+const ProductModel = require("../models/Product/Product.model");
 
 exports.findBySlug = async slug => {
     const product = await ProductModel.findOne({ where: { slug } });

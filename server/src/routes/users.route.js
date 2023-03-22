@@ -7,26 +7,20 @@ const { verifyJWT } = require("../middlewares/jwtVerify.middleware");
 const usersController = require("../controllers/users.controller");
 
 router.get("/", usersController.findAll);
-router.post("/", usersValidator.create, usersController.register);
-router.post("/get-user-auth", usersController.getUserAuth);
 
-router.post(
-    "/address",
-    verifyJWT,
-    usersValidator.address,
-    usersController.updateAddress
-);
-router.post("/login", usersController.login);
+router.post("/", usersValidator.create, usersController.create);
+router.post("/get-user-auth", verifyJWT, usersController.getUserAuth);
+router.post("/login", usersValidator.auth, usersController.auth);
 router.post("/logout", verifyJWT, usersController.logout);
 router.post(
-    "/recovery-password",
-    usersValidator.recoveryPassword,
-    usersController.recoveryPassword
+    "/recovery-password/send",
+    usersValidator.sendRecoveryPasswordEmail,
+    usersController.sendRecoveryPasswordEmail
 );
 router.post(
-    "/recovery-password/change/verify",
-    usersValidator.getRecoveryPasswordChange,
-    usersController.getRecoveryPasswordChange
+    "/recovery-password/verify",
+    usersValidator.verifyRecoveryPasswordEmailAndToken,
+    usersController.verifyRecoveryPasswordEmailAndToken
 );
 router.post(
     "/recovery-password/change",
@@ -44,6 +38,7 @@ router.post(
     usersValidator.contactSendEmail,
     usersController.contactSendEmail
 );
+
 router.put("/", verifyJWT, usersValidator.update, usersController.update);
 
 module.exports = router;

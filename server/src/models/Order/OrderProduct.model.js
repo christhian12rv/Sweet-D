@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const db = require("../configs/db");
+const db = require("../../configs/db");
 
 const OrderProduct = db.define("orderProduct", {
     id: {
@@ -55,4 +55,4 @@ OrderProduct.associate = function (models) {
     OrderProduct.hasMany(models.OrderProductIngredient, { as: "orderProductIngredients" });
 };
 
-module.exports = Order;
+module.exports = OrderProduct;
