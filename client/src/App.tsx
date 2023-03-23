@@ -22,6 +22,8 @@ import { Orders } from './pages/Orders';
 import { ProfileLayout } from './pages/layout/ProfileLayout';
 import { Order } from './pages/Order';
 import { ForgotPassword } from './pages/ForgotPassword';
+import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
+import { Products as AdminProducts } from './pages/Admin/Products';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -46,6 +48,10 @@ export const App: React.FunctionComponent<object> = () => {
 						</Route>
 						<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
 						<Route path="*" element={<Error404 />} />
+					</Route>
+
+					<Route element={<AdminMainLayout />} >
+						<Route path={RoutesEnum.ADMIN_PRODUCTS} element={<AdminProducts/>} />
 					</Route>
 				</Routes>
 			</BrowserRouter >

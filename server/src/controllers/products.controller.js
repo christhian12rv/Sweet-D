@@ -24,7 +24,7 @@ exports.findBySlug = async (req, res) => {
         res.status(200).send({ product, message, });
     } catch (error) {
         const message = 'Ocorreram erros internos ao buscar produto';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
@@ -74,13 +74,15 @@ exports.findAll = async (req, res) => {
         res.status(200).send({ totalRows, products, minPrice, maxPrice, message });
     } catch (error) {
         const message = 'Ocorreram erros internos ao buscar produtos';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
 };
 
 exports.create = async (req, res) => {
+    logger.info(`Chamando create de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const message = 'Ocorreram alguns erros ao criar produto';
@@ -89,20 +91,21 @@ exports.create = async (req, res) => {
         return res.status(400).send({ errors: formatErrors(errors.array()), message });
     }
 
-    // if (!req.files || Object.keys(req.files).length === 0) {
-    //     return res.status(400).send({ errors: ["O produto deve ter pelo menos 1 imagem"], });
-    // }
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send({ errors: ["O produto deve ter pelo menos 1 imagem"], });
+    }
 
     try {
         const { name, description, slug, sizes, ingredientTypes, ingredients } = req.body;
+
         const product = await productsService.create(
             name,
             description,
             slug,
             sizes,
             ingredientTypes,
-            ingredients
-            // req.files.photos
+            ingredients,
+            req.files.photos
         );
         
         const message = 'Produto criado com sucesso';
@@ -111,97 +114,92 @@ exports.create = async (req, res) => {
         res.status(200).send({ product, message });
     } catch (error) {
         const message = 'Ocorreram erros internos ao criar produto';
-        logger.error(message);
+        logger.error(`${message}: ${error}`);
 
         res.status(500).send({ message, });
     }
 };
 
 exports.update = async (req, res) => {
+    logger.info(`Chamando update de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(a).send({ status: 400, errors: formatErrors(errors.array()) });
+        const message = 'Ocorreram alguns erros ao atualizar produto';
+        logger.info(message);
+
+        return res.status(400).send({ errors: formatErrors(errors.array()), message });
     }
 
-    if (
-        (!req.files || Object.keys(req.files).length === 0) &&
-        (!req.body.bodyPhotos || !req.body.bodyPhotos.length)
-    ) {
-        return res.status(a).send({
-            status: 400,
-            errors: [
-                {
-                    msg: "O produto deve ter pelo menos 1 imagem"
-                }
-            ]
+    if ((!req.files || Object.keys(req.files).length === 0) &&
+        (!req.body.bodyPhotos || !req.body.bodyPhotos.length)) {
+        const message = 'Ocorreram alguns erros ao atualizar produto';
+        logger.info(message);
+
+        return res.status(400).send({ errors: ['O produto deve ter pelo menos 1 imagem'], message });
+    }
+
+    if (typeof req.body.bodyPhotos != "object")
+        req.body.bodyPhotos = [req.body.bodyPhotos];
+
+    const bodyPhotos = [];
+    if (req.body.bodyPhotos) {
+        req.body.bodyPhotos.forEach(b => {
+            if (b)
+                bodyPhotos.push(JSON.parse(b));
         });
     }
 
     try {
-        const { slug: slugParam } = req.body;
-        const productExists = productsService.findBySlug(slugParam);
-        if (!productExists)
-            return res.status(a).send({
-                status: 400,
-                errors: [{ msg: "Produto inválido" }]
-            });
 
-        if (typeof req.body.bodyPhotos != "object")
-            req.body.bodyPhotos = [req.body.bodyPhotos];
-
-        const bodyPhotos = [];
-        if (req.body.bodyPhotos) {
-            req.body.bodyPhotos.forEach(b => {
-                if (b) bodyPhotos.push(JSON.parse(b));
-            });
-        }
-        const { id, name, description, price, storage, extras, priceExtras } =
+        const { id, name, description, slug, sizes, ingredientTypes, ingredients } =
             req.body;
+            
         const product = await productsService.update(
             id,
             name,
             description,
-            price,
-            storage,
-            slugParam,
-            extras,
-            priceExtras,
+            slug,
+            sizes,
+            ingredientTypes,
+            ingredients,
             bodyPhotos,
             req.files && req.files.photos ? req.files.photos : []
         );
-        res.status(a).send({
-            status: 200,
-            product,
-            msg: "Produto alterado com sucesso"
-        });
+
+        const message = 'Produto atualizado com sucesso';
+        logger.info(message);
+
+        res.status(200).send({ product, message, });
     } catch (error) {
-        res.status(a).send({
-            status: 500,
-            msg: "Houve um erro interno ao tentar alterar produto"
-        });
+        const message = 'Ocorreram erros internos ao atualizar produto';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.updateActive = async (req, res) => {
+    logger.info(`Chamando updateActive de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(a).send({ status: 400, errors: formatErrors(errors.array()) });
+        const message = 'Ocorreram alguns erros ao atualizar active do produto';
+        logger.info(message);
+
+        return res.status(400).send({ errors: formatErrors(errors.array()), message });
     }
 
     try {
         const { id, active } = req.body;
 
         const product = await productsService.updateActive(id, active);
-        res.status(a).send({
-            status: 200,
-            product,
-            msg:
-                "Produto " + (active ? "ativado" : "desativado") + "com sucesso"
-        });
+        
+        res.status(200).send({ product, message, });
     } catch (error) {
-        res.status(a).send({
-            status: 500,
-            msg: "Houve um erro interno ao tentar ativar ou desativar produto"
-        });
+        const message = 'Ocorreram erros itnernos ao atualizar active do produto';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };

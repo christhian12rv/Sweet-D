@@ -69,48 +69,47 @@ exports.create = async (
     slug,
     sizes,
     ingredientTypes,
-    ingredients
-    // photos
+    ingredients,
+    photos
 ) => {
-    // if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
-    //     let arrayAuxPhotos = [];
-    //     arrayAuxPhotos.push(photos);
-    //     photos = arrayAuxPhotos;
-    // }
+    if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
+        let arrayAuxPhotos = [];
+        arrayAuxPhotos.push(photos);
+        photos = arrayAuxPhotos;
+    }
 
-    // let newPhotos = [];
+    let newPhotos = [];
 
-    // const uploadPath = __dirname + "/../public/img/product/";
-    // for (const photo of photos) {
-    //     await new Promise(resolve => {
-    //         const imageName = uuidv4() + path.extname(photo.name);
-    //         const imagePath = uploadPath + imageName;
+    const uploadPath = __dirname + "/../public/img/product/";
+    for (const photo of photos) {
+        await new Promise(resolve => {
+            const imageName = uuidv4() + path.extname(photo.name);
+            const imagePath = uploadPath + imageName;
 
-    //         photo.mv(imagePath, async error => {
-    //             if (error) throw error;
-    //             else {
-    //                 const cloudinaryResponse = await cloudinary.uploader.upload(
-    //                     imagePath,
-    //                     { folder: "Products/" }
-    //                 );
-    //                 newPhotos.push({
-    //                     url: cloudinaryResponse.secure_url,
-    //                     public_id: cloudinaryResponse.public_id
-    //                 });
+            photo.mv(imagePath, async error => {
+                if (error) throw error;
+                else {
+                    const cloudinaryResponse = await cloudinary.uploader.upload(
+                        imagePath,
+                        { folder: "Products/" }
+                    );
+                    newPhotos.push({
+                        url: cloudinaryResponse.secure_url,
+                        public_id: cloudinaryResponse.public_id
+                    });
 
-    //                 fs.unlinkSync(imagePath);
-    //             }
-    //             resolve(true);
-    //         });
-    //     });
-    // }
+                    fs.unlinkSync(imagePath);
+                }
+                resolve(true);
+            });
+        });
+    }
 
     const product = await ProductModel.create({
         name,
         description,
         slug,
-        // photos: JSON.stringify(newPhotos),
-        photos: 'Teste',
+        photos: JSON.stringify(newPhotos),
     });
 
     const createdSizes = await Promise.all(sizes.map( async size => {
@@ -151,11 +150,10 @@ exports.update = async (
     id,
     name,
     description,
-    price,
-    storage,
     slug,
-    extras,
-    priceExtras,
+    sizes,
+    ingredientTypes,
+    ingredients,
     bodyPhotos,
     filesPhotos
 ) => {
@@ -218,26 +216,64 @@ exports.update = async (
         });
     }
 
-    const newProduct = await ProductModel.update(
-        {
-            name,
-            ...(description && { description }),
-            photos: JSON.stringify(newPhotos),
-            price,
-            storage,
-            slug,
-            ...(extras && { extras: JSON.stringify(extras) }),
-            ...(priceExtras && { priceExtras: JSON.stringify(priceExtras) })
+    const newProduct = await ProductModel.update({
+        name,
+        description,
+        slug,
+        photos: JSON.stringify(newPhotos),
+    }, {
+        where: {
+            id,
         },
-        {
-            where: { id }
-        }
-    );
+    });
 
-    return newProduct;
+    const udpatedSizes = await Promise.all(sizes.map( async size => {
+        return await ProductSizeModel.update({
+            productId: product.id,
+            name: size.name,
+            price: size.price,
+        }, {
+            where: {
+                id,
+            },
+        });
+    }));
+
+    const udpatedIngredientTypes = await Promise.all(ingredientTypes.map( async ingredientType => {
+        return await ProductIngredientTypeModel.update({
+            productId: product.id,
+            min: ingredientType.min,
+            max: ingredientType.max,
+            type: ingredientType.type,
+        }, {
+            where: {
+                id,
+            },
+        });
+    }));
+
+    const udpatedIngredients = await Promise.all(ingredients.map( async ingredient => {
+        return await ProductIngredientModel.update({
+            productId: product.id,
+            name: ingredient.name,
+            price: ingredient.price,
+            type: ingredient.type,
+        }, {
+            where: {
+                id,
+            },
+        });
+    }));
+
+    return {
+        ...newProduct.dataValues,
+        sizes: udpatedSizes,
+        ingredients: udpatedIngredients,
+        ingredientTypes: udpatedIngredientTypes,
+    };
 };
 
 exports.updateActive = async (id, active) => {
-    const newProduct = await ProductModel.update({ active }, { where: { id } });
-    return newProduct;
+    const product = await ProductModel.update({ active }, { where: { id } });
+    return product;
 };
