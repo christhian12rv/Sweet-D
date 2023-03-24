@@ -60,6 +60,7 @@ export const AppBarStyled = styled(AppBar, {
 	backgroundColor: '#ffff',
 	boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
 	height: 65,
+	width: 'calc(100% - 65px)',
 	...(open && {
 		marginLeft: drawerWidth - 65,
 		width: `calc(100% - ${drawerWidth}px)`,

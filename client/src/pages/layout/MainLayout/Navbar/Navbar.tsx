@@ -8,7 +8,7 @@ import RoutesEnum from '../../../../types/enums/RoutesEnum';
 import ScreenSizeQuerysEnum from '../../../../types/enums/ScreenSizeQuerysEnum';
 import { LinkUnstyled } from '../../../../components/LinkUnstyled';
 import { useLocation } from 'react-router-dom';
-import { FaceRounded, LogoutRounded, ReceiptRounded, ExpandMoreRounded, AccountCircleRounded } from '@mui/icons-material';
+import { FaceRounded, LogoutRounded, ReceiptRounded, ExpandMoreRounded, AccountCircleRounded, AdminPanelSettingsRounded, PowerSettingsNewRounded } from '@mui/icons-material';
 
 type Props = {
 	window?: () => Window;
@@ -105,14 +105,20 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 				</AccordionSummary>
 				<AccordionDetails>
 					<List >
-						<LinkUnstyled to={RoutesEnum.PROFILE}>
+						<LinkUnstyled to={RoutesEnum.PROFILE} onClick={handleDrawerToggle}>
 							<ListItem disablePadding sx={(theme): object => ({
 								'&:hover, &:hover .accordionAccoutCircleIcon': {
 									color: theme.palette.primary.dark,
 								},
+								...(location.pathname === RoutesEnum.PROFILE && {
+									color: theme.palette.primary.dark,
+									'& .accordionAccoutCircleIcon': {
+										color: theme.palette.primary.dark,
+									},
+								}),
 								transition: 'color .25s !important',
 							})}>
-								<ListItemButton sx={{ paddingLeft: '41px', }}>
+								<ListItemButton sx={{ paddingLeft: '29px', }}>
 									<ListItemIcon>
 										<AccountCircleRounded className="accordionAccoutCircleIcon" sx={{ transition: 'color .25s !important', }}/>
 									</ListItemIcon>
@@ -121,14 +127,20 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 							</ListItem>
 						</LinkUnstyled>
 
-						<LinkUnstyled to={RoutesEnum.ORDERS}>
+						<LinkUnstyled to={RoutesEnum.ORDERS} onClick={handleDrawerToggle}>
 							<ListItem disablePadding sx={(theme): object => ({
 								'&:hover, &:hover .accordionReceiptIcon': {
 									color: theme.palette.primary.dark,
 								},
+								...(location.pathname === RoutesEnum.ORDERS && {
+									color: theme.palette.primary.dark,
+									'& .accordionReceiptIcon': {
+										color: theme.palette.primary.dark,
+									},
+								}),
 								transition: 'color .25s !important',
 							})}>
-								<ListItemButton sx={{ paddingLeft: '41px', }}>
+								<ListItemButton sx={{ paddingLeft: '29px', }}>
 									<ListItemIcon>
 										<ReceiptRounded className="accordionReceiptIcon" sx={{ transition: 'color .25s !important', }}/>
 									</ListItemIcon>
@@ -137,13 +149,29 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 							</ListItem>
 						</LinkUnstyled>
 
-						<ListItem disablePadding sx={(theme): object => ({
+						<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD} onClick={handleDrawerToggle}>
+							<ListItem disablePadding sx={(theme): object => ({
+								'&:hover, &:hover .accordionLogoutIcon': {
+									color: theme.palette.primary.dark,
+								},
+								transition: 'color .25s !important',
+							})}>
+								<ListItemButton sx={{ paddingLeft: '29px', }}>
+									<ListItemIcon>
+										<AdminPanelSettingsRounded className="accordionLogoutIcon" sx={{ transition: 'color .25s !important', }}/>
+									</ListItemIcon>
+									<ListItemText primary="Admin Panel" />
+								</ListItemButton>
+							</ListItem>
+						</LinkUnstyled>
+
+						<ListItem disablePadding onClick={handleDrawerToggle} sx={(theme): object => ({
 							'&:hover, &:hover .accordionLogoutIcon': {
 								color: theme.palette.primary.dark,
 							},
 							transition: 'color .25s !important',
 						})}>
-							<ListItemButton sx={{ paddingLeft: '41px', }}>
+							<ListItemButton sx={{ paddingLeft: '29px', }}>
 								<ListItemIcon>
 									<LogoutRounded className="accordionLogoutIcon" sx={{ transition: 'color .25s !important', }}/>
 								</ListItemIcon>
@@ -154,7 +182,6 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 				</AccordionDetails>
 			</AccordionSidebarMobile>
 
-			<Divider/>
 		</BoxSidebarMobile>
 	);
 
@@ -280,11 +307,11 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 										'&:hover': {
 											color: theme.palette.primary.dark + ' !important',
 										},
-										'&:hover .profileAvatarIcon': {
-											backgroundColor: theme.palette.primary.dark + ' !important',
+										'&:hover .profileAccountIcon': {
+											color: theme.palette.primary.dark + ' !important',
 										},
 									})}>
-										<Avatar className="profileAvatarIcon"/> Perfil
+										<AccountCircleRounded className="profileAccountIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '31px', mr: '8px', })} /> Perfil
 									</MenuItem>
 								</LinkUnstyled>
 								<LinkUnstyled to={RoutesEnum.ORDERS}>
@@ -296,20 +323,32 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 											color: theme.palette.primary.dark + ' !important',
 										},
 									})}>
-										<ReceiptRounded className="receiptReceiptIcon" sx={{ color: '#bdbdbd', fontSize: '32px', ml: '-4px', mr: '8px', }} /> Pedidos
+										<ReceiptRounded className="receiptReceiptIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '31px', mr: '8px', })} /> Pedidos
 									</MenuItem>
 								</LinkUnstyled>
 								<Divider />
+								<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD}>
+									<MenuItem onClick={handleClose} sx={(theme): object => ({
+										'&:hover': {
+											color: theme.palette.primary.dark + ' !important',
+										},
+										'&:hover .receiptReceiptIcon': {
+											color: theme.palette.primary.dark + ' !important',
+										},
+									})}>
+										<AdminPanelSettingsRounded className="receiptReceiptIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '31px', ml: '1px', mr: '7px', })} /> Admin Panel
+									</MenuItem>
+								</LinkUnstyled>
 								<MenuItem onClick={handleClose} sx={(theme): object => ({
 									'&:hover': {
 										color: theme.palette.primary.dark + ' !important',
 									},
-									'&:hover .logoutLogoutIcon': {
+									'&:hover .logoutIcon': {
 										color: theme.palette.primary.dark + ' !important',
 									},
 								})}>
 									<ListItemIcon>
-										<LogoutRounded className="logoutLogoutIcon" fontSize="small" />
+										<PowerSettingsNewRounded className="logoutIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '29px', ml: '.5px', mr: '9.5px', })} />
 									</ListItemIcon>
 									Logout
 								</MenuItem>

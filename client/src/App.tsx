@@ -24,6 +24,7 @@ import { Order } from './pages/Order';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
 import { Products as AdminProducts } from './pages/Admin/Products';
+import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
@@ -52,6 +53,7 @@ export const App: React.FunctionComponent<object> = () => {
 
 					<Route element={<AdminMainLayout />} >
 						<Route path={RoutesEnum.ADMIN_PRODUCTS} element={<AdminProducts/>} />
+						<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
 					</Route>
 				</Routes>
 			</BrowserRouter >

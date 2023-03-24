@@ -1,4 +1,4 @@
-import { AccountCircleRounded, ChevronLeftRounded, ChevronRightRounded, LogoutRounded, MenuRounded, ReceiptRounded } from '@mui/icons-material';
+import { AccountCircleRounded, ChevronLeftRounded, ChevronRightRounded, LogoutRounded, MenuRounded, PowerSettingsNewRounded, ReceiptRounded } from '@mui/icons-material';
 import { Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText,  Typography, CssBaseline, Grid, Toolbar, useMediaQuery, Drawer } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
@@ -142,7 +142,7 @@ export const ProfileLayout: React.FunctionComponent<Props> = (props) => {
 												justifyContent: 'center',
 											}}
 										>
-											<LogoutRounded className="sidebarItemIcon"/>
+											<PowerSettingsNewRounded className="sidebarItemIcon"/>
 										</ListItemIcon>
 										<ListItemText primary="Logout" sx={{ opacity: drawerOpen ? 1 : 0, }} />
 									</ListItemButton>
@@ -240,7 +240,7 @@ export const ProfileLayout: React.FunctionComponent<Props> = (props) => {
 												justifyContent: 'center',
 											}}
 										>
-											<LogoutRounded className="sidebarItemIcon"/>
+											<PowerSettingsNewRounded className="sidebarItemIcon"/>
 										</ListItemIcon>
 										<ListItemText primary="Logout" sx={{ opacity: drawerOpen ? 1 : 0, }} />
 									</ListItemButton>
