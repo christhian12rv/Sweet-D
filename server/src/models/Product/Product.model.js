@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../../configs/db");
+const ProductSize = require('./ProductSize.model');
 
 const Product = db.define("product", {
     id: {
@@ -33,12 +34,5 @@ const Product = db.define("product", {
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
 });
-
-Product.associate = function (models) {
-    Product.hasMany(models.ProductSize, { as: "sizes" });
-    Product.hasMany(models.ProductIngredient, { as: "ingredients" });
-    Product.hasMany(models.ProductIngredientType, { as: "ingredientTypes" });
-    Product.hasMany(models.OrderProduct, { as: "orderProducts" });
-};
 
 module.exports = Product;

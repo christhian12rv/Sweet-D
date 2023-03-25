@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const db = require("../configs/db");
+const db = require("../../configs/db");
 
 const OrderProductIngredient = db.define("orderProductIngredient", {
     id: {
@@ -31,12 +31,5 @@ const OrderProductIngredient = db.define("orderProductIngredient", {
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
 });
-
-OrderProductIngredient.associate = (models) => {
-    OrderProductIngredient.belongsTo(models.OrderProduct, {
-        foreignKey: 'orderProductId',
-        as: 'orderProduct',
-    });
-};
 
 module.exports = OrderProductIngredient;

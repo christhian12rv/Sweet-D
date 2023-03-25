@@ -11,7 +11,11 @@ export default defineConfig({
 		open: true,
 		port: 3000,
 		proxy: {
-			'/api': 'https://www.testeasdfasdfasdfasdf.com',
+			'/api': {
+				target: 'http://localhost:9090/',
+				// changeOrigin: true,
+				// secure: false,
+			},
 		},
 	},
 });

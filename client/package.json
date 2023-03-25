@@ -5,10 +5,12 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@lupus-ai/mui-currency-textfield": "^1.0.3",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
     "@mui/x-data-grid": "^6.0.2",
     "@mui/x-date-pickers": "^6.0.2",
+    "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -23,7 +25,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-material-ui-carousel": "^3.4.2",
+    "react-mui-fileuploader": "^0.5.2",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
     "suneditor": "^2.44.3",
     "suneditor-react": "^3.4.1",
     "typescript": "^5.0.2",
@@ -53,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.25",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "@vitejs/plugin-react": "^3.1.0",

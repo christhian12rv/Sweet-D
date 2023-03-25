@@ -24,10 +24,4 @@ const ChangePasswordToken = db.define("changePasswordToken", {
     updatedAt: Sequelize.DATE
 });
 
-ChangePasswordToken.associate = function (models) {
-    ChangePasswordToken.belongsTo(models.User, {
-        foreignKey: "userId",
-    });
-};
-
 module.exports = ChangePasswordToken;

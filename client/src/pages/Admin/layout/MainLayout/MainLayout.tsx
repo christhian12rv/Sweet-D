@@ -305,9 +305,11 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 				}}>
 					{drawer}
 				</DrawerStyled>
-				<Box sx={{ flexGrow: 1, px: 3, overflow: 'hidden', }}>
+				<Box sx={{ flexGrow: 1, overflowX: 'hidden',  }}>
 					{!isMobile ? <DrawerHeader /> : <></>}
-					<Outlet/>
+					<Box sx={{ maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', overflowX: 'hidden', pb: 5, px: 3, }}>
+						<Outlet/>
+					</Box>
 				</Box>
 			</GridContainer>
 		</BoxArea>

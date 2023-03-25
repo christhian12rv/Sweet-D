@@ -5,10 +5,10 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const fs = require("fs");
 
-const ProductModel = require("../models/Product/Product.model");
-const ProductSizeModel = require('../models/Product/ProductSize.model');
-const ProductIngredientTypeModel = require('../models/Product/ProductIngredientType.model');
-const ProductIngredientModel = require('../models/Product/ProductIngredient.model');
+const { ProductModel } = require("../models");
+const { ProductSizeModel } = require('../models');
+const { ProductIngredientTypeModel } = require('../models');
+const { ProductIngredientModel } = require('../models');
 
 exports.findBySlug = async slug => {
     const product = await ProductModel.findOne({ where: { slug } });
@@ -38,28 +38,42 @@ exports.findAll = async (
             name: {
                 [Op.like]: "%" + search + "%"
             },
-            ...(priceFilter && {
-                price: {
-                    [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
-                }
-            }),
+            // ...(priceFilter && {
+            //     price: {
+            //         [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
+            //     }
+            // }),
             ...(productNotFilterSlug && {
                 slug: {
                     [Op.not]: productNotFilterSlug
                 }
             })
-        }
+        },
+        include: [
+            {
+                model: ProductSizeModel,
+                as: 'sizes'
+            },
+            {
+                model: ProductIngredientTypeModel,
+                as: 'ingredientTypes'
+            },
+            {
+                model: ProductIngredientModel,
+                as: 'ingredients'
+            }
+        ]
     };
 
     const result = await ProductModel.findAndCountAll(options);
-    const minPrice = await ProductModel.min("price");
-    const maxPrice = await ProductModel.max("price");
+    // const minPrice = await ProductModel.min("price");
+    // const maxPrice = await ProductModel.max("price");
 
     return {
         totalRows: result.count,
         products: result.rows,
-        minPrice,
-        maxPrice
+        minPrice: 0,
+        maxPrice: 0
     };
 };
 

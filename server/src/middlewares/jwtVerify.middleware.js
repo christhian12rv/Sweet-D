@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require('../configs/config');
 const { default: logger } = require('../configs/logger');
 
-const UserModel = require("../models/User/User.model");
+const { UserModel } = require("../models");
 
 exports.verifyJWT = async (req, res, next) => {
     const { token } = req.body;

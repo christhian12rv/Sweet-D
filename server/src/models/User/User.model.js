@@ -34,11 +34,4 @@ const User = db.define("user", {
     updatedAt: Sequelize.DATE
 });
 
-User.associate = function (models) {
-    User.hasMany(models.Order, { as: "orders" });
-    User.hasOne(models.ChangePasswordToken, {
-        foreignKey: "userId",
-    });
-};
-
 module.exports = User;

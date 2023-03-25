@@ -71,7 +71,7 @@ const columns: GridColDef[] = [
 		sortable: false,
 		filterable: false,
 		renderCell: (params) => (
-			<Grid display="flex" alignItems="center" justifyContent="center" gap="12px" width="100%" overflow="hidden">
+			<Grid display="flex" alignItems="center" justifyContent="center" gap="12px" width="100%" sx={{ overflowX: 'hidden', }}>
 				<LinkUnstyled to={RoutesEnum.ADMIN_PRODUCT + params.row.slug}>
 					<EditRounded className="action-icon" sx={(theme): object => ({
 						'&:hover': {

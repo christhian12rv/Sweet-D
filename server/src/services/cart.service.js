@@ -1,4 +1,4 @@
-const ProductModel = require("../models/Product/Product.model");
+const { ProductModel } = require("../models");
 
 exports.getAllData = async productsIds => {
     const products = [];

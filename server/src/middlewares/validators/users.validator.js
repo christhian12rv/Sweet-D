@@ -1,8 +1,8 @@
 const { body } = require("express-validator");
 const bcrypt = require("bcrypt");
 
-const UserModel = require("../../models/User/User.model");
-const ChangePasswordTokenModel = require("../../models/User/ChangePasswordToken.model");
+const { UserModel } = require("../../models");
+const { ChangePasswordTokenModel } = require("../../models");
 
 exports.create = [
     body("name")

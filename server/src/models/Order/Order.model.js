@@ -25,15 +25,4 @@ const Order = db.define("order", {
     updatedAt: Sequelize.DATE
 });
 
-Order.associate = function (models) {
-    Order.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user',
-    });
-};
-
-Order.associate = function (models) {
-    Order.hasMany(models.OrderProduct, { as: "orderProducts" });
-};
-
 module.exports = Order;

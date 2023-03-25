@@ -32,11 +32,4 @@ const ProductIngredient = db.define("productIngredient", {
     updatedAt: Sequelize.DATE
 });
 
-ProductIngredient.associate = (models) => {
-    ProductIngredient.belongsTo(models.Product, {
-        foreignKey: 'productId',
-        as: 'product',
-    });
-};
-
 module.exports = ProductIngredient;

@@ -1,20 +1,27 @@
-import { Box, styled } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 
-export const BoxTextEditor = styled(Box)(() => ({
-	// border: '1px solid rgb(192, 192, 192)',
-	// borderRadius: '4px',
-	// '&:hover': {
-	// 	border: '1px solid rgb(118, 118, 118)',
-	// },
-	// '& .muiRichTextEditor-editor': {
-	// 	boxShadow: 'none',
-	// 	padding: '15.5px 14px',
-	// 	minHeight: '228px',
-	// 	marginTop: '0',
-	// },
-	// '& .muiRichTextEditor-toolbar': {
-	// 	borderBottom: '1px solid rgb(192, 192, 192)',
-	// 	borderRadius: '0',
-	// 	boxShadow: 'none',
-	// },
+export const GridTextEditor = styled(Grid)(({ theme, }) => ({
+	'& .MuiPaper-root:nth-of-type(2)': {
+		backgroundColor: theme.palette.primary.main,
+		boxShadow: 'none',
+		border: 'none',
+	},
+	'& .MuiTypography-body1:nth-of-type(3)::-webkit-scrollbar': {
+		width: '10px',
+	},
+	/* Track */
+	'& .MuiTypography-body1:nth-of-type(3)::-webkit-scrollbar-track': {
+		background: 'transparent',
+		boxShadow: 'none',
+	},
+	/* Handle */
+	'& .MuiTypography-body1:nth-of-type(3)::-webkit-scrollbar-thumb': {
+		background: theme.palette.grey[300],
+		boxShadow: 'none',
+		borderRadius: '2px',
+	},
+	/* Handle on hover */
+	'& .MuiTypography-body1:nth-of-type(3)::-webkit-scrollbar-thumb:hover': {
+		background: '#555',
+	},
 }));

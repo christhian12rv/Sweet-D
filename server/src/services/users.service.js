@@ -8,9 +8,9 @@ const { v4: uuidv4 } = require("uuid");
 const recoveryPasswordTemplate = require("../templates/recoveryPassword");
 const contactTemplate = require("../templates/contact");
 
-const UserModel = require("../models/User/User.model");
-const OrderModel = require("../models/Order/Order.model");
-const ChangePasswordTokenModel = require("../models/User/ChangePasswordToken.model");
+const { UserModel } = require("../models");
+const { OrderModel } = require("../models");
+const { ChangePasswordTokenModel } = require("../models");
 const config = require('../configs/config');
 
 exports.findAll = async (

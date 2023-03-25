@@ -1,159 +1,39 @@
-import { FormControl, Grid, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Divider, FormControl, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
 import ProductType from '../../../types/Product/ProductType';
-import { BoxTextEditor } from './AddProduct.styled';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
-
-const lang = {
-	code: 'pt_br',
-	toolbar: {
-		default: 'Padrão',
-		save: 'Salvar',
-		font: 'Fonte',
-		formats: 'Formatos',
-		fontSize: 'Tamanho',
-		bold: 'Negrito',
-		underline: 'Sublinhado',
-		italic: 'Itálico',
-		strike: 'Riscado',
-		subscript: 'Subescrito',
-		superscript: 'Sobrescrito',
-		removeFormat: 'Remover Formatação',
-		fontColor: 'Cor da Fonte',
-		hiliteColor: 'Cor de destaque',
-		indent: 'Recuo',
-		outdent: 'Avançar',
-		align: 'Alinhar',
-		alignLeft: 'Alinhar à esquerda',
-		alignRight: 'Alinhar à direita',
-		alignCenter: 'Centralizar',
-		alignJustify: 'Justificar',
-		list: 'Lista',
-		orderList: 'Lista ordenada',
-		unorderList: 'Lista desordenada',
-		horizontalRule: 'Linha horizontal',
-		hr_solid: 'sólida',
-		hr_dotted: 'pontilhada',
-		hr_dashed: 'tracejada',
-		table: 'Tabela',
-		link: 'Link',
-		math: 'Matemática',
-		image: 'Imagem',
-		video: 'Vídeo',
-		audio: 'Áudio',
-		fullScreen: 'Tela cheia',
-		showBlocks: 'Mostrar blocos',
-		codeView: 'Mostrar códigos',
-		undo: 'Voltar',
-		redo: 'Refazer',
-		preview: 'Prever',
-		print: 'Imprimir',
-		tag_p: 'Paragráfo',
-		tag_div: '(DIV) Normal',
-		tag_h: 'Cabeçalho',
-		tag_blockquote: 'Citar',
-		tag_pre: 'Código',
-		template: 'Modelo',
-		lineHeight: 'Altura da linha',
-		paragraphStyle: 'Estilo do parágrafo',
-		textStyle: 'Estilo do texto',
-		imageGallery: 'Galeria de imagens',
-		dir_ltr: 'Esquerda para direita',
-		dir_rtl: 'Direita para esquerda',
-		mention: 'Menção',
-	},
-	dialogBox: {
-		linkBox: {
-			title: 'Inserir link',
-			url: 'URL para link',
-			text: 'Texto a mostrar',
-			newWindowCheck: 'Abrir em nova guia',
-			downloadLinkCheck: 'Link para Download',
-			bookmark: 'marcar páginas',
-		},
-		mathBox: {
-			title: 'Matemática',
-			inputLabel: 'Notação matemática',
-			fontSizeLabel: 'Tamanho',
-			previewLabel: 'Prever',
-		},
-		imageBox: {
-			title: 'Inserir imagens',
-			file: 'Selecionar arquivos',
-			url: 'URL da imagem',
-			altText: 'Texto alternativo',
-		},
-		videoBox: {
-			title: 'Inserir vídeo',
-			file: 'Selecionar arquivos',
-			url: 'URL do YouTube/Vimeo',
-		},
-		audioBox: {
-			title: 'Inserir áudio',
-			file: 'Selecionar arquivos',
-			url: 'URL da áudio',
-		},
-		browser: {
-			tags: 'Tag',
-			search: 'Procurar',
-		},
-		caption: 'Inserir descrição',
-		close: 'Fechar',
-		submitButton: 'Enviar',
-		revertButton: 'Reverter',
-		proportion: 'Restringir proporções',
-		basic: 'Básico',
-		left: 'Esquerda',
-		right: 'Direita',
-		center: 'Centro',
-		width: 'Largura',
-		height: 'Altura',
-		size: 'Tamanho',
-		ratio: 'Proporções',
-	},
-	controller: {
-		edit: 'Editar',
-		unlink: 'Remover link',
-		remove: 'Remover',
-		insertRowAbove: 'Inserir linha acima',
-		insertRowBelow: 'Inserir linha abaixo',
-		deleteRow: 'Deletar linha',
-		insertColumnBefore: 'Inserir coluna antes',
-		insertColumnAfter: 'Inserir coluna depois',
-		deleteColumn: 'Deletar coluna',
-		fixedColumnWidth: 'Largura fixa da coluna',
-		resize100: 'Redimensionar para 100%',
-		resize75: 'Redimensionar para 75%',
-		resize50: 'Redimensionar para 50%',
-		resize25: 'Redimensionar para 25%',
-		autoSize: 'Tamanho automático',
-		mirrorHorizontal: 'Espelho, Horizontal',
-		mirrorVertical: 'Espelho, Vertical',
-		rotateLeft: 'Girar para esquerda',
-		rotateRight: 'Girar para direita',
-		maxSize: 'Tam máx',
-		minSize: 'Tam mín',
-		tableHeader: 'Cabeçalho da tabela',
-		mergeCells: 'Mesclar células',
-		splitCells: 'Dividir células',
-		HorizontalSplit: 'Divisão horizontal',
-		VerticalSplit: 'Divisão vertical',
-	},
-	menu: {
-		spaced: 'Espaçado',
-		bordered: 'Com borda',
-		neon: 'Neon',
-		translucent: 'Translúcido',
-		shadow: 'Sombreado',
-		code: 'Código',
-	},
-};
-
+import 'suneditor/dist/css/suneditor.min.css';
+import FileUpload from 'react-mui-fileuploader';
+import { RichTextEditor } from '../../../components/RichTextEditor';
+import { GridTextEditor } from './AddProduct.styled';
+import { MainButton } from '../../../components/MainButton';
+import ProductSizeType from '../../../types/Product/ProductSizeType';
+import { DeleteRounded } from '@mui/icons-material';
+import ProductIngredientTypeType from '../../../types/Product/ProductIngredientTypeType';
+import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
+import ProductIngredientType from '../../../types/Product/ProductIngredientType';
+import { findAllProducts } from '../../../store/features/products/products.actions';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { useTypedSelector } from '../../../store/utils/useTypedSelector';
+import RoutesEnum from '../../../types/enums/RoutesEnum';
 
 export const AddProduct: React.FunctionComponent = () => {
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const navigate = useNavigate();
+	const { error, } = useTypedSelector((state) => state.products);
+
+	useEffect(() => {
+		dispatch(findAllProducts());
+	}, []);
+
+	useEffect(() => {
+		if (error?.status === 500)
+			navigate(RoutesEnum.ERROR_500);
+	}, [error]);
+
 	const [product, setProduct] = useState<ProductType>({
-		id: 0,
+		id: 1,
 		name: '',
 		description: '',
 		photos: '',
@@ -165,13 +45,110 @@ export const AddProduct: React.FunctionComponent = () => {
 		ingredients: [],
 		ingredientTypes: [],
 	});
+	const [files, setFiles] = useState<string[]>([]);
 
-	const handleEditorChange = (value): void => {
-		handleChangeProduct('description', value);
+	const handleFilesChange = (files): void => {
+		setFiles([...files]);
 	};
 
 	const handleChangeProduct = (property, value): void => {
 		setProduct({ ...product, [property]: value, });
+	};
+
+	const handleAddSize = (): void => {
+		const newId = product.sizes?.length ? (Math.max(...(product.sizes?.map(size => size.id) as number[])) + 1) : 1;
+		const newSize = {
+			id: newId,
+			productId: 0,
+			name: '',
+			price: 0,
+			createdAt: new Date(),
+			updatedAt: null,
+		} as ProductSizeType;
+
+		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeType[]), newSize], });
+	} ;
+
+	const handleChangeProductSize = (id, property, value): void => {
+		const changedSizes = product.sizes?.map(size => {
+			if (size.id === id)
+				size[property] = value;
+			return size;
+		});
+		
+		setProduct({ ...product, sizes: changedSizes, });
+
+		console.log(product.sizes);
+	};
+
+	const handleRemoveProductSize = (id): void => {
+		const changedSizes = product.sizes?.filter(size => size.id !== id);
+
+		setProduct({ ...product, sizes: changedSizes, });
+	};
+
+	const handleAddIngredientType = (): void => {
+		const newId = product.ingredientTypes?.length ? (Math.max(...(product.ingredientTypes?.map(ingredientType => ingredientType.id) as number[])) + 1) : 1;
+		const newIngredientType = {
+			id: newId,
+			productId: 0,
+			min: 0,
+			max: 0,
+			type: '',
+			createdAt: new Date(),
+			updatedAt: null,
+		} as ProductIngredientTypeType;
+
+		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeType[]), newIngredientType], });
+	} ;
+
+	const handleChangeProductIngredientType = (id, property, value): void => {
+		const changedIngredientTypes = product.ingredientTypes?.map(ingredientType => {
+			if (ingredientType.id === id)
+				ingredientType[property] = value;
+			return ingredientType;
+		});
+		
+		setProduct({ ...product, ingredientTypes: changedIngredientTypes, });
+	};
+
+	const handleRemoveProductIngredientType = (id): void => {
+		const changedIngredientTypes = product.ingredientTypes?.filter(ingredientType => ingredientType.id !== id);
+
+		setProduct({ ...product, ingredientTypes: changedIngredientTypes, });
+	};
+
+	const handleAddIngredient = (): void => {
+		const newId = product.ingredients?.length ? (Math.max(...(product.ingredients?.map(ingredient => ingredient.id) as number[])) + 1) : 1;
+		const newIngredient = {
+			id: newId,
+			productId: 0,
+			name: '',
+			price: 0,
+			type: '',
+			createdAt: new Date(),
+			updatedAt: null,
+		} as ProductIngredientType;
+
+		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientType[]), newIngredient], });
+	} ;
+
+	const handleChangeProductIngredient = (id, property, value): void => {
+		const changedIngredients = product.ingredients?.map(ingredient => {
+			if (ingredient.id === id)
+				ingredient[property] = value;
+			return ingredient;
+		});
+		
+		setProduct({ ...product, ingredients: changedIngredients, });
+
+		console.log(product.ingredients);
+	};
+
+	const handleRemoveProductIngredient = (id): void => {
+		const changedIngredients = product.ingredients?.filter(ingredient => ingredient.id !== id);
+
+		setProduct({ ...product, ingredients: changedIngredients, });
 	};
 	
 
@@ -202,56 +179,214 @@ export const AddProduct: React.FunctionComponent = () => {
 					</Grid>
 
 					<Grid item xs={12} md={12}>
-						<BoxTextEditor component="div">
-							<SunEditor onChange={handleEditorChange} lang={lang} setOptions={{
-								mode: 'classic',
-								buttonList: [
-									['undo',
-										'redo',
-										'fontSize',
-										'paragraphStyle',
-										'blockquote',
-										'bold',
-										'underline',
-										'italic',
-										'strike',
-										'subscript',
-										'superscript',
-										'fontColor',
-										'hiliteColor',
-										'textStyle',
-										'removeFormat',
-										'outdent',
-										'indent',
-										'align',
-										'horizontalRule',
-										'list',
-										'lineHeight',
-										'table',
-										'link',
-										'fullScreen']
-								],
-							}} />
-						</BoxTextEditor>
-						{/* <TextField
-							label="Descrição"
-							type="text"
-							multiline
-							rows={5}
-							value={product.description}
-							onChange={(event): any => handleChangeProduct('description', event.target.value)}
-							InputProps={{ inputProps: { min: 1, }, }}
-							fullWidth/> */}
+						<RichTextEditor
+							placeholder="Descrição..."
+							defaultValue=""
+							onChange={(value): any => handleChangeProduct('description', value)} />
 					</Grid>
 
-					<Grid item xs={12} md={6}>
-						<TextField
-							label="Nome"
-							type="text"
-							value={product.name}
-							onChange={(event): any => handleChangeProduct('name', event.target.value)}
-							InputProps={{ inputProps: { min: 1, }, }}
-							fullWidth/>
+					<GridTextEditor item xs={12} md={12}>
+						<FileUpload 
+							multiFile={true}
+							disabled={false}
+							title="Imagens do produto"
+							header="Puxe uma imagem até aqui"
+							leftLabel="ou"
+							buttonLabel="Clique aqui"
+							rightLabel="para selecionar imagens"
+							buttonRemoveLabel="Remover todas"
+							maxFilesContainerHeight={317}
+							acceptedType={'image/*'}
+							allowedExtensions={['jpg', 'jpeg', 'png']}
+							defaultValue={files}
+							onFilesChange={handleFilesChange}
+							BannerProps={{ elevation: 0, variant: 'outlined', }}
+							showPlaceholderImage={false}
+							PlaceholderGridProps={{ md: 4, }}
+							LabelsGridProps={{ md: 8, }}
+							ContainerProps={{
+								elevation: 0,
+								variant: 'outlined',
+								sx: { p: 1, },
+							}}
+						/>
+					</GridTextEditor>
+
+					
+					<Grid item xs={12} md={12} sx={{ mt: 5, }}>
+						<Typography variant="h5">Tamanhos</Typography>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<MainButton onClick={handleAddSize}>Adicionar tamanho</MainButton>
+					</Grid>
+
+					{product.sizes?.map((size, index) => (
+						<>
+							<Grid item xs={12} md={6}>
+								<TextField
+									label={`Nome tamanho ${index + 1}`}
+									type="string"
+									value={product.sizes?.find(s => s.id === size.id)?.name}
+									onChange={(event): any => handleChangeProductSize(size.id, 'name', event.target.value)}
+									fullWidth/>
+							</Grid>
+							<Grid item xs={12} md={5}>
+								<CurrencyTextField
+									label={`Preço tamanho ${index + 1}`}
+									variant="outlined"
+									value={product.sizes?.find(s => s.id === size.id)?.price}
+									currencySymbol="R$"
+									outputFormat="number"
+									onChange={(event, value): any => handleChangeProductSize(size.id, 'price', value)}
+									decimalCharacter=","
+									digitGroupSeparator="."
+									minimumValue="0"
+									fullWidth
+								/>
+							</Grid>
+							<Grid item xs={12} md={1} display="flex" alignItems="center">
+								<IconButton
+									color="inherit"
+									aria-label="delete size"
+									edge="start"
+									onClick={(): any => handleRemoveProductSize(size.id)}
+								>
+									<DeleteRounded sx={(theme): object => ({
+										color: theme.palette.grey[700],
+									})}/>
+								</IconButton>
+								
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<Divider/>
+							</Grid>
+						</>
+					))}
+
+					<Grid item xs={12} md={12}>
+						<Typography variant="h5">Tipos de ingrediente</Typography>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<MainButton onClick={handleAddIngredientType}>Adicionar tipo de ingrediente</MainButton>
+					</Grid>
+
+					{product.ingredientTypes?.map((ingredientType, index) => (
+						<>
+							<Grid item xs={12} md={6}>
+								<TextField
+									label={`Nome tipo de ingrediente ${index + 1}`}
+									type="string"
+									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.type}
+									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'type', event.target.value)}
+									fullWidth/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									label={`Mínimo tipo de ingrediente ${index + 1}`}
+									type="number"
+									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.min}
+									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'min', event.target.value)}
+									InputProps={{ inputProps: { min: 0, }, }}
+									fullWidth/>
+							</Grid>
+							<Grid item xs={12} md={5}>
+								<TextField
+									label={`Máximo tipo de ingrediente ${index + 1}`}
+									type="number"
+									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.max}
+									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'max', event.target.value)}
+									InputProps={{ inputProps: { min: 0, }, }}
+									fullWidth/>
+							</Grid>
+							<Grid item xs={12} md={1} display="flex" alignItems="center">
+								<IconButton
+									color="inherit"
+									aria-label="delete ingredientType"
+									edge="start"
+									onClick={(): any => handleRemoveProductIngredientType(ingredientType.id)}
+								>
+									<DeleteRounded sx={(theme): object => ({
+										color: theme.palette.grey[700],
+									})}/>
+								</IconButton>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<Divider/>
+							</Grid>
+						</>
+					))}
+
+					<Grid item xs={12} md={12}>
+						<Typography variant="h5">Ingredientes</Typography>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<MainButton onClick={handleAddIngredient}>Adicionar Ingrediente</MainButton>
+					</Grid>
+
+					{product.ingredients?.map((ingredient, index) => (
+						<>
+							<Grid item xs={12} md={6}>
+								<TextField
+									label={`Nome ingrediente ${index + 1}`}
+									type="string"
+									value={product.ingredients?.find(s => s.id === ingredient.id)?.name}
+									onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'name', event.target.value)}
+									fullWidth/>
+							</Grid>
+							<Grid item xs={12} md={6}>
+
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<CurrencyTextField
+									label={`Preço ingrediente ${index + 1}`}
+									variant="outlined"
+									value={product.ingredients?.find(s => s.id === ingredient.id)?.price}
+									currencySymbol="R$"
+									outputFormat="number"
+									onChange={(event, value): any => handleChangeProductSize(ingredient.id, 'price', value)}
+									decimalCharacter=","
+									digitGroupSeparator="."
+									minimumValue="0"
+									fullWidth
+								/>
+							</Grid>
+							<Grid item xs={12} md={5}>
+								<TextField
+									label={`Tipo ingrediente ${index + 1}`}
+									select
+									type="string"
+									value={product.ingredients?.find(s => s.id === ingredient.id)?.type}
+									onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'type', event.target.value)}
+									fullWidth>
+									{product.ingredientTypes?.map((ingredientType, index) => (
+										<MenuItem key={ingredientType.id} value={ingredientType.type}>
+											{ingredientType.type}
+										</MenuItem>
+									))}
+								</TextField>
+							</Grid>
+							<Grid item xs={12} md={1} display="flex" alignItems="center">
+								<IconButton
+									color="inherit"
+									aria-label="delete ingredient"
+									edge="start"
+									onClick={(): any => handleRemoveProductIngredient(ingredient.id)}
+								>
+									<DeleteRounded sx={(theme): object => ({
+										color: theme.palette.grey[700],
+									})}/>
+								</IconButton>
+							</Grid>
+							<Grid item xs={12} md={12}>
+								<Divider/>
+							</Grid>
+						</>
+					))}
+					
+					<Grid item xs={12} md={12}>
+						<MainButton style={{ width: '200px', }}>Salvar</MainButton>
 					</Grid>
 				</Grid>
 			</FormControl>

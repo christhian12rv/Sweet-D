@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
-const ProductModel = require("../../models/Product/Product.model");
-const OrderModel = require("../../models/Order/Order.model");
+const { ProductModel } = require("../../models");
+const { OrderModel } = require("../../models");
 
 exports.create = [
     body("products.*.id")

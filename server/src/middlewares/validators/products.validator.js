@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
-const ProductModel = require("../../models/Product/Product.model");
-const ProductIngredientType = require('../../models/Product/ProductIngredientType.model');
+const { ProductModel } = require("../../models");
+const { ProductIngredientType } = require('../../models');
 
 exports.create = [
     body("name")

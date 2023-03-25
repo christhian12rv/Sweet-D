@@ -1,10 +1,10 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-const ProductModel = require("../models/Product/Product.model");
-const OrderModel = require("../models/Order/Order.model");
-const OrderProductModel = require("../models/Order/OrderProduct.model");
-const UserModel = require("../models/User/User.model");
+const { ProductModel } = require("../models");
+const { OrderModel } = require("../models");
+const { OrderProductModel } = require("../models");
+const { UserModel } = require("../models");
 
 exports.findAll = async (
     limit = -1,

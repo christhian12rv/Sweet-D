@@ -2,9 +2,9 @@ const moment = require("moment");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-const ProductModel = require("../models/Product/Product.model");
-const UserModel = require("../models/User/User.model");
-const OrderModel = require("../models/Order/Order.model");
+const { ProductModel } = require("../models");
+const { UserModel } = require("../models");
+const { OrderModel } = require("../models");
 
 exports.getTotal = async () => {
     const dateTodayStart = new Date().setHours(0, 0, 0, 0);

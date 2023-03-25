@@ -28,11 +28,4 @@ const ProductSize = db.define("productSize", {
     updatedAt: Sequelize.DATE
 });
 
-ProductSize.associate = (models) => {
-    ProductSize.belongsTo(models.Product, {
-        foreignKey: 'productId',
-        as: 'product',
-    });
-};
-
 module.exports = ProductSize;

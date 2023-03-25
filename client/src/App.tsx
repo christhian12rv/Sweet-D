@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 import { ThemeProvider } from '@emotion/react';
 import { GlobalStyles } from '@mui/material';
 import global from './styles/global';
@@ -28,35 +30,37 @@ import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
-		<ThemeProvider theme={theme}>
-			<GlobalStyles styles={global} />
-			<BrowserRouter >
-				<ScrollToTop />
-				<Routes>
-					<Route element={<MainLayout />} >
-						<Route index element={<Home/>} />
-						<Route path={RoutesEnum.PRODUCTS} element={<Products/>} />
-						<Route path={`${RoutesEnum.PRODUCT}:slug`} element={<Product/>} />
-						<Route path={RoutesEnum.CART} element={<Cart/>} />
-						<Route path={RoutesEnum.LOGIN} element={<Login/>} />
-						<Route path={RoutesEnum.REGISTER} element={<Register/>} />
-						<Route path={RoutesEnum.FORGOT_PASSWORD} element={<ForgotPassword/>} />
-						<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
-						<Route element={<ProfileLayout/>} >
-							<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
-							<Route path={RoutesEnum.ORDERS} element={<Orders/>} />
-							<Route path={`${RoutesEnum.ORDER}:id`} element={<Order/>} />
+		<Provider store={store}>
+			<ThemeProvider theme={theme}>
+				<GlobalStyles styles={global} />
+				<BrowserRouter >
+					<ScrollToTop />
+					<Routes>
+						<Route element={<MainLayout />} >
+							<Route index element={<Home/>} />
+							<Route path={RoutesEnum.PRODUCTS} element={<Products/>} />
+							<Route path={`${RoutesEnum.PRODUCT}:slug`} element={<Product/>} />
+							<Route path={RoutesEnum.CART} element={<Cart/>} />
+							<Route path={RoutesEnum.LOGIN} element={<Login/>} />
+							<Route path={RoutesEnum.REGISTER} element={<Register/>} />
+							<Route path={RoutesEnum.FORGOT_PASSWORD} element={<ForgotPassword/>} />
+							<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
+							<Route element={<ProfileLayout/>} >
+								<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
+								<Route path={RoutesEnum.ORDERS} element={<Orders/>} />
+								<Route path={`${RoutesEnum.ORDER}:id`} element={<Order/>} />
+							</Route>
+							<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
+							<Route path="*" element={<Error404 />} />
 						</Route>
-						<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
-						<Route path="*" element={<Error404 />} />
-					</Route>
 
-					<Route element={<AdminMainLayout />} >
-						<Route path={RoutesEnum.ADMIN_PRODUCTS} element={<AdminProducts/>} />
-						<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
-					</Route>
-				</Routes>
-			</BrowserRouter >
-		</ThemeProvider>
+						<Route element={<AdminMainLayout />} >
+							<Route path={RoutesEnum.ADMIN_PRODUCTS} element={<AdminProducts/>} />
+							<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
+						</Route>
+					</Routes>
+				</BrowserRouter >
+			</ThemeProvider>
+		</Provider>
 	);
 };
