@@ -1,19 +1,25 @@
 import ProductType from '../../../types/Product/ProductType';
-import { GlobalActionType, GlobalErrorType, GlobalStateType } from '../../types/global.store.types';
+import { GlobalActionType, GlobalStateType, RequestType } from '../../types/global.store.types';
 
 export enum ProductsActionsTypes {
 	FIND_ALL_PENDING = 'PRODUCTS_FIND_ALL_PENDING',
 	FIND_ALL_SUCCESS = 'PRODUCTS_FIND_ALL_SUCCESS',
-	FIND_ALL_ERROR = 'PRODUCTS_FIND_ALL_ERROR',
+	FIND_ALL_FAIL = 'PRODUCTS_FIND_ALL_FAIL',
+
+	CREATE_PENDING = 'PRODUCTS_CREATE_PENDING',
+	CREATE_SUCCESS = 'PRODUCTS_CREATE_SUCCESS',
+	CREATE_FAIL = 'PRODUCTS_CREATE_FAIL'
 }
 
 export type ProductsAction = {
 	payload?: {
-		products?: ProductType[],
-		error?: GlobalErrorType;
+		products?: ProductType[] | null,
+		product?: ProductType | null,
+		request: RequestType;
 	}
 } & GlobalActionType;
 
 export type ProductsState = {
-	products: ProductType[];
+	products: ProductType[] | null;
+	product: ProductType | null;
 } & GlobalStateType;

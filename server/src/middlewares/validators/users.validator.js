@@ -72,9 +72,6 @@ exports.create = [
         .isString()
         .withMessage("A Senha do campo Confirmar Senha informada é inválida")
         .bail()
-        .isLength({ min: 8 })
-        .withMessage("A Senha deve conter no mínimo 8 caracteres")
-        .bail()
         .custom((value, { req }) => {
             if (value !== req.body.password)
                 throw new Error("As senhas não correspondem");

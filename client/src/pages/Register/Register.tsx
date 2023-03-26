@@ -1,34 +1,51 @@
 import { CallRounded, LockRounded, VisibilityOffRounded, VisibilityRounded } from '@mui/icons-material';
-import { Grid, Divider, Typography, FormControl, TextField, InputAdornment, IconButton, capitalize } from '@mui/material';
+import { Grid, Divider, Typography, FormControl, TextField, InputAdornment, IconButton, capitalize, CircularProgress, Backdrop, Box } from '@mui/material';
 import { formatIncompletePhoneNumber } from 'libphonenumber-js';
-import React, { useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { BackdropLoading } from '../../components/BackdropLoading';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
 import { MainButton } from '../../components/MainButton';
+import { register } from '../../store/features/users/users.actions';
+import { useTypedSelector } from '../../store/utils/useTypedSelector';
 import RoutesEnum from '../../types/enums/RoutesEnum';
+import { useHandleSnackbarMessages } from '../../utils/hooks/useHandleSnackbarMessages';
 import { BoxArea, GridContainer } from './Register.styled';
 
 export const Register: React.FunctionComponent = () => {
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const { request, loading, } = useTypedSelector((state) => state.users);
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const [register, setRegister] = useState({
+	const [user, setUser] = useState({
 		name: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
 		phone: '',
 	});
+
+	useHandleSnackbarMessages(request, 200, 'Cadastro feito com sucesso. Faça login para continuar', RoutesEnum.LOGIN);
+
+	const handleDispatchRegister = (): void => {
+		dispatch(register(user));
+	};
 	
-	const handleChangeRegisterInput = (property, event): void => {
+	const handleChangeUserInput = (property, event): void => {
 		let value = event.target.value;
 		if (property === 'name')
 			value = capitalize(value);
 
-		setRegister({ ...register, [property]: value, });
+		setUser({ ...user, [property]: value, });
 	};
 
-	const handleChangeRegisterPhoneInput = (property, event): void => {
+	const handleChangeUserPhoneInput = (property, event): void => {
 		const value = formatIncompletePhoneNumber(event.target.value, 'BR');
-		setRegister({ ...register, [property]: value, });
+		setUser({ ...user, [property]: value, });
 	};
 	
 	const handleClickShowPassword = (): void => {
@@ -54,95 +71,98 @@ export const Register: React.FunctionComponent = () => {
 				<Divider sx={(theme): object => ({ backgroundColor: theme.palette.primary.main, width: '138px', height: '3px', mt: 1, mb: 3, })}/>
 	
 				<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[800], })}>Olá! Registre sua conta para fazer seu pedido.</Typography>
-				
-				<FormControl sx={{ mt: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, maxWidth: '600px', }}>
-					<Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'center', }}>
-						<Grid item xs={6} sx={{ minWidth: '300px', }}>
-							<TextField type="text" label="Nome" onChange={(event): any => handleChangeRegisterInput('name', event)} value={register.name}
-								style={{ width: '100%', }}/>
-						</Grid>
+				<Box sx={{ position: 'relative', mt: 4, maxWidth: '620px', px: '10px', py: 2, }}>
+					<BackdropLoading open={loading}/>
+					
+					<FormControl sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, }}>
+						<Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'center', }}>
+							<Grid item xs={6} sx={{ minWidth: '300px', }}>
+								<TextField error={false} helperText="" type="text" label="Nome" onChange={(event): any => handleChangeUserInput('name', event)} value={user.name}
+									style={{ width: '100%', }}/>
+							</Grid>
 
-						<Grid item xs={6} sx={{ minWidth: '300px', }}>
-							<TextField type="email" label="Email" onChange={(event): any => handleChangeRegisterInput('email', event)} value={register.email}
-								style={{ width: '100%', }}/>
-						</Grid>
+							<Grid item xs={6} sx={{ minWidth: '300px', }}>
+								<TextField type="email" label="Email" onChange={(event): any => handleChangeUserInput('email', event)} value={user.email}
+									style={{ width: '100%', }}/>
+							</Grid>
 
-						<Grid item xs={6} sx={{ minWidth: '300px', }}>
-							<TextField type={showPassword ? 'text' : 'password'} label="Senha" onChange={(event): any => handleChangeRegisterInput('password', event)} value={register.password}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<LockRounded/>
-										</InputAdornment>
-									),
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton
-												aria-label="toggle password visibility"
-												onClick={handleClickShowPassword}
-												onMouseDown={handleMouseDownPassword}
-												edge="end"
-											>
-												{showPassword ? <VisibilityOffRounded /> : <VisibilityRounded />}
-											</IconButton>
-										</InputAdornment>
-									),
-								}} style={{ width: '100%', }}/>
-						</Grid>
+							<Grid item xs={6} sx={{ minWidth: '300px', }}>
+								<TextField type={showPassword ? 'text' : 'password'} label="Senha" onChange={(event): any => handleChangeUserInput('password', event)} value={user.password}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<LockRounded/>
+											</InputAdornment>
+										),
+										endAdornment: (
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle password visibility"
+													onClick={handleClickShowPassword}
+													onMouseDown={handleMouseDownPassword}
+													edge="end"
+												>
+													{showPassword ? <VisibilityOffRounded /> : <VisibilityRounded />}
+												</IconButton>
+											</InputAdornment>
+										),
+									}} style={{ width: '100%', }}/>
+							</Grid>
 		
-						<Grid item xs={6} sx={{ minWidth: '300px', }}>
-							<TextField type={showConfirmPassword ? 'text' : 'password'} label="Confirmar senha" onChange={(event): any => handleChangeRegisterInput('confirmPassword', event)} value={register.confirmPassword}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<LockRounded/>
-										</InputAdornment>
-									),
-									endAdornment: (
-										<InputAdornment position="end">
-											<IconButton
-												aria-label="toggle confirm password visibility"
-												onClick={handleClickShowConfirmPassword}
-												onMouseDown={handleMouseDownConfirmPassword}
-												edge="end"
-											>
-												{showConfirmPassword ? <VisibilityOffRounded /> : <VisibilityRounded />}
-											</IconButton>
-										</InputAdornment>
-									),
-								}} style={{ width: '100%', }}/>
-						</Grid>
+							<Grid item xs={6} sx={{ minWidth: '300px', }}>
+								<TextField type={showConfirmPassword ? 'text' : 'password'} label="Confirmar senha" onChange={(event): any => handleChangeUserInput('confirmPassword', event)} value={user.confirmPassword}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<LockRounded/>
+											</InputAdornment>
+										),
+										endAdornment: (
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle confirm password visibility"
+													onClick={handleClickShowConfirmPassword}
+													onMouseDown={handleMouseDownConfirmPassword}
+													edge="end"
+												>
+													{showConfirmPassword ? <VisibilityOffRounded /> : <VisibilityRounded />}
+												</IconButton>
+											</InputAdornment>
+										),
+									}} style={{ width: '100%', }}/>
+							</Grid>
 
-						<Grid item xs={6} sx={{ minWidth: '300px', }}>
-							<TextField type="text" label="Telefone" onChange={(event): any => handleChangeRegisterPhoneInput('phone', event)} value={register.phone}
-								inputProps={{ maxLength: 15, }}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<CallRounded/>
-										</InputAdornment>
-									),
-								}} style={{ width: '100%', }}/>
+							<Grid item xs={6} sx={{ minWidth: '300px', }}>
+								<TextField type="text" label="Telefone" onChange={(event): any => handleChangeUserPhoneInput('phone', event)} value={user.phone}
+									inputProps={{ maxLength: 15, }}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<CallRounded/>
+											</InputAdornment>
+										),
+									}} style={{ width: '100%', }}/>
+							</Grid>
 						</Grid>
-					</Grid>
 	
-					<MainButton style={{ width: '295px', }}>Registrar</MainButton>
+						<MainButton onClick={handleDispatchRegister} style={{ width: '295px', }}>Registrar</MainButton>
 	
-					<Grid display="flex">
-						<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[800], })}>Já possui uma conta?</Typography>
-						<LinkUnstyled to={RoutesEnum.LOGIN}>
-							<Typography variant="body1" sx={(theme): any => ({
-								color: theme.palette.primary.darker,
-								'&:hover': {
-									color: theme.palette.secondary.dark,
-								},
-								transition: 'all .25s',
-							})}>
+						<Grid display="flex">
+							<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[800], })}>Já possui uma conta?</Typography>
+							<LinkUnstyled to={RoutesEnum.LOGIN}>
+								<Typography variant="body1" sx={(theme): any => ({
+									color: theme.palette.primary.darker,
+									'&:hover': {
+										color: theme.palette.secondary.dark,
+									},
+									transition: 'all .25s',
+								})}>
 								&nbsp;Login
-							</Typography>
-						</LinkUnstyled>
-					</Grid>
-				</FormControl>
+								</Typography>
+							</LinkUnstyled>
+						</Grid>
+					</FormControl>
+				</Box>
 			</GridContainer>
 		</BoxArea>
 	);

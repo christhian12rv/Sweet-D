@@ -27,10 +27,12 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
 import { Products as AdminProducts } from './pages/Admin/Products';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
+import { SnackbarProviderCustom } from './components/SnackbarProvider';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
 		<Provider store={store}>
+			<SnackbarProviderCustom />
 			<ThemeProvider theme={theme}>
 				<GlobalStyles styles={global} />
 				<BrowserRouter >
