@@ -1,13 +1,19 @@
+export type RequestErrorType = {
+	message: string;
+	field: string;
+}
+
 export type RequestType = {
 	success: boolean,
 	status: number,
 	message: string,
-	errors: string[] | null;
+	errors: RequestErrorType[] | null;
 }
 
 export type GlobalStateType = {
-	request: RequestType;
+	request: RequestType | null;
 	loading: boolean;
+	previousType: string | null;
 }
 
 export type GlobalActionType = {

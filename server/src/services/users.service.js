@@ -49,16 +49,10 @@ exports.create = async (name, email, password, phone) => {
 };
 
 exports.auth = async (email) => {
-    let user = await UserModel.findOne({ where: { email } });
+    const user = await UserModel.findOne({ where: { email } });
 
     const token = await jwt.sign({ id: user.id }, config.jwtSecret);
 
-    user = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        isAdmin: user.isAdmin
-    };
     return { user, token, };
 };
 
@@ -68,8 +62,12 @@ exports.logout = async () => {
     });
 };
 
-exports.update = async (userId, data) => {
-    await UserModel.update(data, {
+exports.update = async (userId, name, email, phone) => {
+    await UserModel.update({
+        name,
+        email,
+        phone,
+    }, {
         where: { id: userId }
     });
 

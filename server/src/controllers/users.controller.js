@@ -127,9 +127,10 @@ exports.update = async (req, res) => {
     }
 
     try {
-        const { userId, data } = req.body;
+        const { name, email, phone  } = req.body;
+        const { id } = req.user;
 
-        const user = await usersService.update(userId, data);
+        const user = await usersService.update(id, name, email, phone);
 
         const message = 'Usuário atualizado com sucesso';
         logger.info(message);

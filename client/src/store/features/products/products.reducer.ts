@@ -10,18 +10,19 @@ const initialState: ProductsState = {
 		errors: null,
 	},
 	loading: false,
+	previousType: null,
 };
 
 const productsReducer = (state = initialState, action: ProductsAction): ProductsState => {
 	switch (action.type) {
 	case ProductsActionsTypes.FIND_ALL_PENDING: {
-		return { ...state, ...action.payload, loading: true, };
+		return { ...state, ...action.payload, previousType: action.type, loading: true, };
 	}
 	case ProductsActionsTypes.FIND_ALL_SUCCESS: {
-		return { ...state, ...action.payload, loading: false, };
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
 	}
 	case ProductsActionsTypes.FIND_ALL_FAIL: {
-		return { ...state, ...action.payload, loading: false, };
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
 	}
 	default:
 		return state;

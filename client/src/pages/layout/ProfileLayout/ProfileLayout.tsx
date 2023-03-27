@@ -126,27 +126,6 @@ export const ProfileLayout: React.FunctionComponent<Props> = (props) => {
 										</ListItemButton>
 									</ListItem>
 								</LinkUnstyled>
-
-								<ListItem disablePadding sx={{ display: 'block', }}>
-									<ListItemButton
-										sx={{
-											minHeight: 48,
-											justifyContent: drawerOpen ? 'initial' : 'center',
-											px: 2.5,
-										}}
-									>
-										<ListItemIcon
-											sx={{
-												minWidth: 0,
-												mr: drawerOpen ? 3 : 'auto',
-												justifyContent: 'center',
-											}}
-										>
-											<PowerSettingsNewRounded className="sidebarItemIcon"/>
-										</ListItemIcon>
-										<ListItemText primary="Logout" sx={{ opacity: drawerOpen ? 1 : 0, }} />
-									</ListItemButton>
-								</ListItem>
 							</List>
 						</DrawerStyled>
 

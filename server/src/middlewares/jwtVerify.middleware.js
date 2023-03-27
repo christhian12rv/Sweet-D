@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require('../configs/config');
-const { default: logger } = require('../configs/logger');
+const logger = require('../configs/logger');
 
 const { UserModel } = require("../models");
 

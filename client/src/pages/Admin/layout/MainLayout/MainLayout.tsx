@@ -8,6 +8,7 @@ import Logo from '../../../../assets/img/Logo.png';
 import RoutesEnum from '../../../../types/enums/RoutesEnum';
 import { Outlet, useLocation } from 'react-router-dom';
 import ScreenSizeQuerysEnum from '../../../../types/enums/ScreenSizeQuerysEnum';
+import LocalStorageEnum from '../../../../types/enums/LocalStorageEnum';
 
 type Props = {
   window?: () => Window;
@@ -16,7 +17,7 @@ type Props = {
 export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 	const location = useLocation();
 	const isMobile = useMediaQuery('(max-width: ' + ScreenSizeQuerysEnum.MOBILE + 'px');
-	const [openSidebar, setOpenSidebar] = useState(localStorage.getItem('adminSidebarOpen') === 'true');
+	const [openSidebar, setOpenSidebar] = useState(!isMobile ? localStorage.getItem(LocalStorageEnum.ADMIN_SIDEBAR_OPEN) === 'true' : false);
 	const [fullscreen, setFullscreen] = useState(false);
 
 	const container = window !== undefined ? (): any => window().document.body : undefined;
@@ -32,12 +33,12 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 
 	const handleDrawerOpenSidebar = (): void => {
 		setOpenSidebar(true);
-		localStorage.setItem('adminSidebarOpen', 'true');
+		localStorage.setItem(LocalStorageEnum.ADMIN_SIDEBAR_OPEN, 'true');
 	};
 
 	const handleDrawerCloseSidebar = (): void => {
 		setOpenSidebar(false);
-		localStorage.setItem('adminSidebarOpen', 'false');
+		localStorage.setItem(LocalStorageEnum.ADMIN_SIDEBAR_OPEN, 'false');
 	};
 
 	const drawer = (

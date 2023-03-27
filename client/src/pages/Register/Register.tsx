@@ -1,18 +1,17 @@
 import { CallRounded, LockRounded, VisibilityOffRounded, VisibilityRounded } from '@mui/icons-material';
-import { Grid, Divider, Typography, FormControl, TextField, InputAdornment, IconButton, capitalize, CircularProgress, Backdrop, Box } from '@mui/material';
+import { Grid, Divider, Typography, FormControl, TextField, InputAdornment, IconButton, capitalize, Box } from '@mui/material';
 import { formatIncompletePhoneNumber } from 'libphonenumber-js';
-import { enqueueSnackbar } from 'notistack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
 import { BackdropLoading } from '../../components/BackdropLoading';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
 import { MainButton } from '../../components/MainButton';
-import { register } from '../../store/features/users/users.actions';
+import { register as registerAction, clearRequest as clearRequestAction } from '../../store/features/users/users.actions';
 import { useTypedSelector } from '../../store/utils/useTypedSelector';
 import RoutesEnum from '../../types/enums/RoutesEnum';
-import { useHandleSnackbarMessages } from '../../utils/hooks/useHandleSnackbarMessages';
+import getRequestErrorByField from '../../store/utils/getRequestErrorByField';
+import { useRequestVerification } from '../../utils/hooks/useRequestVerification';
 import { BoxArea, GridContainer } from './Register.styled';
 
 export const Register: React.FunctionComponent = () => {
@@ -29,10 +28,18 @@ export const Register: React.FunctionComponent = () => {
 		phone: '',
 	});
 
-	useHandleSnackbarMessages(request, 200, 'Cadastro feito com sucesso. Faça login para continuar', RoutesEnum.LOGIN);
+	useEffect(() => {
+		dispatch(clearRequestAction());
+	}, []);
 
-	const handleDispatchRegister = (): void => {
-		dispatch(register(user));
+	useRequestVerification({
+		request,
+		successMessage: 'Cadastro feito com sucesso. Faça login para continuar',
+		successNavigate: RoutesEnum.LOGIN,
+	});
+
+	const handleRegisterButtonClick = (): void => {
+		dispatch(registerAction(user));
 	};
 	
 	const handleChangeUserInput = (property, event): void => {
@@ -71,23 +78,33 @@ export const Register: React.FunctionComponent = () => {
 				<Divider sx={(theme): object => ({ backgroundColor: theme.palette.primary.main, width: '138px', height: '3px', mt: 1, mb: 3, })}/>
 	
 				<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[800], })}>Olá! Registre sua conta para fazer seu pedido.</Typography>
-				<Box sx={{ position: 'relative', mt: 4, maxWidth: '620px', px: '10px', py: 2, }}>
+				
+				<Box sx={{ position: 'relative', mt: 4, maxWidth: '630px', p: 2, }}>
 					<BackdropLoading open={loading}/>
 					
 					<FormControl sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, }}>
-						<Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'center', }}>
+						<Grid columnSpacing={2} rowSpacing={2} container sx={{ alignItems: 'flex-start', justifyContent: 'center', }}>
 							<Grid item xs={6} sx={{ minWidth: '300px', }}>
-								<TextField error={false} helperText="" type="text" label="Nome" onChange={(event): any => handleChangeUserInput('name', event)} value={user.name}
+								<TextField
+									error={!!getRequestErrorByField(request, 'name')}
+									helperText={getRequestErrorByField(request, 'name')?.message}
+									type="text" label="Nome" onChange={(event): any => handleChangeUserInput('name', event)} value={user.name}
 									style={{ width: '100%', }}/>
 							</Grid>
 
 							<Grid item xs={6} sx={{ minWidth: '300px', }}>
-								<TextField type="email" label="Email" onChange={(event): any => handleChangeUserInput('email', event)} value={user.email}
+								<TextField
+									error={!!getRequestErrorByField(request, 'email')}
+									helperText={getRequestErrorByField(request, 'email')?.message}
+									type="email" label="Email" onChange={(event): any => handleChangeUserInput('email', event)} value={user.email}
 									style={{ width: '100%', }}/>
 							</Grid>
 
 							<Grid item xs={6} sx={{ minWidth: '300px', }}>
-								<TextField type={showPassword ? 'text' : 'password'} label="Senha" onChange={(event): any => handleChangeUserInput('password', event)} value={user.password}
+								<TextField
+									error={!!getRequestErrorByField(request, 'password')}
+									helperText={getRequestErrorByField(request, 'password')?.message}
+									type={showPassword ? 'text' : 'password'} label="Senha" onChange={(event): any => handleChangeUserInput('password', event)} value={user.password}
 									InputProps={{
 										startAdornment: (
 											<InputAdornment position="start">
@@ -110,7 +127,10 @@ export const Register: React.FunctionComponent = () => {
 							</Grid>
 		
 							<Grid item xs={6} sx={{ minWidth: '300px', }}>
-								<TextField type={showConfirmPassword ? 'text' : 'password'} label="Confirmar senha" onChange={(event): any => handleChangeUserInput('confirmPassword', event)} value={user.confirmPassword}
+								<TextField
+									error={!!getRequestErrorByField(request, 'confirmPassword')}
+									helperText={getRequestErrorByField(request, 'confirmPassword')?.message}
+									type={showConfirmPassword ? 'text' : 'password'} label="Confirmar senha" onChange={(event): any => handleChangeUserInput('confirmPassword', event)} value={user.confirmPassword}
 									InputProps={{
 										startAdornment: (
 											<InputAdornment position="start">
@@ -133,7 +153,10 @@ export const Register: React.FunctionComponent = () => {
 							</Grid>
 
 							<Grid item xs={6} sx={{ minWidth: '300px', }}>
-								<TextField type="text" label="Telefone" onChange={(event): any => handleChangeUserPhoneInput('phone', event)} value={user.phone}
+								<TextField
+									error={!!getRequestErrorByField(request, 'phone')}
+									helperText={getRequestErrorByField(request, 'phone')?.message}
+									type="text" label="Telefone" onChange={(event): any => handleChangeUserPhoneInput('phone', event)} value={user.phone}
 									inputProps={{ maxLength: 15, }}
 									InputProps={{
 										startAdornment: (
@@ -145,7 +168,7 @@ export const Register: React.FunctionComponent = () => {
 							</Grid>
 						</Grid>
 	
-						<MainButton onClick={handleDispatchRegister} style={{ width: '295px', }}>Registrar</MainButton>
+						<MainButton onClick={handleRegisterButtonClick} style={{ width: '295px', }}>Registrar</MainButton>
 	
 						<Grid display="flex">
 							<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[800], })}>Já possui uma conta?</Typography>

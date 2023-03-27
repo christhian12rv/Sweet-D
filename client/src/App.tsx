@@ -28,13 +28,16 @@ import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
 import { Products as AdminProducts } from './pages/Admin/Products';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 import { SnackbarProviderCustom } from './components/SnackbarProvider';
+import { GetAuthUser } from './components/utils/GetAuthUser';
+import { NeedsAuth } from './components/utils/NeedsAuth';
 
 export const App: React.FunctionComponent<object> = () => {
 	return (
 		<Provider store={store}>
-			<SnackbarProviderCustom />
 			<ThemeProvider theme={theme}>
 				<GlobalStyles styles={global} />
+				<SnackbarProviderCustom />
+				<GetAuthUser />
 				<BrowserRouter >
 					<ScrollToTop />
 					<Routes>
@@ -47,11 +50,15 @@ export const App: React.FunctionComponent<object> = () => {
 							<Route path={RoutesEnum.REGISTER} element={<Register/>} />
 							<Route path={RoutesEnum.FORGOT_PASSWORD} element={<ForgotPassword/>} />
 							<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
-							<Route element={<ProfileLayout/>} >
-								<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
-								<Route path={RoutesEnum.ORDERS} element={<Orders/>} />
-								<Route path={`${RoutesEnum.ORDER}:id`} element={<Order/>} />
+
+							<Route element={<NeedsAuth/>} >
+								<Route element={<ProfileLayout/>} >
+									<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
+									<Route path={RoutesEnum.ORDERS} element={<Orders/>} />
+									<Route path={`${RoutesEnum.ORDER}:id`} element={<Order/>} />
+								</Route>
 							</Route>
+
 							<Route path={RoutesEnum.ERROR_500} element={<Error500 />} />
 							<Route path="*" element={<Error404 />} />
 						</Route>

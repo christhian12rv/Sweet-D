@@ -95,11 +95,8 @@ exports.auth = [
                     return Promise.reject("Ocorreu um erro interno");
                 })
                 .then(user => {
-                    if (user) {
-                        if (!bcrypt.compareSync(req.body.password, user.password))
-                            return Promise.reject("Senha inválida");
-
-                    } else return Promise.reject("Usuário inválido");
+                    if (!user)
+                        return Promise.reject("Email inválido");
                 });
         }),
 
@@ -113,6 +110,17 @@ exports.auth = [
         .bail()
         .isLength({ min: 8 })
         .withMessage("A Senha deve conter no mínimo 8 caracteres")
+        .custom((value, { req }) => {
+            return UserModel.findOne({ where: { email: req.body.email, }, })
+                .catch(erro => {
+                    return Promise.reject("Ocorreu um erro interno");
+                })
+                .then(user => {
+                    if (user && !bcrypt.compareSync(req.body.password, user.password)) {
+                        return Promise.reject("Senha inválida");
+                    }
+                });
+        }),
 ]
 
 exports.update = [

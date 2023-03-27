@@ -93,7 +93,7 @@ export const LoginButton = styled(Button)(({ theme, }) => ({
 
 export const BoxSidebarMobile = styled(Box)(({ theme, }) => ({
 	textAlign: 'center',
-	backgroundColor: theme.palette.primary.lighter,
+	backgroundColor: '#ffff',
 	height: '100%',
 }));
 
