@@ -79,8 +79,8 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 					</SidebarListItemStyled>
 				</LinkUnstyled>
 
-				<LinkUnstyled to={RoutesEnum.ADMIN_PRODUCTS}>
-					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_PRODUCTS || location.pathname === RoutesEnum.ADMIN_ADD_PRODUCT} open={openSidebar}>
+				<LinkUnstyled to={RoutesEnum.ADMIN_LIST_PRODUCTS}>
+					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_LIST_PRODUCTS || location.pathname === RoutesEnum.ADMIN_ADD_PRODUCT} open={openSidebar}>
 						<ListItemButton
 							sx={{
 								minHeight: 48,
@@ -94,7 +94,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 									justifyContent: 'center',
 								}}
 							>
-								<CookieRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_PRODUCTS || location.pathname === RoutesEnum.ADMIN_ADD_PRODUCT ? theme.palette.primary.dark : theme.palette.grey[800], })} />
+								<CookieRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_LIST_PRODUCTS || location.pathname === RoutesEnum.ADMIN_ADD_PRODUCT ? theme.palette.primary.dark : theme.palette.grey[800], })} />
 							</ListItemIcon>
 							<ListItemText primary="Produtos" sx={{ opacity: openSidebar ? 1 : 0, }} />
 						</ListItemButton>

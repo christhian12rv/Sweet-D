@@ -25,13 +25,13 @@ import { ProfileLayout } from './pages/layout/ProfileLayout';
 import { Order } from './pages/Order';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
-import { Products as AdminProducts } from './pages/Admin/Products';
+import { ListProducts as AdminListProducts } from './pages/Admin/ListProducts';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 import { SnackbarProviderCustom } from './components/SnackbarProvider';
 import { GetAuthUser } from './components/utils/GetAuthUser';
 import { NeedsAuth } from './components/utils/NeedsAuth';
 
-export const App: React.FunctionComponent<object> = () => {
+export const App: React.FunctionComponent = () => {
 	return (
 		<Provider store={store}>
 			<ThemeProvider theme={theme}>
@@ -64,7 +64,7 @@ export const App: React.FunctionComponent<object> = () => {
 						</Route>
 
 						<Route element={<AdminMainLayout />} >
-							<Route path={RoutesEnum.ADMIN_PRODUCTS} element={<AdminProducts/>} />
+							<Route path={RoutesEnum.ADMIN_LIST_PRODUCTS} element={<AdminListProducts/>} />
 							<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
 						</Route>
 					</Routes>

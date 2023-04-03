@@ -15,7 +15,7 @@ enum RoutesEnum {
 	CONTACT = '/contact',
 
 	ADMIN_DASHBOARD = '/admin/dashboard',
-	ADMIN_PRODUCTS = '/admin/products',
+	ADMIN_LIST_PRODUCTS = '/admin/products',
 	ADMIN_PRODUCT = '/admin/product/',
 	ADMIN_ADD_PRODUCT = '/admin/add-product',
 	ADMIN_ORDERS = '/admin/orders',

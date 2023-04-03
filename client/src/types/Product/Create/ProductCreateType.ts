@@ -1,6 +1,6 @@
-import ProductIngredientType from '../ProductIngredientType';
-import ProductIngredientTypeType from '../ProductIngredientTypeType';
-import ProductSizeType from '../ProductSizeType';
+import ProductIngredientCreateType from './ProductIngredientCreateType';
+import ProductIngredientTypeCreateType from './ProductIngredientTypeCreateType';
+import ProductSizeCreateType from './ProductSizeCreateType';
 
 interface ProductCreateType {
 	name: string;
@@ -8,9 +8,9 @@ interface ProductCreateType {
 	photos: File[];
 	slug: string;
 
-	sizes: ProductSizeType[];
-	ingredients: ProductIngredientType[];
-	ingredientTypes: ProductIngredientTypeType[];
+	sizes: ProductSizeCreateType[];
+	ingredients: ProductIngredientCreateType[];
+	ingredientTypes: ProductIngredientTypeCreateType[];
 }
 
 export default ProductCreateType;

@@ -99,7 +99,7 @@ const rows = [
 	{ id: 1, name: 'Bolo de pote', slug: 'bolo-de-pote', prices: 'R$ 9,00 , R$ 11,00', active: true, createdAt: dayjs(new Date()).format('DD/MM/YYYY - HH:mm:ss').toString(), }
 ];
 
-export const Products: React.FunctionComponent = () => {
+export const ListProducts: React.FunctionComponent = () => {
 
 	useTitle('Admin - Produtos');
 

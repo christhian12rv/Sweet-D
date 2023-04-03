@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Divider, FormControl, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
-import ProductType from '../../../types/Product/ProductType';
 import 'suneditor/dist/css/suneditor.min.css';
 import FileUpload from 'react-mui-fileuploader';
 import { RichTextEditor } from '../../../components/RichTextEditor';
 import { GridTextEditor } from './AddProduct.styled';
 import { MainButton } from '../../../components/MainButton';
-import ProductSizeType from '../../../types/Product/ProductSizeType';
 import { DeleteRounded } from '@mui/icons-material';
-import ProductIngredientTypeType from '../../../types/Product/ProductIngredientTypeType';
 import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
-import ProductIngredientType from '../../../types/Product/ProductIngredientType';
 import { clearRequest as clearRequestAction, createProduct as createProductAction } from '../../../store/features/products/products.actions';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useTypedSelector } from '../../../store/utils/useTypedSelector';
@@ -20,11 +15,14 @@ import { useRequestVerification } from '../../../utils/hooks/useRequestVerificat
 import RoutesEnum from '../../../types/enums/RoutesEnum';
 import ProductCreateType from '../../../types/Product/Create/ProductCreateType';
 import { useTitle } from '../../../utils/hooks/useTitle';
+import { ProductsActionsTypes } from '../../../store/features/products/products.types';
+import ProductSizeCreateType from '../../../types/Product/Create/ProductSizeCreateType';
+import ProductIngredientTypeCreateType from '../../../types/Product/Create/ProductIngredientTypeCreateType';
+import ProductIngredientCreateType from '../../../types/Product/Create/ProductIngredientCreateType';
 
 export const AddProduct: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-	const navigate = useNavigate();
-	const { request, loading, } = useTypedSelector((state) => state.products);
+	const { request, loading, previousType, } = useTypedSelector((state) => state.products);
 
 	const [product, setProduct] = useState<ProductCreateType>({
 		name: '',
@@ -45,7 +43,11 @@ export const AddProduct: React.FunctionComponent = () => {
 	useRequestVerification({
 		request,
 		successMessage: 'Produto criado com sucesso',
-		successNavigate: RoutesEnum.LOGIN,
+		successNavigate: RoutesEnum.ADMIN_LIST_PRODUCTS,
+		type: {
+			actualType: previousType,
+			expectedType: ProductsActionsTypes.CREATE_SUCCESS,
+		},
 	});
 
 	const handleSaveButtonClick = (): void => {
@@ -64,14 +66,11 @@ export const AddProduct: React.FunctionComponent = () => {
 		const newId = product.sizes?.length ? (Math.max(...(product.sizes?.map(size => size.id) as number[])) + 1) : 1;
 		const newSize = {
 			id: newId,
-			productId: 0,
 			name: '',
 			price: 0,
-			createdAt: new Date(),
-			updatedAt: null,
-		} as ProductSizeType;
+		} as ProductSizeCreateType;
 
-		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeType[]), newSize], });
+		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeCreateType[]), newSize], });
 	} ;
 
 	const handleChangeProductSize = (id, property, value): void => {
@@ -98,11 +97,9 @@ export const AddProduct: React.FunctionComponent = () => {
 			min: 0,
 			max: 0,
 			type: '',
-			createdAt: new Date(),
-			updatedAt: null,
-		} as ProductIngredientTypeType;
+		} as ProductIngredientTypeCreateType;
 
-		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeType[]), newIngredientType], });
+		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeCreateType[]), newIngredientType], });
 	} ;
 
 	const handleChangeProductIngredientType = (id, property, value): void => {
@@ -129,11 +126,9 @@ export const AddProduct: React.FunctionComponent = () => {
 			name: '',
 			price: 0,
 			type: '',
-			createdAt: new Date(),
-			updatedAt: null,
-		} as ProductIngredientType;
+		} as ProductIngredientCreateType;
 
-		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientType[]), newIngredient], });
+		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientCreateType[]), newIngredient], });
 	} ;
 
 	const handleChangeProductIngredient = (id, property, value): void => {
