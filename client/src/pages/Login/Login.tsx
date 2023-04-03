@@ -13,6 +13,7 @@ import { BoxArea, GridContainer } from './Login.styled';
 import getRequestErrorByField from '../../store/utils/getRequestErrorByField';
 import { BackdropLoading } from '../../components/BackdropLoading';
 import { AuthActionsTypes } from '../../store/features/auth/auth.types';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Login: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -23,6 +24,8 @@ export const Login: React.FunctionComponent = () => {
 		email: '',
 		password: '',
 	});
+
+	useTitle('Login');
 
 	useEffect(() => {
 		dispatch(clearRequestAction());

@@ -4,8 +4,12 @@ import { BoxArea, GridContainer } from './Error500.styled';
 import ScaredPineappleImg from '../../assets/img/Scared-Pineapple.png';
 import { MainButton } from '../../components/MainButton';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Error500: React.FunctionComponent = () => {
+
+	useTitle('Erro interno');
+
 	return (
 		<BoxArea>
 			<GridContainer>

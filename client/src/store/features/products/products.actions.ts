@@ -1,4 +1,6 @@
 import { Dispatch } from 'redux';
+import LocalStorageEnum from '../../../types/enums/LocalStorageEnum';
+import ProductCreateType from '../../../types/Product/Create/ProductCreateType';
 import { ProductsAction, ProductsActionsTypes } from './products.types';
 
 export const findAllProducts = (): (dispatch: Dispatch<ProductsAction>) => Promise<void> => {
@@ -38,13 +40,21 @@ export const findAllProducts = (): (dispatch: Dispatch<ProductsAction>) => Promi
 	};
 };
 
-export const createProduct = (product): (dispatch: Dispatch<ProductsAction>) => Promise<void> => {
+export const createProduct = (product: ProductCreateType): (dispatch: Dispatch<ProductsAction>) => Promise<void> => {
 	return async (dispatch: Dispatch<ProductsAction>): Promise<void> => {
-		dispatch({ type: ProductsActionsTypes.CREATE_FAIL, });
+		const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
+		if (!token)
+			return;
+		
+		dispatch({ type: ProductsActionsTypes.CREATE_PENDING, });
+
+		const formData = setProductToFormData(product);
+		formData.append('token', token);
+
 
 		const response = await fetch('/api/products', {
 			method: 'POST',
-			body: JSON.stringify(product),
+			body: formData,
 		});
 		const json = await response.json();
 
@@ -76,4 +86,26 @@ export const createProduct = (product): (dispatch: Dispatch<ProductsAction>) => 
 			},
 		});
 	};
+};
+
+export const clearRequest = (): (dispatch: Dispatch<ProductsAction>) => Promise<void> => {
+	return async (dispatch: Dispatch<ProductsAction>): Promise<void> => {
+		dispatch({ type: ProductsActionsTypes.CLEAR_REQUEST, });
+	};
+};
+
+const setProductToFormData = (product: ProductCreateType): FormData => {
+	const formData = new FormData();
+
+	formData.append('name', product.name);
+	formData.append('description', product.description);
+	product.photos.forEach(photo => {
+		formData.append('files', photo);
+	});
+	formData.append('slug', product.slug);
+	formData.append('sizes', JSON.stringify(product.sizes));
+	formData.append('ingredients', JSON.stringify(product.ingredients));
+	formData.append('ingredientTypes', JSON.stringify(product.ingredientTypes));
+	console.log(formData.getAll('sizes'));
+	return formData;
 };

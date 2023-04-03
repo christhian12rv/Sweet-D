@@ -7,6 +7,7 @@ import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
 import { MainButton } from '../../../components/MainButton';
 import PotCakeImg from '../../../assets/img/bolo-pote-chocolate.jpg';
+import { useTitle } from '../../../utils/hooks/useTitle';
 
 const columns: GridColDef[] = [
 	{
@@ -99,6 +100,9 @@ const rows = [
 ];
 
 export const Products: React.FunctionComponent = () => {
+
+	useTitle('Admin - Produtos');
+
 	return (
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
 			<Grid display="flex" flexWrap="wrap" alignItems="center" gap={2}> 

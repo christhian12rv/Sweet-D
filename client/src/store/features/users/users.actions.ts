@@ -1,9 +1,7 @@
 import { Dispatch } from 'redux';
 import LocalStorageEnum from '../../../types/enums/LocalStorageEnum';
-import UserRegisterType from '../../../types/User/UserRegisterType';
-import UserUpdateType from '../../../types/User/UserUpdateType';
-import { getUserAuth } from '../auth/auth.actions';
-import { AuthAction } from '../auth/auth.types';
+import UserRegisterType from '../../../types/User/Register/UserRegisterType';
+import UserUpdateType from '../../../types/User/Update/UserUpdateType';
 import { UsersAction, UsersActionsTypes } from './users.types';
 
 export const register = (user: UserRegisterType): (dispatch: Dispatch<UsersAction>) => Promise<void> => {
@@ -48,7 +46,6 @@ export const register = (user: UserRegisterType): (dispatch: Dispatch<UsersActio
 export const update = (user: UserUpdateType): (dispatch: Dispatch<UsersAction>) => Promise<void> => {
 	return async (dispatch: Dispatch<UsersAction>): Promise<void> => {
 		const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
-
 		if (!token)
 			return;
 			

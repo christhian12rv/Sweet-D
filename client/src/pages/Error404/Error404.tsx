@@ -4,8 +4,12 @@ import { BoxArea, GridContainer } from './Error404.styled';
 import ScaredWatermelonImg from '../../assets/img/Scared-Watermelon.png';
 import { MainButton } from '../../components/MainButton';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Error404: React.FunctionComponent = () => {
+
+	useTitle('Página não encontrada');
+
 	return (
 		<BoxArea>
 			<GridContainer>

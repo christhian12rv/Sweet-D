@@ -8,19 +8,19 @@ import { BackdropLoading } from '../../components/BackdropLoading';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
 import { MainButton } from '../../components/MainButton';
 import { getUserAuth as getUserAuthAction } from '../../store/features/auth/auth.actions';
-import { update as updateAction } from '../../store/features/users/users.actions';
+import { clearRequest as usersClearRequestAction, update as updateAction } from '../../store/features/users/users.actions';
 import getRequestErrorByField from '../../store/utils/getRequestErrorByField';
 import { useTypedSelector } from '../../store/utils/useTypedSelector';
 import RoutesEnum from '../../types/enums/RoutesEnum';
 import { useNonInitialEffect } from '../../utils/hooks/useNonInitialEffect';
 import { useRequestVerification } from '../../utils/hooks/useRequestVerification';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Profile: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const { user: loggedUser, } = useTypedSelector((state) => state.auth);
 	const { request: usersRequest, loading: usersLoading, } = useTypedSelector((state) => state.users);
 	
-	const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
 	const [phoneFocus, setPhoneFocus] = useState(false);
 	const [profile, setProfile] = useState({
 		name: '',
@@ -28,6 +28,12 @@ export const Profile: React.FunctionComponent = () => {
 		password: '12345678',
 		phone: '',
 	});
+
+	useTitle('Meu Perfil');
+
+	useEffect(() => {
+		dispatch(usersClearRequestAction());
+	}, []);
 
 	useEffect(() => {
 		setProfile({
@@ -54,8 +60,6 @@ export const Profile: React.FunctionComponent = () => {
 			email: profile.email,
 			phone: profile.phone,
 		}));
-
-		setUpdateButtonClicked(true);
 	};
 
 	const handleChangeProfileInput = (property, event): void => {

@@ -32,6 +32,7 @@ app.use(cors());
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 app.use(fileUpload());
 app.use(
     session({

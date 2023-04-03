@@ -7,6 +7,7 @@ import { LinkUnstyled } from '../../components/LinkUnstyled';
 import RoutesEnum from '../../types/enums/RoutesEnum';
 import ScreenSizeQuerysEnum from '../../types/enums/ScreenSizeQuerysEnum';
 import brlCurrencyFormatter from '../../utils/brlCurrencyFormatter';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 const columns: GridColDef[] = [
 	{
@@ -80,6 +81,9 @@ const rows = [
 ];
 
 export const Orders: React.FunctionComponent = () => {
+
+	useTitle('Meus Pedidos');
+
 	return (
 		<Grid display="flex" flexDirection="column" sx={{ maxWidth: ScreenSizeQuerysEnum.MOBILE, }}>
 			<Typography variant="h4" mb={3}>Meus pedidos</Typography>

@@ -6,8 +6,12 @@ import { Lead } from './Lead';
 import { Products } from './Products';
 import { SizesSection } from './SizesSection';
 import { DateVisualization } from './DateVisualization';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Home: React.FunctionComponent = () => {
+
+	useTitle('Sweet D');
+
 	return (
 		<>
 			<BoxArea>

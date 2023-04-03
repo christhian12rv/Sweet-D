@@ -13,42 +13,47 @@ import { DeleteRounded } from '@mui/icons-material';
 import ProductIngredientTypeType from '../../../types/Product/ProductIngredientTypeType';
 import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
 import ProductIngredientType from '../../../types/Product/ProductIngredientType';
-import { findAllProducts } from '../../../store/features/products/products.actions';
+import { clearRequest as clearRequestAction, createProduct as createProductAction } from '../../../store/features/products/products.actions';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useTypedSelector } from '../../../store/utils/useTypedSelector';
+import { useRequestVerification } from '../../../utils/hooks/useRequestVerification';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
+import ProductCreateType from '../../../types/Product/Create/ProductCreateType';
+import { useTitle } from '../../../utils/hooks/useTitle';
 
 export const AddProduct: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const navigate = useNavigate();
-	const { error, } = useTypedSelector((state) => state.products);
+	const { request, loading, } = useTypedSelector((state) => state.products);
 
-	useEffect(() => {
-		dispatch(findAllProducts());
-	}, []);
-
-	useEffect(() => {
-		if (error?.status === 500)
-			navigate(RoutesEnum.ERROR_500);
-	}, [error]);
-
-	const [product, setProduct] = useState<ProductType>({
-		id: 1,
+	const [product, setProduct] = useState<ProductCreateType>({
 		name: '',
 		description: '',
-		photos: '',
+		photos: [],
 		slug: '',
-		active: true,
-		createdAt: new Date(),
-		updatedAt: null,
 		sizes: [],
 		ingredients: [],
 		ingredientTypes: [],
 	});
-	const [files, setFiles] = useState<string[]>([]);
+
+	useTitle('Admin - Adicionar produto');
+
+	useEffect(() => {
+		dispatch(clearRequestAction());
+	}, []);
+
+	useRequestVerification({
+		request,
+		successMessage: 'Produto criado com sucesso',
+		successNavigate: RoutesEnum.LOGIN,
+	});
+
+	const handleSaveButtonClick = (): void => {
+		dispatch(createProductAction(product));
+	};
 
 	const handleFilesChange = (files): void => {
-		setFiles([...files]);
+		setProduct({ ...product, photos: [...files], });
 	};
 
 	const handleChangeProduct = (property, value): void => {
@@ -77,8 +82,6 @@ export const AddProduct: React.FunctionComponent = () => {
 		});
 		
 		setProduct({ ...product, sizes: changedSizes, });
-
-		console.log(product.sizes);
 	};
 
 	const handleRemoveProductSize = (id): void => {
@@ -198,7 +201,7 @@ export const AddProduct: React.FunctionComponent = () => {
 							maxFilesContainerHeight={317}
 							acceptedType={'image/*'}
 							allowedExtensions={['jpg', 'jpeg', 'png']}
-							defaultValue={files}
+							defaultValue={product.photos}
 							onFilesChange={handleFilesChange}
 							BannerProps={{ elevation: 0, variant: 'outlined', }}
 							showPlaceholderImage={false}
@@ -386,7 +389,7 @@ export const AddProduct: React.FunctionComponent = () => {
 					))}
 					
 					<Grid item xs={12} md={12}>
-						<MainButton style={{ width: '200px', }}>Salvar</MainButton>
+						<MainButton onClick={handleSaveButtonClick} style={{ width: '200px', }}>Salvar</MainButton>
 					</Grid>
 				</Grid>
 			</FormControl>

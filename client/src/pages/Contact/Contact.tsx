@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
 import { MainButton } from '../../components/MainButton';
 import SocialNetworksLinksEnum from '../../types/enums/SocialNetworksLinksEnum';
+import { useTitle } from '../../utils/hooks/useTitle';
 import { CardBox } from '../Home/DateVisualization/DateVisualization.styled';
 import { BoxArea, EmailIcon, GridContainer, InstagramIcon, WhatsAppIcon } from './Contact.styled';
 
@@ -12,6 +13,8 @@ export const Contact: React.FunctionComponent = () => {
 		email: '',
 		message: '',
 	});
+
+	useTitle('Contato');
 
 	const handleChangeEmailInput = (property, event): void => {
 		setEmail({ ...email, [property]: event.target.value, });

@@ -22,6 +22,6 @@ export type UsersAction = {
 } & GlobalActionType;
 
 export type UsersState = {
-	users: UserType[] | null;
-	user: UserType | null;
+	// users: UserType[] | null;
+	// user: UserType | null;
 } & GlobalStateType;

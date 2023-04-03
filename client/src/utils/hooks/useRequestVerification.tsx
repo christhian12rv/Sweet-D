@@ -19,13 +19,11 @@ export const useRequestVerification = ({ request, type, successMessage, successN
 
 	useNonInitialEffect(() => {
 		closeSnackbar();
-		
-		console.log('DESPACHADO');
 
 		const typeVerified = type ? type.expectedType === type.actualType : null;
 
-		if (request && (typeVerified !== null ? typeVerified : true)) {
-			if (request.success) {
+		if (request) {
+			if (request.success && (typeVerified !== null ? typeVerified : true)) {
 				if (successMessage)
 					enqueueSnackbar(successMessage, { variant: 'success', });
 				if (successNavigate)

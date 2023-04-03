@@ -8,7 +8,9 @@ export enum ProductsActionsTypes {
 
 	CREATE_PENDING = 'PRODUCTS_CREATE_PENDING',
 	CREATE_SUCCESS = 'PRODUCTS_CREATE_SUCCESS',
-	CREATE_FAIL = 'PRODUCTS_CREATE_FAIL'
+	CREATE_FAIL = 'PRODUCTS_CREATE_FAIL',
+
+	CLEAR_REQUEST = 'PRODUCTS_CLEAR_REQUEST',
 }
 
 export type ProductsAction = {
@@ -20,6 +22,6 @@ export type ProductsAction = {
 } & GlobalActionType;
 
 export type ProductsState = {
-	products: ProductType[] | null;
-	product: ProductType | null;
+	// products: ProductType[] | null;
+	// product: ProductType | null;
 } & GlobalStateType;

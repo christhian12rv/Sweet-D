@@ -13,6 +13,7 @@ import RoutesEnum from '../../types/enums/RoutesEnum';
 import getRequestErrorByField from '../../store/utils/getRequestErrorByField';
 import { useRequestVerification } from '../../utils/hooks/useRequestVerification';
 import { BoxArea, GridContainer } from './Register.styled';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 export const Register: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -27,6 +28,8 @@ export const Register: React.FunctionComponent = () => {
 		confirmPassword: '',
 		phone: '',
 	});
+
+	useTitle('Registrar');
 
 	useEffect(() => {
 		dispatch(clearRequestAction());

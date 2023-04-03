@@ -5,6 +5,7 @@ import { LinkUnstyled } from '../../components/LinkUnstyled';
 import RoutesEnum from '../../types/enums/RoutesEnum';
 import brlCurrencyFormatter from '../../utils/brlCurrencyFormatter';
 import PotCakeImg from '../../assets/img/bolo-pote-chocolate.jpg';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 type Row = {
 	id: number;
@@ -135,6 +136,9 @@ const CustomTableRow: React.FunctionComponent<CustomTableRowProps> = ({ row, }) 
 };
 
 export const Order: React.FunctionComponent = () => {
+
+	useTitle('Pedido #');
+
 	return (
 		<Grid display="flex" flexDirection="column">
 			<Typography variant="h4">Detalhes do Pedido</Typography>

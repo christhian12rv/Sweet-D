@@ -4,6 +4,7 @@ import { MainButton } from '../../components/MainButton';
 import { ProductCard } from '../../components/ProductCard';
 import { BoxArea, BoxModal, CloseModalIcon, FormAccordionStyled, FormControlStyled, GridContainer } from './Products.styled';
 import { ExpandMoreRounded } from '@mui/icons-material';
+import { useTitle } from '../../utils/hooks/useTitle';
 
 const array = [1,2,3,4,5];
 
@@ -28,6 +29,8 @@ export const Products: React.FunctionComponent = () => {
 	const [name, setName] = useState('');
 	const [price, setPrice] = useState<number[]>([5, 39]);
 	const [sortBy, setSortBy] = useState(sortByArray[0]);
+
+	useTitle('Produtos');
 
 	const handleChangePage = (event: React.ChangeEvent<unknown>, value: number): void => {
 		setPage(value);

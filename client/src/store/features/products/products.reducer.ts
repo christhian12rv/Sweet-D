@@ -1,8 +1,6 @@
 import { ProductsAction, ProductsActionsTypes, ProductsState } from './products.types';
 
 const initialState: ProductsState = {
-	products: null,
-	product: null,
 	request: {
 		success: true,
 		status: 200,
@@ -23,6 +21,10 @@ const productsReducer = (state = initialState, action: ProductsAction): Products
 	}
 	case ProductsActionsTypes.FIND_ALL_FAIL: {
 		return { ...state, ...action.payload, previousType: action.type, loading: false, };
+	}
+
+	case ProductsActionsTypes.CLEAR_REQUEST: {
+		return { ...state, request: null, loading: false, previousType: action.type, };
 	}
 	default:
 		return state;

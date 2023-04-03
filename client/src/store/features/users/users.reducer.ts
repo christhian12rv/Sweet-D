@@ -1,8 +1,6 @@
 import { UsersAction, UsersActionsTypes, UsersState } from './users.types';
 
 const initialState: UsersState = {
-	user: null,
-	users: null,
 	request: null,
 	loading: false,
 	previousType: null,
