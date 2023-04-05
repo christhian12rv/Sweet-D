@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Divider, FormControl, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Divider, FormControl, FormHelperText, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
+import ProductType from '../../../types/Product/ProductType';
 import 'suneditor/dist/css/suneditor.min.css';
 import FileUpload from 'react-mui-fileuploader';
 import { RichTextEditor } from '../../../components/RichTextEditor';
 import { GridTextEditor } from './AddProduct.styled';
 import { MainButton } from '../../../components/MainButton';
+import ProductSizeType from '../../../types/Product/ProductSizeType';
 import { DeleteRounded } from '@mui/icons-material';
+import ProductIngredientTypeType from '../../../types/Product/ProductIngredientTypeType';
 import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
 import { clearRequest as clearRequestAction, createProduct as createProductAction } from '../../../store/features/products/products.actions';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -15,14 +19,15 @@ import { useRequestVerification } from '../../../utils/hooks/useRequestVerificat
 import RoutesEnum from '../../../types/enums/RoutesEnum';
 import ProductCreateType from '../../../types/Product/Create/ProductCreateType';
 import { useTitle } from '../../../utils/hooks/useTitle';
-import { ProductsActionsTypes } from '../../../store/features/products/products.types';
 import ProductSizeCreateType from '../../../types/Product/Create/ProductSizeCreateType';
-import ProductIngredientTypeCreateType from '../../../types/Product/Create/ProductIngredientTypeCreateType';
+import getRequestErrorByField from '../../../store/utils/getRequestErrorByField';
 import ProductIngredientCreateType from '../../../types/Product/Create/ProductIngredientCreateType';
+import ProductIngredientTypeCreateType from '../../../types/Product/Create/ProductIngredientTypeCreateType';
 
 export const AddProduct: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-	const { request, loading, previousType, } = useTypedSelector((state) => state.products);
+	const navigate = useNavigate();
+	const { request, loading, } = useTypedSelector((state) => state.products);
 
 	const [product, setProduct] = useState<ProductCreateType>({
 		name: '',
@@ -33,6 +38,7 @@ export const AddProduct: React.FunctionComponent = () => {
 		ingredients: [],
 		ingredientTypes: [],
 	});
+	const [sunEditorDescriptionValue, setSunEditorDescriptionValue] = useState('');
 
 	useTitle('Admin - Adicionar produto');
 
@@ -43,14 +49,11 @@ export const AddProduct: React.FunctionComponent = () => {
 	useRequestVerification({
 		request,
 		successMessage: 'Produto criado com sucesso',
-		successNavigate: RoutesEnum.ADMIN_LIST_PRODUCTS,
-		type: {
-			actualType: previousType,
-			expectedType: ProductsActionsTypes.CREATE_SUCCESS,
-		},
+		successNavigate: RoutesEnum.LOGIN,
 	});
 
-	const handleSaveButtonClick = (): void => {
+	const handleFormSubmit = (event): void => {
+		event.preventDefault();
 		dispatch(createProductAction(product));
 	};
 
@@ -59,7 +62,7 @@ export const AddProduct: React.FunctionComponent = () => {
 	};
 
 	const handleChangeProduct = (property, value): void => {
-		setProduct({ ...product, [property]: value, });
+		setProduct((state) => ({ ...state, [property]: value, }));
 	};
 
 	const handleAddSize = (): void => {
@@ -139,8 +142,6 @@ export const AddProduct: React.FunctionComponent = () => {
 		});
 		
 		setProduct({ ...product, ingredients: changedIngredients, });
-
-		console.log(product.ingredients);
 	};
 
 	const handleRemoveProductIngredient = (id): void => {
@@ -154,240 +155,257 @@ export const AddProduct: React.FunctionComponent = () => {
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
 			<Typography variant="h4">Adicionar produto</Typography>
 
-			<FormControl>
-				<Grid container spacing={2}>
-					<Grid item xs={12} md={6}>
-						<TextField
-							label="Nome"
-							type="text"
-							value={product.name}
-							onChange={(event): any => handleChangeProduct('name', event.target.value)}
-							fullWidth
-							sx={{ minHeight: 56, }}/>
-					</Grid>
+			<form onSubmit={handleFormSubmit}>
+				<FormControl>
+					<Grid container spacing={2}>
+						<Grid item xs={12} md={6}>
+							<TextField
+								error={!!getRequestErrorByField(request, 'name')}
+								helperText={getRequestErrorByField(request, 'name')?.message}
+								label="Nome"
+								type="text"
+								value={product.name}
+								onChange={(event): any => handleChangeProduct('name', event.target.value)}
+								fullWidth
+								sx={{ minHeight: 56, }}/>
+						</Grid>
 
-					<Grid item xs={12} md={6}>
-						<TextField
-							label="Slug"
-							type="text"
-							value={product.slug}
-							onChange={(event): any => handleChangeProduct('slug', event.target.value)}
-							fullWidth
-							sx={{ minHeight: 56, }}/>
-					</Grid>
+						<Grid item xs={12} md={6}>
+							<TextField
+								error={!!getRequestErrorByField(request, 'slug')}
+								helperText={getRequestErrorByField(request, 'slug')?.message}
+								label="Slug"
+								type="text"
+								value={product.slug}
+								onChange={(event): any => handleChangeProduct('slug', event.target.value)}
+								fullWidth
+								sx={{ minHeight: 56, }}/>
+						</Grid>
 
-					<Grid item xs={12} md={12}>
-						<RichTextEditor
-							placeholder="Descrição..."
-							defaultValue=""
-							onChange={(value): any => handleChangeProduct('description', value)} />
-					</Grid>
+						<Grid item xs={12} md={12}>
+							<RichTextEditor
+								error={!!getRequestErrorByField(request, 'description')}
+								placeholder="Descrição..."
+								defaultValue={product.description}
+								onChange={(event): any => handleChangeProduct('description', event)} />
+							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+								{getRequestErrorByField(request, 'description')?.message}
+							</FormHelperText>
+						</Grid>
 
-					<GridTextEditor item xs={12} md={12}>
-						<FileUpload 
-							multiFile={true}
-							disabled={false}
-							title="Imagens do produto"
-							header="Puxe uma imagem até aqui"
-							leftLabel="ou"
-							buttonLabel="Clique aqui"
-							rightLabel="para selecionar imagens"
-							buttonRemoveLabel="Remover todas"
-							maxFilesContainerHeight={317}
-							acceptedType={'image/*'}
-							allowedExtensions={['jpg', 'jpeg', 'png']}
-							defaultValue={product.photos}
-							onFilesChange={handleFilesChange}
-							BannerProps={{ elevation: 0, variant: 'outlined', }}
-							showPlaceholderImage={false}
-							PlaceholderGridProps={{ md: 4, }}
-							LabelsGridProps={{ md: 8, }}
-							ContainerProps={{
-								elevation: 0,
-								variant: 'outlined',
-								sx: { p: 1, },
-							}}
-						/>
-					</GridTextEditor>
+						<GridTextEditor item xs={12} md={12} sx={(theme): object => ({
+							'& .MuiPaper-root': {
+								...(!!getRequestErrorByField(request, 'photos') && { borderColor: theme.palette.error.main, }),
+							},
+						})}>
+							<FileUpload
+								multiFile={true}
+								disabled={false}
+								title="Imagens do produto"
+								header="Puxe uma imagem até aqui"
+								leftLabel="ou"
+								buttonLabel="Clique aqui"
+								rightLabel="para selecionar imagens"
+								buttonRemoveLabel="Remover todas"
+								maxFilesContainerHeight={317}
+								acceptedType={'image/*'}
+								allowedExtensions={['jpg', 'jpeg', 'png']}
+								defaultValue={product.photos}
+								onFilesChange={handleFilesChange}
+								BannerProps={{ elevation: 0, variant: 'outlined', }}
+								showPlaceholderImage={false}
+								PlaceholderGridProps={{ md: 4, }}
+								LabelsGridProps={{ md: 8, }}
+								ContainerProps={{
+									elevation: 0,
+									variant: 'outlined',
+									sx: { p: 1, },
+								}}
+							/>
+							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+								{getRequestErrorByField(request, 'photos')?.message}
+							</FormHelperText>
+						</GridTextEditor>
 
-					
-					<Grid item xs={12} md={12} sx={{ mt: 5, }}>
-						<Typography variant="h5">Tamanhos</Typography>
-					</Grid>
-					<Grid item xs={12} md={12}>
-						<MainButton onClick={handleAddSize}>Adicionar tamanho</MainButton>
-					</Grid>
+						
+						<Grid item xs={12} md={12} sx={{ mt: 5, }}>
+							<Typography variant="h5">Tamanhos</Typography>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<MainButton onClick={handleAddSize}>Adicionar tamanho</MainButton>
+						</Grid>
 
-					{product.sizes?.map((size, index) => (
-						<>
-							<Grid item xs={12} md={6}>
-								<TextField
-									label={`Nome tamanho ${index + 1}`}
-									type="string"
-									value={product.sizes?.find(s => s.id === size.id)?.name}
-									onChange={(event): any => handleChangeProductSize(size.id, 'name', event.target.value)}
-									fullWidth/>
-							</Grid>
-							<Grid item xs={12} md={5}>
-								<CurrencyTextField
-									label={`Preço tamanho ${index + 1}`}
-									variant="outlined"
-									value={product.sizes?.find(s => s.id === size.id)?.price}
-									currencySymbol="R$"
-									outputFormat="number"
-									onChange={(event, value): any => handleChangeProductSize(size.id, 'price', value)}
-									decimalCharacter=","
-									digitGroupSeparator="."
-									minimumValue="0"
-									fullWidth
-								/>
-							</Grid>
-							<Grid item xs={12} md={1} display="flex" alignItems="center">
-								<IconButton
-									color="inherit"
-									aria-label="delete size"
-									edge="start"
-									onClick={(): any => handleRemoveProductSize(size.id)}
-								>
-									<DeleteRounded sx={(theme): object => ({
-										color: theme.palette.grey[700],
-									})}/>
-								</IconButton>
-								
-							</Grid>
-							<Grid item xs={12} md={12}>
-								<Divider/>
-							</Grid>
-						</>
-					))}
+						{product.sizes?.map((size, index) => (
+							<>
+								<Grid item xs={12} md={6}>
+									<TextField
+										label={`Nome tamanho ${index + 1}`}
+										type="string"
+										value={product.sizes?.find(s => s.id === size.id)?.name}
+										onChange={(event): any => handleChangeProductSize(size.id, 'name', event.target.value)}
+										fullWidth/>
+								</Grid>
+								<Grid item xs={12} md={5}>
+									<CurrencyTextField
+										label={`Preço tamanho ${index + 1}`}
+										variant="outlined"
+										value={product.sizes?.find(s => s.id === size.id)?.price}
+										currencySymbol="R$"
+										outputFormat="number"
+										onChange={(event, value): any => handleChangeProductSize(size.id, 'price', value)}
+										decimalCharacter=","
+										digitGroupSeparator="."
+										minimumValue="0"
+										fullWidth
+									/>
+								</Grid>
+								<Grid item xs={12} md={1} display="flex" alignItems="center">
+									<IconButton
+										color="inherit"
+										aria-label="delete size"
+										edge="start"
+										onClick={(): any => handleRemoveProductSize(size.id)}
+									>
+										<DeleteRounded sx={(theme): object => ({
+											color: theme.palette.grey[700],
+										})}/>
+									</IconButton>
+									
+								</Grid>
+								<Grid item xs={12} md={12}>
+									<Divider/>
+								</Grid>
+							</>
+						))}
 
-					<Grid item xs={12} md={12}>
-						<Typography variant="h5">Tipos de ingrediente</Typography>
-					</Grid>
-					<Grid item xs={12} md={12}>
-						<MainButton onClick={handleAddIngredientType}>Adicionar tipo de ingrediente</MainButton>
-					</Grid>
+						<Grid item xs={12} md={12}>
+							<Typography variant="h5">Tipos de ingrediente</Typography>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<MainButton onClick={handleAddIngredientType}>Adicionar tipo de ingrediente</MainButton>
+						</Grid>
 
-					{product.ingredientTypes?.map((ingredientType, index) => (
-						<>
-							<Grid item xs={12} md={6}>
-								<TextField
-									label={`Nome tipo de ingrediente ${index + 1}`}
-									type="string"
-									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.type}
-									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'type', event.target.value)}
-									fullWidth/>
-							</Grid>
-							<Grid item xs={12} md={6}>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<TextField
-									label={`Mínimo tipo de ingrediente ${index + 1}`}
-									type="number"
-									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.min}
-									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'min', event.target.value)}
-									InputProps={{ inputProps: { min: 0, }, }}
-									fullWidth/>
-							</Grid>
-							<Grid item xs={12} md={5}>
-								<TextField
-									label={`Máximo tipo de ingrediente ${index + 1}`}
-									type="number"
-									value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.max}
-									onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'max', event.target.value)}
-									InputProps={{ inputProps: { min: 0, }, }}
-									fullWidth/>
-							</Grid>
-							<Grid item xs={12} md={1} display="flex" alignItems="center">
-								<IconButton
-									color="inherit"
-									aria-label="delete ingredientType"
-									edge="start"
-									onClick={(): any => handleRemoveProductIngredientType(ingredientType.id)}
-								>
-									<DeleteRounded sx={(theme): object => ({
-										color: theme.palette.grey[700],
-									})}/>
-								</IconButton>
-							</Grid>
-							<Grid item xs={12} md={12}>
-								<Divider/>
-							</Grid>
-						</>
-					))}
+						{product.ingredientTypes?.map((ingredientType, index) => (
+							<>
+								<Grid item xs={12} md={6}>
+									<TextField
+										label={`Nome tipo de ingrediente ${index + 1}`}
+										type="string"
+										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.type}
+										onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'type', event.target.value)}
+										fullWidth/>
+								</Grid>
+								<Grid item xs={12} md={6}>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<TextField
+										label={`Mínimo tipo de ingrediente ${index + 1}`}
+										type="number"
+										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.min}
+										onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'min', event.target.value)}
+										InputProps={{ inputProps: { min: 0, }, }}
+										fullWidth/>
+								</Grid>
+								<Grid item xs={12} md={5}>
+									<TextField
+										label={`Máximo tipo de ingrediente ${index + 1}`}
+										type="number"
+										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.max}
+										onChange={(event): any => handleChangeProductIngredientType(ingredientType.id, 'max', event.target.value)}
+										InputProps={{ inputProps: { min: 0, }, }}
+										fullWidth/>
+								</Grid>
+								<Grid item xs={12} md={1} display="flex" alignItems="center">
+									<IconButton
+										color="inherit"
+										aria-label="delete ingredientType"
+										edge="start"
+										onClick={(): any => handleRemoveProductIngredientType(ingredientType.id)}
+									>
+										<DeleteRounded sx={(theme): object => ({
+											color: theme.palette.grey[700],
+										})}/>
+									</IconButton>
+								</Grid>
+								<Grid item xs={12} md={12}>
+									<Divider/>
+								</Grid>
+							</>
+						))}
 
-					<Grid item xs={12} md={12}>
-						<Typography variant="h5">Ingredientes</Typography>
-					</Grid>
-					<Grid item xs={12} md={12}>
-						<MainButton onClick={handleAddIngredient}>Adicionar Ingrediente</MainButton>
-					</Grid>
+						<Grid item xs={12} md={12}>
+							<Typography variant="h5">Ingredientes</Typography>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<MainButton onClick={handleAddIngredient}>Adicionar Ingrediente</MainButton>
+						</Grid>
 
-					{product.ingredients?.map((ingredient, index) => (
-						<>
-							<Grid item xs={12} md={6}>
-								<TextField
-									label={`Nome ingrediente ${index + 1}`}
-									type="string"
-									value={product.ingredients?.find(s => s.id === ingredient.id)?.name}
-									onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'name', event.target.value)}
-									fullWidth/>
-							</Grid>
-							<Grid item xs={12} md={6}>
+						{product.ingredients?.map((ingredient, index) => (
+							<>
+								<Grid item xs={12} md={6}>
+									<TextField
+										label={`Nome ingrediente ${index + 1}`}
+										type="string"
+										value={product.ingredients?.find(s => s.id === ingredient.id)?.name}
+										onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'name', event.target.value)}
+										fullWidth/>
+								</Grid>
+								<Grid item xs={12} md={6}>
 
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<CurrencyTextField
-									label={`Preço ingrediente ${index + 1}`}
-									variant="outlined"
-									value={product.ingredients?.find(s => s.id === ingredient.id)?.price}
-									currencySymbol="R$"
-									outputFormat="number"
-									onChange={(event, value): any => handleChangeProductSize(ingredient.id, 'price', value)}
-									decimalCharacter=","
-									digitGroupSeparator="."
-									minimumValue="0"
-									fullWidth
-								/>
-							</Grid>
-							<Grid item xs={12} md={5}>
-								<TextField
-									label={`Tipo ingrediente ${index + 1}`}
-									select
-									type="string"
-									value={product.ingredients?.find(s => s.id === ingredient.id)?.type}
-									onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'type', event.target.value)}
-									fullWidth>
-									{product.ingredientTypes?.map((ingredientType, index) => (
-										<MenuItem key={ingredientType.id} value={ingredientType.type}>
-											{ingredientType.type}
-										</MenuItem>
-									))}
-								</TextField>
-							</Grid>
-							<Grid item xs={12} md={1} display="flex" alignItems="center">
-								<IconButton
-									color="inherit"
-									aria-label="delete ingredient"
-									edge="start"
-									onClick={(): any => handleRemoveProductIngredient(ingredient.id)}
-								>
-									<DeleteRounded sx={(theme): object => ({
-										color: theme.palette.grey[700],
-									})}/>
-								</IconButton>
-							</Grid>
-							<Grid item xs={12} md={12}>
-								<Divider/>
-							</Grid>
-						</>
-					))}
-					
-					<Grid item xs={12} md={12}>
-						<MainButton onClick={handleSaveButtonClick} style={{ width: '200px', }}>Salvar</MainButton>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<CurrencyTextField
+										label={`Preço ingrediente ${index + 1}`}
+										variant="outlined"
+										value={product.ingredients?.find(s => s.id === ingredient.id)?.price}
+										currencySymbol="R$"
+										outputFormat="number"
+										onChange={(event, value): any => handleChangeProductSize(ingredient.id, 'price', value)}
+										decimalCharacter=","
+										digitGroupSeparator="."
+										minimumValue="0"
+										fullWidth
+									/>
+								</Grid>
+								<Grid item xs={12} md={5}>
+									<TextField
+										label={`Tipo ingrediente ${index + 1}`}
+										select
+										type="string"
+										value={product.ingredients?.find(s => s.id === ingredient.id)?.type}
+										onChange={(event): any => handleChangeProductIngredient(ingredient.id, 'type', event.target.value)}
+										fullWidth>
+										{product.ingredientTypes?.map((ingredientType, index) => (
+											<MenuItem key={ingredientType.id} value={ingredientType.type}>
+												{ingredientType.type}
+											</MenuItem>
+										))}
+									</TextField>
+								</Grid>
+								<Grid item xs={12} md={1} display="flex" alignItems="center">
+									<IconButton
+										color="inherit"
+										aria-label="delete ingredient"
+										edge="start"
+										onClick={(): any => handleRemoveProductIngredient(ingredient.id)}
+									>
+										<DeleteRounded sx={(theme): object => ({
+											color: theme.palette.grey[700],
+										})}/>
+									</IconButton>
+								</Grid>
+								<Grid item xs={12} md={12}>
+									<Divider/>
+								</Grid>
+							</>
+						))}
+						
+						<Grid item xs={12} md={12}>
+							<MainButton type="submit" style={{ width: '200px', }}>Salvar</MainButton>
+						</Grid>
 					</Grid>
-				</Grid>
-			</FormControl>
+				</FormControl>
+			</form>
 		</Grid>
 	);
 };

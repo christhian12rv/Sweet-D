@@ -8,7 +8,7 @@ type Props = {
 
 export const MainButton: React.FunctionComponent<Props> = (props) => {
 	return (
-		<ButtonStyled onClick={props.onClick} style={props.style} design={props.design ? props.design : 'square'}>
+		<ButtonStyled type={props.type} onClick={props.onClick} style={props.style} design={props.design ? props.design : 'square'}>
 			{props.children}
 		</ButtonStyled>
 	);

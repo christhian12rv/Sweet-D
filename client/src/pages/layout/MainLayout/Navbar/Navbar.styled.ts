@@ -62,7 +62,7 @@ type NavItemProps = {
 	active: boolean;
 } & ButtonProps;
 
-export const NavItem = styled(Button)<NavItemProps>(({ active, theme, }) => ({
+export const NavItem = styled(Button, { shouldForwardProp: (prop) => prop !== 'active', })<NavItemProps>(({ active, theme, }) => ({
 	color: !active ? theme.palette.common.black : theme.palette.primary.dark,
 	'&:hover': {
 		color: theme.palette.primary.darker,
@@ -74,7 +74,7 @@ type NavItemMobileProps = {
 	active: boolean;
 } & ListItemProps;
 
-export const NavItemMobile = styled(ListItem)<NavItemMobileProps>(({ active, theme, }) => ({
+export const NavItemMobile = styled(ListItem, { shouldForwardProp: (prop) => prop !== 'active', })<NavItemMobileProps>(({ active, theme, }) => ({
 	color: !active ? theme.palette.common.black : theme.palette.primary.dark,
 	padding: 0,
 	'&:hover': {

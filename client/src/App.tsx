@@ -29,7 +29,7 @@ import { ListProducts as AdminListProducts } from './pages/Admin/ListProducts';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 import { SnackbarProviderCustom } from './components/SnackbarProvider';
 import { GetAuthUser } from './components/utils/GetAuthUser';
-import { NeedsAuth } from './components/utils/NeedsAuth';
+import { VerifyAuth } from './components/utils/VerifyAuth';
 
 export const App: React.FunctionComponent = () => {
 	return (
@@ -51,7 +51,7 @@ export const App: React.FunctionComponent = () => {
 							<Route path={RoutesEnum.FORGOT_PASSWORD} element={<ForgotPassword/>} />
 							<Route path={RoutesEnum.CONTACT} element={<Contact/>} />
 
-							<Route element={<NeedsAuth/>} >
+							<Route element={<VerifyAuth/>} >
 								<Route element={<ProfileLayout/>} >
 									<Route path={RoutesEnum.PROFILE} element={<Profile/>} />
 									<Route path={RoutesEnum.ORDERS} element={<Orders/>} />

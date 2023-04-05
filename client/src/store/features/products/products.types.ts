@@ -1,4 +1,3 @@
-import ProductType from '../../../types/Product/ProductType';
 import { GlobalActionType, GlobalStateType, RequestType } from '../../types/global.store.types';
 
 export enum ProductsActionsTypes {
@@ -15,13 +14,8 @@ export enum ProductsActionsTypes {
 
 export type ProductsAction = {
 	payload?: {
-		products?: ProductType[] | null,
-		product?: ProductType | null,
 		request: RequestType;
 	}
 } & GlobalActionType;
 
-export type ProductsState = {
-	// products: ProductType[] | null;
-	// product: ProductType | null;
-} & GlobalStateType;
+export type ProductsState = GlobalStateType;

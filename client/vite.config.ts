@@ -12,8 +12,7 @@ export default defineConfig({
 		port: 3000,
 		proxy: {
 			'/api': {
-				target: 'http://localhost:9090/',
-				headers: { 'Content-type': 'application/json; charset=UTF-8', },
+				target: 'http://localhost:9092/',
 			},
 		},
 	},

@@ -11,6 +11,9 @@ export const register = (user: UserRegisterType): (dispatch: Dispatch<UsersActio
 		const response = await fetch('/api/users', {
 			method: 'POST',
 			body: JSON.stringify(user),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
 		});
 		const json = await response.json();
 	
@@ -54,6 +57,9 @@ export const update = (user: UserUpdateType): (dispatch: Dispatch<UsersAction>) 
 		const response = await fetch('/api/users', {
 			method: 'PUT',
 			body: JSON.stringify({ token, ...user, }),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
 		});
 		const json = await response.json();
 	

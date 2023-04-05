@@ -23,6 +23,16 @@ const productsReducer = (state = initialState, action: ProductsAction): Products
 		return { ...state, ...action.payload, previousType: action.type, loading: false, };
 	}
 
+	case ProductsActionsTypes.CREATE_PENDING: {
+		return { ...state, ...action.payload, previousType: action.type, loading: true, };
+	}
+	case ProductsActionsTypes.CREATE_SUCCESS: {
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
+	}
+	case ProductsActionsTypes.CREATE_FAIL: {
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
+	}
+
 	case ProductsActionsTypes.CLEAR_REQUEST: {
 		return { ...state, request: null, loading: false, previousType: action.type, };
 	}

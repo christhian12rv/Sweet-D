@@ -7,7 +7,11 @@ export const findAllProducts = (): (dispatch: Dispatch<ProductsAction>) => Promi
 	return async (dispatch: Dispatch<ProductsAction>): Promise<void> => {
 		dispatch({ type: ProductsActionsTypes.FIND_ALL_PENDING, });
 
-		const response = await fetch('/api/products?limit=10&page=1');
+		const response = await fetch('/api/products?limit=10&page=1', {
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		});
 		const json = await response.json();
 	
 		if (response.status === 200) {

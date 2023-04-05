@@ -10,6 +10,9 @@ export const login = (login: AuthLoginType): (dispatch: Dispatch<AuthAction>) =>
 		const response = await fetch('/api/users/login', {
 			method: 'POST',
 			body: JSON.stringify(login),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
 		});
 		const json = await response.json();
 	
@@ -57,6 +60,9 @@ export const getUserAuth = (): (dispatch: Dispatch<AuthAction>) => Promise<void>
 		const response = await fetch('/api/users/get-user-auth', {
 			method: 'POST',
 			body: JSON.stringify({ token, }),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
 		});
 		const json = await response.json();
 	
@@ -102,6 +108,9 @@ export const logout = (): (dispatch: Dispatch<AuthAction>) => Promise<void> => {
 		const response = await fetch('/api/users/logout', {
 			method: 'POST',
 			body: JSON.stringify({ token, }),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
 		});
 		const json = await response.json();
 	

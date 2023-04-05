@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const logger = require('../configs/logger');
 const productsService = require("../services/products.service");
 const formatErrors = require('../utils/formatErrors');
+const createAndFormatError = require('../utils/createAndFormatError');
 
 exports.findBySlug = async (req, res) => {
     logger.info(`Chamando findBySlug de ${req.originalUrl}`);
@@ -92,7 +93,10 @@ exports.create = async (req, res) => {
     }
 
     if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send({ errors: ["O produto deve ter pelo menos 1 imagem"], });
+        const message = 'Ocorreram alguns erros ao criar produto';
+        logger.info(message);
+
+        return res.status(400).send({ errors: createAndFormatError("O produto deve ter pelo menos 1 imagem", "photos"), message, });
     }
 
     try {
@@ -136,7 +140,7 @@ exports.update = async (req, res) => {
         const message = 'Ocorreram alguns erros ao atualizar produto';
         logger.info(message);
 
-        return res.status(400).send({ errors: ['O produto deve ter pelo menos 1 imagem'], message });
+        return res.status(400).send({ errors: createAndFormatError("O produto deve ter pelo menos 1 imagem", "photos"), message });
     }
 
     if (typeof req.body.bodyPhotos != "object")

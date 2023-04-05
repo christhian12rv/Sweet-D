@@ -121,7 +121,7 @@ type SidebarListItemStyledProps = {
 	open: boolean;
 }
 
-export const SidebarListItemStyled = styled(ListItem)<SidebarListItemStyledProps>(({ theme, active, open, }) => ({
+export const SidebarListItemStyled = styled(ListItem, { shouldForwardProp: (prop) => prop !== 'active', })<SidebarListItemStyledProps>(({ theme, active, open, }) => ({
 	color: active ? theme.palette.primary.dark : theme.palette.grey[800],
 	backgroundColor: active ?  theme.palette.primary.lighter : 'transparent',
 	borderRadius: '8px !important',
