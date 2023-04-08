@@ -1,13 +1,18 @@
 import { Box, Grid, Checkbox, Typography } from '@mui/material';
 import { EditRounded, ExitToAppRounded } from '@mui/icons-material';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
 import { MainButton } from '../../../components/MainButton';
-import PotCakeImg from '../../../assets/img/bolo-pote-chocolate.jpg';
 import { useTitle } from '../../../utils/hooks/useTitle';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { useTypedSelector } from '../../../store/utils/useTypedSelector';
+import ProductType from '../../../types/Product/ProductType';
+import { clearRequest as clearRequestAction, findAllProducts as findAllProductsAction } from '../../../store/features/products/products.actions';
+import { enqueueSnackbar } from 'notistack';
 
 const columns: GridColDef[] = [
 	{
@@ -17,13 +22,13 @@ const columns: GridColDef[] = [
 		flex: 1,
 	},
 	{
-		field: 'image',
+		field: 'photos',
 		headerName: '',
 		minWidth: 100,
 		flex: 1,
 		renderCell: (params) => (
 			<Box component="div" sx={{
-				backgroundImage: `url(${PotCakeImg})`,
+				backgroundImage: `url(${params.row.photos[0].url})`,
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',
 				borderRadius: '8px',
@@ -51,6 +56,7 @@ const columns: GridColDef[] = [
 		sortable: false,
 		minWidth: 200,
 		flex: 1,
+		renderCell: (params) => params.row.sizes.map(s => s.price).join(', '),
 	},
 	{
 		field: 'active',
@@ -100,6 +106,44 @@ const rows = [
 ];
 
 export const ListProducts: React.FunctionComponent = () => {
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const [loading, setLoading] = useState(false);
+	const { request, previousType, } = useTypedSelector((state) => state.products);
+
+	const [rows, setRows] = useState<ProductType[]>([]);
+
+	const fetchProducts = async (): Promise<void> => {
+		setLoading(true);
+
+		const [response, json] = await findAllProductsAction();
+
+		if (response.status === 500) {
+			enqueueSnackbar(json.message, { variant: 'error', });
+			setLoading(false);
+			return;
+		}
+
+		if (json.products) {
+			json.products.map(product => {
+				product.createdAt = dayjs(product.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString();
+				product.photos = JSON.parse(product.photos);
+			}) as ProductType[];
+			setRows(json.products);
+		}
+
+		
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		dispatch(clearRequestAction());
+		fetchProducts();
+	}, []);
+
+	useEffect(() => {
+
+		console.log(rows);
+	}, [rows]);
 
 	useTitle('Admin - Produtos');
 
@@ -117,6 +161,7 @@ export const ListProducts: React.FunctionComponent = () => {
 
 			<Box sx={{ flexGrow: 1, overflowX: 'auto', width: '100%', }}>
 				<DataGrid
+					loading={loading}
 					rows={rows}
 					columns={columns}
 					rowHeight={110}

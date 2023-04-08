@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Divider, FormControl, FormHelperText, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
-import ProductType from '../../../types/Product/ProductType';
 import 'suneditor/dist/css/suneditor.min.css';
 import FileUpload from 'react-mui-fileuploader';
 import { RichTextEditor } from '../../../components/RichTextEditor';
 import { GridTextEditor } from './AddProduct.styled';
 import { MainButton } from '../../../components/MainButton';
-import ProductSizeType from '../../../types/Product/ProductSizeType';
 import { DeleteRounded } from '@mui/icons-material';
-import ProductIngredientTypeType from '../../../types/Product/ProductIngredientTypeType';
 import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
 import { clearRequest as clearRequestAction, createProduct as createProductAction } from '../../../store/features/products/products.actions';
 import { ThunkDispatch } from '@reduxjs/toolkit';
@@ -23,11 +19,12 @@ import ProductSizeCreateType from '../../../types/Product/Create/ProductSizeCrea
 import getRequestErrorByField from '../../../store/utils/getRequestErrorByField';
 import ProductIngredientCreateType from '../../../types/Product/Create/ProductIngredientCreateType';
 import ProductIngredientTypeCreateType from '../../../types/Product/Create/ProductIngredientTypeCreateType';
+import { ProductsActionsTypes } from '../../../store/features/products/products.types';
+import { BackdropLoading } from '../../../components/BackdropLoading';
 
 export const AddProduct: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-	const navigate = useNavigate();
-	const { request, loading, } = useTypedSelector((state) => state.products);
+	const { request, loading, previousType, } = useTypedSelector((state) => state.products);
 
 	const [product, setProduct] = useState<ProductCreateType>({
 		name: '',
@@ -49,7 +46,11 @@ export const AddProduct: React.FunctionComponent = () => {
 	useRequestVerification({
 		request,
 		successMessage: 'Produto criado com sucesso',
-		successNavigate: RoutesEnum.LOGIN,
+		successNavigate: RoutesEnum.ADMIN_LIST_PRODUCTS,
+		type: {
+			actualType: previousType,
+			expectedType: ProductsActionsTypes.CREATE_SUCCESS,
+		},
 	});
 
 	const handleFormSubmit = (event): void => {
@@ -96,7 +97,6 @@ export const AddProduct: React.FunctionComponent = () => {
 		const newId = product.ingredientTypes?.length ? (Math.max(...(product.ingredientTypes?.map(ingredientType => ingredientType.id) as number[])) + 1) : 1;
 		const newIngredientType = {
 			id: newId,
-			productId: 0,
 			min: 0,
 			max: 0,
 			type: '',
@@ -125,7 +125,6 @@ export const AddProduct: React.FunctionComponent = () => {
 		const newId = product.ingredients?.length ? (Math.max(...(product.ingredients?.map(ingredient => ingredient.id) as number[])) + 1) : 1;
 		const newIngredient = {
 			id: newId,
-			productId: 0,
 			name: '',
 			price: 0,
 			type: '',
@@ -153,6 +152,8 @@ export const AddProduct: React.FunctionComponent = () => {
 
 	return (
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
+			<BackdropLoading open={loading}/>
+
 			<Typography variant="h4">Adicionar produto</Typography>
 
 			<form onSubmit={handleFormSubmit}>
@@ -234,11 +235,18 @@ export const AddProduct: React.FunctionComponent = () => {
 						<Grid item xs={12} md={12}>
 							<MainButton onClick={handleAddSize}>Adicionar tamanho</MainButton>
 						</Grid>
+						<Grid item xs={12} md={12} sx={{ display: getRequestErrorByField(request, 'sizes') ? 'initial' : 'none', }}>
+							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+								{getRequestErrorByField(request, 'sizes')?.message}
+							</FormHelperText>
+						</Grid>
 
 						{product.sizes?.map((size, index) => (
-							<>
+							<React.Fragment key={size.id}>
 								<Grid item xs={12} md={6}>
 									<TextField
+										error={!!getRequestErrorByField(request, `sizes[${index}].name`)}
+										helperText={getRequestErrorByField(request, `sizes[${index}].name`)?.message}
 										label={`Nome tamanho ${index + 1}`}
 										type="string"
 										value={product.sizes?.find(s => s.id === size.id)?.name}
@@ -247,6 +255,8 @@ export const AddProduct: React.FunctionComponent = () => {
 								</Grid>
 								<Grid item xs={12} md={5}>
 									<CurrencyTextField
+										error={!!getRequestErrorByField(request, `sizes[${index}].price`)}
+										helperText={getRequestErrorByField(request, `sizes[${index}].price`)?.message}
 										label={`Preço tamanho ${index + 1}`}
 										variant="outlined"
 										value={product.sizes?.find(s => s.id === size.id)?.price}
@@ -275,7 +285,7 @@ export const AddProduct: React.FunctionComponent = () => {
 								<Grid item xs={12} md={12}>
 									<Divider/>
 								</Grid>
-							</>
+							</React.Fragment>
 						))}
 
 						<Grid item xs={12} md={12}>
@@ -284,11 +294,18 @@ export const AddProduct: React.FunctionComponent = () => {
 						<Grid item xs={12} md={12}>
 							<MainButton onClick={handleAddIngredientType}>Adicionar tipo de ingrediente</MainButton>
 						</Grid>
+						<Grid item xs={12} md={12} sx={{ display: getRequestErrorByField(request, 'ingredientTypes') ? 'initial' : 'none', }}>
+							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+								{getRequestErrorByField(request, 'ingredientTypes')?.message}
+							</FormHelperText>
+						</Grid>
 
 						{product.ingredientTypes?.map((ingredientType, index) => (
 							<>
 								<Grid item xs={12} md={6}>
 									<TextField
+										error={!!getRequestErrorByField(request, `ingredientTypes[${index}].type`)}
+										helperText={getRequestErrorByField(request, `ingredientTypes[${index}].type`)?.message}
 										label={`Nome tipo de ingrediente ${index + 1}`}
 										type="string"
 										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.type}
@@ -299,6 +316,8 @@ export const AddProduct: React.FunctionComponent = () => {
 								</Grid>
 								<Grid item xs={12} md={6}>
 									<TextField
+										error={!!getRequestErrorByField(request, `ingredientTypes[${index}].min`)}
+										helperText={getRequestErrorByField(request, `ingredientTypes[${index}].min`)?.message}
 										label={`Mínimo tipo de ingrediente ${index + 1}`}
 										type="number"
 										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.min}
@@ -308,6 +327,8 @@ export const AddProduct: React.FunctionComponent = () => {
 								</Grid>
 								<Grid item xs={12} md={5}>
 									<TextField
+										error={!!getRequestErrorByField(request, `ingredientTypes[${index}].max`)}
+										helperText={getRequestErrorByField(request, `ingredientTypes[${index}].max`)?.message}
 										label={`Máximo tipo de ingrediente ${index + 1}`}
 										type="number"
 										value={product.ingredientTypes?.find(s => s.id === ingredientType.id)?.max}
@@ -339,11 +360,18 @@ export const AddProduct: React.FunctionComponent = () => {
 						<Grid item xs={12} md={12}>
 							<MainButton onClick={handleAddIngredient}>Adicionar Ingrediente</MainButton>
 						</Grid>
+						<Grid item xs={12} md={12} sx={{ display: getRequestErrorByField(request, 'ingredients') ? 'initial' : 'none', }}>
+							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+								{getRequestErrorByField(request, 'ingredients')?.message}
+							</FormHelperText>
+						</Grid>
 
 						{product.ingredients?.map((ingredient, index) => (
 							<>
 								<Grid item xs={12} md={6}>
 									<TextField
+										error={!!getRequestErrorByField(request, `ingredients[${index}].name`)}
+										helperText={getRequestErrorByField(request, `ingredients[${index}].name`)?.message}
 										label={`Nome ingrediente ${index + 1}`}
 										type="string"
 										value={product.ingredients?.find(s => s.id === ingredient.id)?.name}
@@ -351,16 +379,17 @@ export const AddProduct: React.FunctionComponent = () => {
 										fullWidth/>
 								</Grid>
 								<Grid item xs={12} md={6}>
-
 								</Grid>
 								<Grid item xs={12} md={6}>
 									<CurrencyTextField
+										error={!!getRequestErrorByField(request, `ingredients[${index}].price`)}
+										helperText={getRequestErrorByField(request, `ingredients[${index}].price`)?.message}
 										label={`Preço ingrediente ${index + 1}`}
 										variant="outlined"
 										value={product.ingredients?.find(s => s.id === ingredient.id)?.price}
 										currencySymbol="R$"
 										outputFormat="number"
-										onChange={(event, value): any => handleChangeProductSize(ingredient.id, 'price', value)}
+										onChange={(event, value): any => handleChangeProductIngredient(ingredient.id, 'price', value)}
 										decimalCharacter=","
 										digitGroupSeparator="."
 										minimumValue="0"
@@ -369,6 +398,8 @@ export const AddProduct: React.FunctionComponent = () => {
 								</Grid>
 								<Grid item xs={12} md={5}>
 									<TextField
+										error={!!getRequestErrorByField(request, `ingredients[${index}].type`)}
+										helperText={getRequestErrorByField(request, `ingredients[${index}].type`)?.message}
 										label={`Tipo ingrediente ${index + 1}`}
 										select
 										type="string"

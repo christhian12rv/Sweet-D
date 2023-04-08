@@ -18,11 +18,13 @@ export const useRequestVerification = ({ request, type, successMessage, successN
 	const navigate = useNavigate();
 
 	useNonInitialEffect(() => {
+		console.log('ASDF', type);
 		closeSnackbar();
 
 		const typeVerified = type ? type.expectedType === type.actualType : null;
 
 		if (request) {
+			console.log(type, typeVerified);
 			if (request.success && (typeVerified !== null ? typeVerified : true)) {
 				if (successMessage)
 					enqueueSnackbar(successMessage, { variant: 'success', });

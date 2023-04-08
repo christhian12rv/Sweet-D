@@ -3,7 +3,7 @@ import React from 'react';
 
 export const BackdropLoading: React.FunctionComponent<BackdropProps> = (props) => {
 	return (
-		<Backdrop {...props} sx={{ position: 'absolute', zIndex: 1, borderRadius: '5px', }}>
+		<Backdrop {...props} sx={{ position: 'absolute', zIndex: 999, borderRadius: '5px', }}>
 			<CircularProgress size={24}
 				sx={{
 					position: 'absolute',

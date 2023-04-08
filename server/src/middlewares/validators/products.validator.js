@@ -66,11 +66,29 @@ exports.create = [
                 return JSON.parse(value);
             return value;
         })
+        .bail()
         .isArray()
-        .withMessage("O campo Tamanhos é inválido"),
+        .withMessage("Os tamanhos são inválidos")
+        .bail()
+        .isLength({ min: 1, })
+        .withMessage("É obrigatório pelo menos 1 tamanho")
+        .bail()
+        .custom(value => {
+            value.forEach(v => {
+                const keys = Object.keys(v);
+                if (!keys.includes('id') && !keys.includes('name') && !keys.includes('price')) {
+                    throw new Error("Os tamanhos são inválidos");
+                }
+            });
+            
+            return true;
+        }),
 
     body("sizes.*.name")
         .trim()
+        .exists()
+        .withMessage("Nome de tamanho é obrigatório")
+        .bail()
         .notEmpty()
         .withMessage("Nome de tamanho é obrigatório")
         .bail()
@@ -95,13 +113,24 @@ exports.create = [
             return value;
         })
         .isArray()
-        .withMessage("O campo Tamanhos é inválido")
+        .withMessage("O campo Tipo de ingrediente é inválido")
         .bail()
-        .custom((value, { req }) => {
+        .isLength({ min: 1, })
+        .withMessage("É obrigatório pelo menos 1 tipo de ingrediente")
+        .bail()
+        .custom(value => {
             value.forEach(v => {
                 if (value.filter(ingredientType => ingredientType.type === v.type).length >= 2)
                     throw new Error('Não podem existir tipos de ingredientes com mesmo nome');
-            })
+
+                const keys = Object.keys(v);
+                if (!keys.includes('id') && !keys.includes('min') && !keys.includes('max') && !keys.includes('type')) {
+                    throw new Error("Os tipos de ingredientes são inválidos");
+                }
+
+                if (v.min > v.max)
+                    throw new Error("Os mínimo não pode ser maior que o máximo");
+            });
             
             return true;
         }),
@@ -111,24 +140,24 @@ exports.create = [
         .notEmpty()
         .withMessage("Mínimo de tipo de ingrediente é obrigatório")
         .bail()
-        .isInt({ min: 0, })
-        .withMessage("Mínimo de tipo de ingrediente inválido"),
+        .isInt({ min: 1, })
+        .withMessage("Mínimo de tipo de ingrediente deve ser maior que 0"),
 
     body("ingredientTypes.*.max")
         .trim()
         .notEmpty()
         .withMessage("Máximo de tipo de ingrediente é obrigatório")
         .bail()
-        .isInt({ min: 0, })
-        .withMessage("Máximo de tipo de ingrediente inválido"),
+        .isInt({ min: 1, })
+        .withMessage("Máximo de tipo de ingrediente deve ser maior que 0"),
 
     body("ingredientTypes.*.type")
         .trim()
         .notEmpty()
-        .withMessage("Máximo de tipo de ingrediente é obrigatório")
+        .withMessage("Nome tipo de ingrediente é obrigatório")
         .bail()
         .isString()
-        .withMessage("Máximo de tipo de ingrediente inválido")
+        .withMessage("Nome tipo de ingrediente inválido")
         .bail(),
 
     body("ingredients")
@@ -141,12 +170,22 @@ exports.create = [
         })
         .isArray()
         .withMessage("O campo Ingredientes é inválido")
+        .bail()
+        .isLength({ min: 1, })
+        .withMessage("É obrigatório pelo menos 1 ingrediente")
+        .bail()
         .custom((value, { req }) => {
             req.body.ingredientTypes.forEach(ingredientType => {
                 if (value.filter(v => v.type === ingredientType.type ).length < ingredientType.min)
                     throw new Error(`Quantidade de ingredientes do tipo ${ingredientType.type} é insuficiente. Mínimo: ${ingredientType.min}`);
             })
-            
+
+            value.forEach(v => {
+                const entries = Object.keys(v);
+                if (!entries.includes('id') && !entries.includes('name') && !entries.includes('price') && !entries.includes('type')) {
+                    throw new Error("Os ingredientes são inválidos");
+                }
+            });
 
             return true;
         }),

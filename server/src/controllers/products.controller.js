@@ -101,7 +101,6 @@ exports.create = async (req, res) => {
 
     try {
         const { name, description, slug, sizes, ingredientTypes, ingredients } = req.body;
-
         const product = await productsService.create(
             name,
             description,
