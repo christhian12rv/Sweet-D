@@ -1,83 +1,97 @@
 const { body } = require("express-validator");
-
-const { ProductModel } = require("../../models");
+const { ProductModel, ProductSizeModel, ProductIngredientTypeModel, ProductIngredientModel } = require("../../models");
 const { OrderModel } = require("../../models");
 
 exports.create = [
-    body("products.*.id")
+    body("productsChoices.*.id")
+    .notEmpty()
+    .withMessage("Produto inválido")
+    .bail()
+    .isInt()
+    .withMessage("Produto inválido")
+    .custom(value => {
+        return ProductModel.findByPk(value)
+            .catch(error => {
+                return Promise.reject("Ocorreu um erro interno");
+            })
+            .then(product => {
+                if (!product)
+                    return Promise.reject("Produto inválido");
+            });
+    }),
+
+    body("productsChoices.*.quantity")
         .notEmpty()
-        .withMessage("Produto inválido")
+        .withMessage("Quantidade inválida")
+        .bail()
+        .isInt({ min: 1, })
+        .withMessage("Quantidade inválida"),
+
+    body("productsChoices.*.size")
+        .notEmpty()
+        .withMessage("Tamanho inválido")
         .bail()
         .isInt()
-        .withMessage("Produto inválido")
-        .custom(value => {
-            return ProductModel.findByPk(value)
-                .catch(error => {
-                    return Promise.reject("Ocorreu um erro interno");
-                })
-                .then(product => {
-                    if (!product) return Promise.reject("Produto inválido");
-                });
-        }),
+        .withMessage("Tamanho inválido"),
 
-    body("products.*.extras")
-        .customSanitizer(value => {
-            if (typeof value !== "object") return JSON.parse(value);
-            return value;
-        })
-        .isArray()
-        .withMessage("O campo Extra é inválido"),
-
-    body("products.*")
+    body("productsChoices.*.ingredients.*.type")
         .notEmpty()
-        .withMessage("Produto inválido")
+        .withMessage("Tipo de ingrediente inválido")
         .bail()
-        .isObject()
-        .withMessage("Produto inválido")
+        .isString()
+        .withMessage("Tipo de ingrediente inválido"),
+
+    body("productsChoices.*.ingredients.*.ingredients.*")
+        .notEmpty()
+        .withMessage("Ingrediente inválido")
+        .bail()
+        .isInt()
+        .withMessage("Ingrediente inválido"),
+
+    body("productsChoices.*")
+        .notEmpty()
+        .withMessage("Pedido inválido")
+        .bail()
         .custom(value => {
-            return ProductModel.findByPk(value.id)
-                .catch(error => {
-                    return Promise.reject("Ocorreu um erro interno");
-                })
-                .then(product => {
-                    if (product) {
-                        const extrasFindArray = JSON.parse(product.extras);
-                        let invalidExtra = false;
-                        let invalidExtraValue = "";
-                        value.extras.forEach(e => {
-                            if (!extrasFindArray.includes(e)) {
-                                invalidExtra = true;
-                                invalidExtraValue = e;
-                            }
-                        });
-                        if (invalidExtra)
-                            return Promise.reject(
-                                "Extra " + invalidExtraValue + " inválido"
-                            );
-
-                        if (value.quantity > product.storage)
-                            return Promise.reject(
-                                "Quantidade inválida, maior que estoque"
-                            );
-
-                        if (!product.active)
-                            return Promise.reject("Produto indisponível");
+            return ProductSizeModel.findOne({
+                where: {
+                    id: Number(value.size),
+                    productId: Number(value.id),
+                }
+            })
+            .catch(error => {
+                return Promise.reject("Ocorreu um erro interno");
+            })
+            .then(size => {
+                if (!size)
+                    return Promise.reject("Tamanho inválido");
+            });
+        })
+        .custom(async (value) => {
+            for (let i = 0; i < value.ingredients.length; i++) {
+                const productIngredientType = await ProductIngredientTypeModel.findOne({
+                    where: {
+                        type: value.ingredients[i].type,
+                        productId: Number(value.id),
                     }
                 });
+
+                if (!productIngredientType)
+                    throw new Error('Tipo de ingrediente inválido');
+
+                for (let j = 0; j < value.ingredients[i].ingredients; j++) {
+                    const productIngredient = ProductIngredientModel.findOne({
+                        where: {
+                            id: Number(value.ingredients[i].ingredients[i]),
+                            productId: Number(value.id),
+                        }
+                    })
+
+                    if (!productIngredient)
+                    throw new Error('Ingrediente inválido');
+                }
+            }
         }),
-
-    body("products.*.extras.*")
-        .notEmpty()
-        .withMessage("Quantidade inválida")
-        .isString()
-        .withMessage("Extra inválido"),
-
-    body("products.*.quantity")
-        .notEmpty()
-        .withMessage("Quantidade inválida")
-        .bail()
-        .isInt({ min: 1 })
-        .withMessage("Quantidade inválida")
 ];
 
 exports.updateFinish = [

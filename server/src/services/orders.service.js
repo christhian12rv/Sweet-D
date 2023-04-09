@@ -1,10 +1,8 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-const { ProductModel } = require("../models");
-const { OrderModel } = require("../models");
-const { OrderProductModel } = require("../models");
-const { UserModel } = require("../models");
+const { UserModel, OrderModel, OrderProductModel, OrderProductIngredientModel, ProductModel, ProductSizeModel,
+    ProductIngredientModel, ProductIngredientTypeModel, } = require("../models");
 
 exports.findAll = async (
     limit = -1,
@@ -78,6 +76,7 @@ exports.findAll = async (
         orders: result.rows
     };
 };
+
 exports.findByPk = async id => {
     let order = await OrderModel.findByPk(id);
 
@@ -147,87 +146,68 @@ exports.findAllByUser = async userId => {
     };
 };
 
-exports.create = async (userId, products) => {
-    if (!userId)
-        return {
-            status: 401,
-            errors: [
-                {
-                    msg: "Usuário não está logado"
-                }
-            ]
-        };
-
-    let address = await AddressModel.findOne({ where: { userId } });
-
-    if (!address)
-        return {
-            status: 400,
-            errors: [
-                {
-                    msg: "Você ainda não definiu um endereço. Vá ao seu perfil e adicione um endereço"
-                }
-            ]
-        };
-
-    address = JSON.stringify(address);
-    address = JSON.parse(address);
-    delete address.id;
-
+exports.create = async (userId, productsChoices, date) => {
     const order = await OrderModel.create({
-        userId: userId,
-        total: 0
+        userId,
+        date,
     });
 
-    let total = 0;
-    for (const p of products) {
-        const productFind = await ProductModel.findByPk(p.id);
-
-        let extrasPriceTotal = 0;
-        let priceExtras = [];
-
-        if (p.extras && p.extras.length) {
-            const findExtras =
-                productFind.extras && JSON.parse(productFind.extras);
-            const findPriceExtras =
-                productFind.extras && JSON.parse(productFind.priceExtras);
-
-            p.extras.forEach(e => {
-                const eFindIndex = findExtras.indexOf(e);
-                extrasPriceTotal += parseFloat(findPriceExtras[eFindIndex]);
-                priceExtras.push(parseFloat(findPriceExtras[eFindIndex]));
-            });
-        }
-
-        const pTotal =
-            p.quantity * productFind.price + extrasPriceTotal * p.quantity;
-        total += pTotal;
-        p.total = pTotal;
-
-        await OrderProductModel.create({
-            orderId: order.id,
-            productId: p.id,
-            ...(p.extras && { extras: JSON.stringify(p.extras) }),
-            ...(p.extras && { priceExtras: JSON.stringify(priceExtras) }),
-            quantity: p.quantity,
-            total: p.total
+    await Promise.all(productsChoices.map(async (pc) => {
+        const product = await ProductModel.findOne({
+            where: {
+                id: pc.id
+            },
+            include: [
+                {
+                    model: ProductSizeModel,
+                    as: 'sizes'
+                },
+                {
+                    model: ProductIngredientModel,
+                    as: 'ingredients'
+                }
+            ],
         });
 
-        await ProductModel.update(
-            { storage: productFind.storage - p.quantity },
-            { where: { id: p.id } }
-        );
-    }
+        const productSize = product.sizes.find(s => s.id === pc.size);
 
-    await OrderModel.update({ total }, { where: { id: order.id } });
+        const orderProduct = await OrderProductModel.create({
+            orderId: order.id,
+            productId: pc.id,
+            sizeName: productSize.name,
+            sizePrice: productSize.price,
+            quantity: pc.quantity,
+        });
 
-    await OrderAddress.create({ ...address, ...{ orderId: order.id } });
+        await Promise.all(pc.ingredients.map(async (ingredient) => {
+            const productIngredient = product.ingredients.find(i => i.id === ingredient);
 
-    return {
-        status: 200,
-        order,
-        msg: "Pedido feito com sucesso. Aguarde e já iremos colocar seu pedido a caminho"
-    };
+            await OrderProductIngredientModel.create({
+                orderProductId: orderProduct.id,
+                name: productIngredient.name,
+                price: productIngredient.price,
+                type: productIngredient.type,
+            });
+        }))
+    }))
+
+    return await OrderModel.find({
+        where: {
+            id: order.id,
+        },
+        include: [
+            {
+                model: OrderProductModel,
+                as: 'orderProducts',
+                include: [
+                    {
+                        model: OrderProductIngredientModel,
+                        as: 'orderProductINgredients'
+                    }
+                ]
+            },
+        ],
+    })
 };
 
 exports.update = async (orderId, finished) => {

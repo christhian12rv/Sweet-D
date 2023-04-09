@@ -1,129 +1,78 @@
-import { Dialog, Grid, Typography, TextField, MenuItem, Box, Checkbox, Snackbar, Alert, Divider } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Dialog, Grid, Typography, TextField, MenuItem, Box, Checkbox, Divider } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
+import React, { useState } from 'react';
 import { MainButton } from '../../../../../components/MainButton';
 import ProductChoicesType from '../../../../../types/Product/ProductChoicesType';
 import ProductType from '../../../../../types/Product/ProductType';
 import brlCurrencyFormatter from '../../../../../utils/brlCurrencyFormatter';
 import { BoxDialog, CloseDialogIcon, FormControlStyled } from './EditItem.styled';
+import { addToCart as addToCartAction, fetchCart as fetchCartAction } from '../../../../../store/features/cart/cart.actions';
+import { ThunkDispatch } from 'redux-thunk';
+import { useDispatch } from 'react-redux';
 
 type Props = {
 	openEditItemDialog: boolean;
 	setOpenEditItemDialog: React.Dispatch<React.SetStateAction<boolean>>;
+	productChoices: ProductChoicesType;
+	product: ProductType;
 };
 
-export const EditItem: React.FunctionComponent<Props> = ({ openEditItemDialog, setOpenEditItemDialog, }) => {
-	const nowDate = new Date();
+export const EditItem: React.FunctionComponent<Props> = (props) => {
+	const { openEditItemDialog, setOpenEditItemDialog, product, } = props;
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-	const [product, setProduct] = useState<ProductType>({
-		id: 0,
-		name: '',
-		description: '',
-		photos: '',
-		price: 0,
-		sizes: ['250ml', '500ml'],
-		slug: '',
-		active: true,
-		createdAt: nowDate,
-		updatedAt: null,
-		ingredients: {
-			id: 0,
-			pastas: [
-				{
-					id: 1,
-					name: 'Chocolate',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 2,
-					name: 'Baunilha',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 3,
-					name: 'Misto',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				}
-			],
-			pastasMinQuantity: 2,
-			pastasMaxQuantity: 2,
-			fillings: [
-				{
-					id: 1,
-					name: 'Abacaxi',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 2,
-					name: 'Ninho',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 3,
-					name: 'Morango',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				}
-			],
-			fillingsMinQuantity: 2,
-			fillingsMaxQuantity: 2,
-			createdAt: nowDate,
-			updatedAt: null,
-		},
-	});
-	const [productChoices, setProductChoices] = useState<ProductChoicesType>({
-		pastas: [],
-		fillings: [],
-		quantity: 1,
-		size: '',
-	});
-	const [openProductChoicesPastasSnackbar, setOpenProductChoicesPastasSnackbar] = useState(false);
-	const [openProductChoicesFillingsSnackbar, setOpenProductChoicesFillingsSnackbar] = useState(false);
-	
+	const [productChoices, setProductChoices] = useState<ProductChoicesType>(props.productChoices);
+
 	const handleCloseEditItemDialog = (): void => {
 		setOpenEditItemDialog(false);
 	};
 
-	const handleChangeProductChoicesPastas = (event): void => {
-		if (product.ingredients?.pastas) {
-			const pastasMaxQuantity = product.ingredients?.pastasMaxQuantity ?? 0;
-			if (event.target.value.length > pastasMaxQuantity) {
-				handleChangeOpenProductChoicesPastasSnackbar(true);
-				return;
-			}
+	const handleEditItemDialogFormSubmit = (event): void => {
+		event.preventDefault();
+		let hasError = false;
 
-			setProductChoices({ ...productChoices, pastas: event.target.value, });
+		if (!productChoices.quantity || productChoices.quantity < 0) {
+			enqueueSnackbar('Quantidade inválida', { variant: 'error', });
+			hasError = true;
 		}
-	};
 
-	const handleChangeProductChoicesFillings = (event): void => {
-		if (product.ingredients?.fillings) {
-			const fillingsMaxQuantity = product.ingredients?.fillingsMaxQuantity ?? 0;
-			if (event.target.value.length > fillingsMaxQuantity) {
-				handleChangeOpenProductChoicesFillingsSnackbar(true);
-				return;
-			}
-
-			setProductChoices({ ...productChoices, fillings: event.target.value, });
+		if (!productChoices.size || !product.sizes?.find(s => productChoices.size === s.id)) {
+			enqueueSnackbar('Tamanho inválido', { variant: 'error', });
+			hasError = true;
 		}
+
+		productChoices.ingredients.forEach(ingredient => {
+			const ingredientType = product.ingredientTypes?.find(ingredientType => ingredientType.type === ingredient.type);
+			if (!ingredientType || ingredient.ingredients.length < ingredientType.min) {
+				enqueueSnackbar(`São necessário(a)s no mínimo ${ingredientType?.min} ${ingredientType?.type}s`, { variant: 'error', });
+				hasError = true;
+			}
+		});
+
+		if (hasError)
+			return;
+		
+		addToCartAction(productChoices);
+		
+		dispatch(fetchCartAction());
+		handleCloseEditItemDialog();
 	};
 
-	const handleChangeOpenProductChoicesPastasSnackbar = (value): void => {
-		setOpenProductChoicesPastasSnackbar(value);
-	};
+	const handleChangeProductChoicesIngredients = (event, type): void => {
+		const ingredientType = product.ingredientTypes?.find(ingredientType => ingredientType.type === type);
+		if (event.target.value.length > (ingredientType?.max ? ingredientType?.max : 0)) {
+			enqueueSnackbar(`Você pode escolher no máximo ${ingredientType?.max} ${ingredientType?.type}s`, { variant: 'error', });
+			return;
+		}
 
-	const handleChangeOpenProductChoicesFillingsSnackbar = (value): void => {
-		setOpenProductChoicesFillingsSnackbar(value);
+		const newIngredients = productChoices.ingredients.map(ingredient => {
+			if (ingredient.type === type)
+				ingredient.ingredients = event.target.value;
+			return ingredient;
+		}
+		);
+
+		setProductChoices({ ...productChoices, ingredients: newIngredients, });
 	};
 
 	const handleChangeProductChoicesQuantity = (event): void => {
@@ -143,121 +92,78 @@ export const EditItem: React.FunctionComponent<Props> = ({ openEditItemDialog, s
 			<BoxDialog>
 				<Grid display="flex" alignItems="center" justifyContent="center" mb="1em">
 					<Typography variant="h6" component="h2" mx="auto">
-								Escolha os ingredientes
+						Escolha os ingredientes
 					</Typography>
 					<CloseDialogIcon onClick={handleCloseEditItemDialog}/>
 				</Grid>
 
-				<FormControlStyled>
-					{product.ingredients?.pastas &&
-					<>
-						<Typography sx={{ mb: 1, }}>Massas</Typography>
-						<TextField
-							fullWidth
-							select
-							SelectProps={{
-								multiple: true,
-								value: productChoices.pastas,
-								onChange: handleChangeProductChoicesPastas,
-								renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.pastas?.find(p => p.id === s)?.name).join(', ') : '',
-							}}
-							label="Massas"
-						>
-							{product.ingredients.pastas.map((option) => (
-								<MenuItem key={option.id} value={option.id}>
-									<Checkbox sx={{ py: 0, }} checked={!!productChoices.pastas?.find(p => p === option.id)} />
-									<Box component="span" sx={{ flexGrow: 1, }}>
-										{option.name}
-									</Box>
-									<Box component="span">
-											+ {brlCurrencyFormatter.format(option.price)}
-									</Box>
-								</MenuItem>
-							))}
-						</TextField>
-						<Snackbar
-							open={openProductChoicesPastasSnackbar}
-							autoHideDuration={6000}
-							onClose={(): any => handleChangeOpenProductChoicesPastasSnackbar(false)}
-							anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-						>
-							<Alert onClose={(): any => handleChangeOpenProductChoicesPastasSnackbar(false)} severity="error" sx={{ width: '100%', }}>
-									Você só pode escolher no máximo {product.ingredients.pastasMaxQuantity} massas
-							</Alert>
-						</Snackbar>
-					</>
-					}
-
-					{product.ingredients?.fillings &&
-					<>
-						<Typography sx={{ mb: 1, mt: 2, }}>Recheios</Typography>
-						<TextField
-							fullWidth
-							select
-							SelectProps={{
-								multiple: true,
-								value: productChoices.fillings,
-								onChange: handleChangeProductChoicesFillings,
-								renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.fillings?.find(p => p.id === s)?.name).join(', ') : '',
-							}}
-							label="Recheios"
-						>
-							{product.ingredients.fillings.map((option) => (
-								<MenuItem key={option.id} value={option.id}>
-									<Checkbox sx={{ py: 0, }} checked={!!productChoices.fillings?.find(p => p === option.id)} />
-									<Box component="span" sx={{ flexGrow: 1, }}>
-										{option.name}
-									</Box>
-									<Box component="span">
-											+ {brlCurrencyFormatter.format(option.price)}
-									</Box>
-								</MenuItem>
-							))}
-						</TextField>
-						<Snackbar
-							open={openProductChoicesFillingsSnackbar}
-							autoHideDuration={6000}
-							onClose={(): any => handleChangeOpenProductChoicesFillingsSnackbar(false)}
-							anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-						>
-							<Alert onClose={(): any => handleChangeOpenProductChoicesFillingsSnackbar(false)} severity="error" sx={{ width: '100%', }}>
-									Você só pode escolher no máximo {product.ingredients.fillingsMaxQuantity} recheios
-							</Alert>
-						</Snackbar>
-					</>
-					}
-						
-					<Divider sx={{ my: 2, }}/>
-
-					<Typography sx={{ mb: 1, }}>Quantidade</Typography>
-					<TextField
-						label="Quantidade"
-						type="number"
-						value={productChoices.quantity}
-						onChange={handleChangeProductChoicesQuantity}
-						InputProps={{ inputProps: { min: 1, }, }}/>
-
-					<Typography sx={{ mb: 1, mt: 2, }}>Tamanho</Typography>
-					<TextField
-						fullWidth
-						select
-						SelectProps={{
-							value: productChoices.size,
-							onChange: handleChangeProductChoicesSize,
-						}}
-						label="Tamanho"
-					>
-						{product.sizes.map((option) => (
-							<MenuItem key={option} value={option}>
-								<Box component="span" sx={{ flexGrow: 1, }}>
-									{option}
-								</Box>
-							</MenuItem>
+				<form onSubmit={handleEditItemDialogFormSubmit}>
+					<FormControlStyled>
+						{product.ingredientTypes?.map((ingredientType, index) => (
+							<React.Fragment key={ingredientType.id}>
+								<Typography sx={{ mb: 1, }}>{ingredientType.type}</Typography>
+								<TextField
+									fullWidth
+									select
+									SelectProps={{
+										multiple: true,
+										value: productChoices.ingredients.find(ingredient => ingredient.type === ingredientType.type)?.ingredients || [],
+										onChange: (event): any => handleChangeProductChoicesIngredients(event, ingredientType.type),
+										renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.find(i => i.id === s)?.name).join(', ') : '',
+									}}
+									label={ingredientType.type}
+								>
+									{product.ingredients?.filter(ingredient => ingredient.type === ingredientType.type).map((ingredient) => (
+										<MenuItem key={ingredient.id} value={ingredient.id}>
+											<Checkbox sx={{ py: 0, }} checked={!!productChoices.ingredients.find(ingredient => ingredient.type === ingredientType.type)?.ingredients.find(i => i === ingredient.id)} />
+											<Box component="span" sx={{ flexGrow: 1, }}>
+												{ingredient.name}
+											</Box>
+											<Box component="span">
+												+ {brlCurrencyFormatter.format(ingredient.price)}
+											</Box>
+										</MenuItem>
+									))}
+								</TextField>
+							</React.Fragment>
 						))}
-					</TextField>
+								
+						<Divider sx={{ my: 2, }}/>
 
-					<MainButton style={{ marginTop: '1em', }}>Concluir</MainButton>
-				</FormControlStyled>
+						<Typography sx={{ mb: 1, }}>Quantidade</Typography>
+						<TextField
+							label="Quantidade"
+							type="number"
+							value={productChoices.quantity}
+							onChange={handleChangeProductChoicesQuantity}
+							InputProps={{ inputProps: { min: 1, }, }}/>
+
+						<Typography sx={{ mb: 1, mt: 2, }}>Tamanho</Typography>
+						<TextField
+							fullWidth
+							select
+							SelectProps={{
+								value: productChoices.size,
+								onChange: handleChangeProductChoicesSize,
+								renderValue: (selected: any): any => selected ? product.sizes?.find(size => size.id === selected)?.name : '',
+							}}
+							label="Tamanho"
+						>
+							{product.sizes?.map((size) => (
+								<MenuItem key={size.id} value={size.id}>
+									<Box component="span" sx={{ flexGrow: 1, }}>
+										{size.name}
+									</Box>
+									<Box component="span">
+										{brlCurrencyFormatter.format(size.price)}
+									</Box>
+								</MenuItem>
+							))}
+						</TextField>
+
+						<MainButton type="submit" style={{ marginTop: '1em', }}>Concluir</MainButton>
+					</FormControlStyled>
+				</form>
 			</BoxDialog>
 		</Dialog>
 	);

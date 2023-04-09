@@ -1,8 +1,8 @@
 import ProductChoicesType from '../types/Product/ProductChoicesType';
 import ProductType from '../types/Product/ProductType';
 
-export default (product: ProductType, productChoices: ProductChoicesType): number => {
-	if (product.id !== productChoices.id)
+export default (product: ProductType | undefined, productChoices: ProductChoicesType | undefined): number => {
+	if (!product || !productChoices || product.id !== productChoices.id)
 		return 0;
 
 	let total = 0;

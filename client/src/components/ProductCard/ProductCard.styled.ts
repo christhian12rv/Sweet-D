@@ -36,7 +36,7 @@ export const Price = styled(Typography)(({ theme, }) => ({
 	color: theme.palette.primary.dark,
 }));
 
-export const Description = styled(Typography)(({ theme, }) => ({
+export const Description = styled(Box)(({ theme, }) => ({
 	color: theme.palette.grey[800],
 	textAlign: 'justify',
 }));

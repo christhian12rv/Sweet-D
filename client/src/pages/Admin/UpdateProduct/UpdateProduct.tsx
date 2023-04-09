@@ -66,6 +66,18 @@ export const UpdateProduct: React.FunctionComponent = () => {
 			jsonProduct.photos = await Promise.all(
 				JSON.parse(jsonProduct.photos).map( async (p, index) => await createFileFromUrl(p.url, `Imagem ${index + 1}`))
 			);
+			jsonProduct.sizes = jsonProduct.sizes.map(s => {
+				s.new = false;
+				return s;
+			});
+			jsonProduct.ingredients = jsonProduct.ingredients.map(i => {
+				i.new = false;
+				return i;
+			});
+			jsonProduct.ingredientTypes = jsonProduct.ingredientTypes.map(it => {
+				it.new = false;
+				return it;
+			});
 			setProduct(jsonProduct);
 		}
 
@@ -102,6 +114,7 @@ export const UpdateProduct: React.FunctionComponent = () => {
 			id: newId,
 			name: '',
 			price: 0,
+			new: true,
 		} as ProductSizeUpdateType;
 
 		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeUpdateType[]), newSize], });
@@ -130,6 +143,7 @@ export const UpdateProduct: React.FunctionComponent = () => {
 			min: 0,
 			max: 0,
 			type: '',
+			new: true,
 		} as ProductIngredientTypeUpdateType;
 
 		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeUpdateType[]), newIngredientType], });
@@ -158,6 +172,7 @@ export const UpdateProduct: React.FunctionComponent = () => {
 			name: '',
 			price: 0,
 			type: '',
+			new: true,
 		} as ProductIngredientUpdateType;
 
 		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientUpdateType[]), newIngredient], });

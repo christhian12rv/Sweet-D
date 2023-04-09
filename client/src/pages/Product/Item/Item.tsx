@@ -10,9 +10,11 @@ import { CloseDialogIcon } from './Item.styled';
 import ProductType from '../../../types/Product/ProductType';
 import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
 import ProductChoicesType from '../../../types/Product/ProductChoicesType';
-import { addToCart as addToCartAction } from '../../../store/features/cart/cart.actions';
+import { addToCart as addToCartAction, fetchCart as fetchCartAction } from '../../../store/features/cart/cart.actions';
 import { enqueueSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { ThunkDispatch } from 'redux-thunk';
+import { useDispatch } from 'react-redux';
 
 type Props = {
 	product: ProductType;
@@ -20,6 +22,7 @@ type Props = {
 
 export const Item: React.FunctionComponent<Props> = ({ product, }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const [openBuyItemDialog, setOpenBuyItemDialog] = useState(false);
 	const [isBuyAction, setIsBuyAction] = useState(false);
 	
@@ -80,7 +83,7 @@ export const Item: React.FunctionComponent<Props> = ({ product, }) => {
 		if (isBuyAction)
 			navigate(RoutesEnum.CART);
 		else {
-			enqueueSnackbar('Produto adicionado ao carrinho', { variant: 'success', });
+			dispatch(fetchCartAction());
 			handleCloseBuyItemDialog();
 		}
 	};
@@ -156,7 +159,7 @@ export const Item: React.FunctionComponent<Props> = ({ product, }) => {
 				<BoxDialog>
 					<Grid display="flex" alignItems="center" justifyContent="center" mb="1em">
 						<Typography variant="h6" component="h2" mx="auto">
-									Escolha os ingredientes
+							Escolha os ingredientes
 						</Typography>
 						<CloseDialogIcon onClick={handleCloseBuyItemDialog}/>
 					</Grid>

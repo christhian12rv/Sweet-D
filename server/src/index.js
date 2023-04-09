@@ -18,7 +18,6 @@ const indexRoute = require("./routes/index.route");
 const usersRoute = require("./routes/users.route");
 const productsRoute = require("./routes/products.route");
 const ordersRoute = require("./routes/orders.route");
-const cartRoute = require("./routes/cart.route");
 const logger = require('./configs/logger');
 
 const corsOptions = {
@@ -64,7 +63,6 @@ app.use("/api", indexRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/products", productsRoute);
 app.use("/api/orders", ordersRoute);
-app.use("/api/cart", cartRoute);
 
 app.get("/*", function (req, res) {
     res.status(404).send({  message: `A rota ${req.originalUrl} não existe`, });

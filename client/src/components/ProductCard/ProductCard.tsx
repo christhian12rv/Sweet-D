@@ -35,7 +35,7 @@ export const ProductCard: React.FunctionComponent<Props> = ({ product, }) => {
 					<Title variant="h6" fontWeight="bold">
 						{name}
 					</Title>
-					<Description variant="body1">
+					<Description component="span">
 						<div dangerouslySetInnerHTML={{ __html: description, }}></div>
 					</Description>
 					<Price variant="h6" fontWeight="bold" textAlign="center">

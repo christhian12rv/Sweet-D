@@ -65,7 +65,6 @@ export const createProduct = (product: ProductCreateType): (dispatch: Dispatch<P
 			dispatch({
 				type: ProductsActionsTypes.CREATE_SUCCESS,
 				payload: {
-					product: json.product,
 					request: {
 						success: true,
 						status: response.status,
@@ -113,7 +112,6 @@ export const updateProduct = (product: ProductUpdateType): (dispatch: Dispatch<P
 			dispatch({
 				type: ProductsActionsTypes.UPDATE_SUCCESS,
 				payload: {
-					product: json.product,
 					request: {
 						success: true,
 						status: response.status,

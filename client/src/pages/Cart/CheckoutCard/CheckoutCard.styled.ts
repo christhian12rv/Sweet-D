@@ -2,6 +2,7 @@ import { Card, styled } from '@mui/material';
 
 
 export const MainCard = styled(Card)(() => ({
+	position: 'relative',
 	display: 'flex',
 	gap: 3,
 	justifyContent: 'center',

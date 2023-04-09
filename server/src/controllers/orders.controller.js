@@ -1,8 +1,11 @@
 const { validationResult } = require("express-validator");
-
+const logger = require('../configs/logger');
 const ordersService = require("../services/orders.service");
+const formatErrors = require('../utils/formatErrors');
 
 exports.findAll = async (req, res) => {
+    logger.info(`Chamando findAll de ${req.originalUrl}`);
+
     try {
         let { limit, page, columnSort, directionSort, search } = req.query;
         columnSort =
@@ -22,103 +25,138 @@ exports.findAll = async (req, res) => {
             search
         );
 
-        res.json({ status: 200, orders, totalRows });
+        const message = 'Pedidos buscados com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ orders, totalRows, message });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar procurar por pedidos"
-        });
+        const message = 'Ocorreram erros internos ao buscar pedidos';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.findByPk = async (req, res) => {
+    logger.info(`Chamando findByPk de ${req.originalUrl}`);
+
     try {
         const { id } = req.params;
+
         const order = await ordersService.findByPk(id);
-        res.json({ status: 200, order });
+
+        const message = 'Pedido buscado com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ order, message });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar procurar por pedidos"
-        });
+        const message = 'Ocorreram erros internos ao buscar pedido';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.findAllByUser = async (req, res) => {
+    logger.info(`Chamando findAllByUser de ${req.originalUrl}`);
+
     try {
         const user = req.user;
-        const { orders, totalRows } = await ordersService.findAllByUser(
-            user.id
-        );
-        res.json({ status: 200, orders, totalRows });
+
+        const { orders, totalRows } = await ordersService.findAllByUser(user.id);
+
+        const message = 'Pedido buscado com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ orders, totalRows, message });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar procurar por pedidos"
-        });
+        const message = 'Ocorreram erros internos ao buscar pedido';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.create = async (req, res) => {
+    logger.info(`Chamando create de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.json({ status: 400, errors: errors.array() });
+        const message = 'Ocorreram alguns erros ao criar pedido';
+        logger.info(message);
+
+        return res.status(400).json({ errors: formatErrors(errors.array()), message });
     }
 
     try {
-        const { products } = req.body;
         const user = req.user;
+        const { productsChoices, date } = req.body;
 
-        const response = await ordersService.create(user.id, products);
-        res.json(response);
+        const order = await ordersService.create(user.id, productsChoices, date);
+
+        const message = 'Pedido criado com sucesso';
+        logger.info(message);
+        
+        res.json({ order, message, });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar fazer pedido"
-        });
+        const message = 'Ocorreram erros internos ao criar pedido';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.update = async (req, res) => {
+    logger.info(`Chamando update de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.json({ status: 400, errors: errors.array() });
+        const message = 'Ocorreram alguns erros ao atualizar pedido';
+        logger.info(message);
+
+        return res.status(400).json({ errors: formatErrors(errors.array()), message });
     }
 
     try {
         const { orderId, finished } = req.body;
         const order = await ordersService.update(orderId, finished);
-        res.json({
-            status: 200,
-            order,
-            msg: "Pedido alterado com sucesso"
-        });
+
+        const message = 'Pedido atualizado com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ order, message, });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar alterar pedido"
-        });
+        const message = 'Ocorreram erros internos ao atualizar pedido';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };
 
 exports.updateFinish = async (req, res) => {
+    logger.info(`Chamando updateFinish de ${req.originalUrl}`);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.json({ status: 400, errors: errors.array() });
+        const message = 'Ocorreram alguns erros ao finalizar pedido';
+        logger.info(message);
+
+        return res.status(400).json({ errors: formatErrors(errors.array()), message });
     }
 
     try {
         const { id } = req.body;
 
         await ordersService.updateFinish(id);
-        res.json({
-            status: 200,
-            msg: "Pedido concluído com sucesso"
-        });
+
+        const message = 'Pedido atualizado com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ message, });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao tentar finalizar pedido"
-        });
+        const message = 'Ocorreram erros internos ao finalizar pedido';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };

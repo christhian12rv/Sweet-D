@@ -16,6 +16,10 @@ const Order = db.define("order", {
             key: "id"
         }
     },
+    date: {
+        type: Sequelize.DATE,
+        allowNull: false
+    },
     finished: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

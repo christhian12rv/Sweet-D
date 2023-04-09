@@ -13,7 +13,12 @@ import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useTypedSelector } from '../../../../store/utils/useTypedSelector';
 import { logout as logoutAction } from '../../../../store/features/auth/auth.actions';
+import { findAllByIds as findAllProductsBydIdsAction } from '../../../../store/features/products/products.actions';
+import { fetchCart as fetchCartAction } from '../../../../store/features/cart/cart.actions';
 import { useNonInitialEffect } from '../../../../utils/hooks/useNonInitialEffect';
+import brlCurrencyFormatter from '../../../../utils/brlCurrencyFormatter';
+import getTotalPriceOfProduct from '../../../../utils/getTotalPriceOfProduct';
+import ProductType from '../../../../types/Product/ProductType';
 
 type Props = {
 	window?: () => Window;
@@ -40,7 +45,10 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const { user: loggedUser, logout, } = useTypedSelector((state) => state.auth);
+	const { productsChoices, } = useTypedSelector((state) => state.cart);
 
+	const [cartIsLoading, setCartIsLoading] = useState(true);
+	const [products, setProducts] = useState<ProductType[]>([]);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const openLoginDropdown = Boolean(anchorEl);
@@ -51,6 +59,31 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 		if (logout)
 			navigate('/');
 	}, [logout]);
+
+	const fetchProducts = async (): Promise<void> => {
+		const [response, json] = await findAllProductsBydIdsAction(productsChoices.map(p => p.id));
+
+		if (response.status === 500) {
+			navigate(RoutesEnum.ERROR_500);
+			return;
+		}
+
+		setProducts(json.products || []);
+		
+		setCartIsLoading(false);
+	};
+
+	useEffect(() => {
+		setCartIsLoading(true);
+		dispatch(fetchCartAction());
+	}, []);
+
+	useNonInitialEffect(() => {
+		if (!productsChoices || productsChoices.length <= 0)
+			return;
+
+		fetchProducts();
+	}, [productsChoices]);
 
 	const handleLogout = (): void => {
 		handleClose();
@@ -388,14 +421,18 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 						</LinkUnstyled>
 
 						<Typography variant="body1">
-							2
+							{cartIsLoading ? 0 :
+								productsChoices.reduce((sum, pc) => sum + pc.quantity, 0)
+							}
 						</Typography>
 						<Divider orientation="vertical" sx={(theme): any => ({
 							height: '17px',
 							backgroundColor: theme.palette.common.black,
 						})}/>
 						<Typography variant="body1" sx={{ mr: 1, }}>
-							R$ 12,30
+							{cartIsLoading ? 'R$ 0,00' :
+								brlCurrencyFormatter.format(productsChoices.reduce((sum, pc) => sum + (getTotalPriceOfProduct(products.find(p => p.id === pc.id), pc)), 0))
+							}
 						</Typography>
 
 						{!isMobile &&

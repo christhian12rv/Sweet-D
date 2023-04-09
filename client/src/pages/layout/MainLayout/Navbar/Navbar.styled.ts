@@ -7,7 +7,7 @@ type AppBarProps = {
 	scrolltrigger: boolean;
 }
 
-export const AppBarCustom = styled(AppBar)<AppBarProps>(({ theme, scrolltrigger, }) => ({
+export const AppBarCustom = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'scrolltrigger', })<AppBarProps>(({ theme, scrolltrigger, }) => ({
 	left: '50% !important',
 	transform: 'translate(-50%, 0)',
 	alignItems: 'center',
