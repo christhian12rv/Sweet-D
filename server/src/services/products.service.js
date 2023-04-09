@@ -11,7 +11,24 @@ const { ProductIngredientTypeModel } = require('../models');
 const { ProductIngredientModel } = require('../models');
 
 exports.findBySlug = async slug => {
-    const product = await ProductModel.findOne({ where: { slug } });
+    const product = await ProductModel.findOne({
+        where: { slug },
+        include: [
+            {
+                model: ProductSizeModel,
+                as: 'sizes'
+            },
+            {
+                model: ProductIngredientTypeModel,
+                as: 'ingredientTypes'
+            },
+            {
+                model: ProductIngredientModel,
+                as: 'ingredients'
+            }
+        ],
+    });
+    
     return product;
 };
 
@@ -25,29 +42,27 @@ exports.findAll = async (
     productNotFilterSlug
 ) => {
     const options = {
-        ...(columnSort &&
-            directionSort && {
-                order:
-                    columnSort != "random"
+        ...((columnSort && directionSort) && {
+                order: columnSort !== "random"
                         ? [[columnSort, directionSort]]
                         : Sequelize.literal("rand()")
             }),
         limit,
         offset: limit * (page - 1),
         where: {
-            name: {
-                [Op.like]: "%" + search + "%"
-            },
+            // name: {
+            //     [Op.like]: "%" + search + "%"
+            // },
             // ...(priceFilter && {
             //     price: {
             //         [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
             //     }
             // }),
-            ...(productNotFilterSlug && {
-                slug: {
-                    [Op.not]: productNotFilterSlug
-                }
-            })
+            // ...(productNotFilterSlug && {
+            //     slug: {
+            //         [Op.not]: productNotFilterSlug
+            //     }
+            // })
         },
         include: [
             {
@@ -65,16 +80,43 @@ exports.findAll = async (
         ]
     };
 
-    const result = await ProductModel.findAndCountAll(options);
+    const products = await ProductModel.findAll(options);
+    const totalRows = await ProductModel.count();
     // const minPrice = await ProductModel.min("price");
     // const maxPrice = await ProductModel.max("price");
-
     return {
-        totalRows: result.count,
-        products: result.rows,
+        totalRows,
+        products,
         minPrice: 0,
         maxPrice: 0
     };
+};
+
+exports.findAllByIds = async (ids) => {
+    console.log(ids);
+    const products = await ProductModel.findAll({
+        where: {
+            id: {
+                [Op.in]: ids
+            },
+        },
+        include: [
+            {
+                model: ProductSizeModel,
+                as: 'sizes'
+            },
+            {
+                model: ProductIngredientTypeModel,
+                as: 'ingredientTypes'
+            },
+            {
+                model: ProductIngredientModel,
+                as: 'ingredients'
+            }
+        ],
+    });
+    
+    return products;
 };
 
 exports.create = async (
@@ -162,57 +204,29 @@ exports.create = async (
 
 exports.update = async (
     id,
+    active,
     name,
     description,
     slug,
     sizes,
     ingredientTypes,
     ingredients,
-    bodyPhotos,
-    filesPhotos
+    photos,
 ) => {
-    let arrayAuxPhotos = [];
-    if (
-        (!bodyPhotos.length || bodyPhotos.length < 1) &&
-        !Array.isArray(bodyPhotos)
-    ) {
-        arrayAuxPhotos.push(bodyPhotos);
-        bodyPhotos = arrayAuxPhotos;
-    }
-
-    if (
-        (!filesPhotos.length || filesPhotos.length < 1) &&
-        !Array.isArray(filesPhotos)
-    ) {
-        arrayAuxPhotos.push(filesPhotos);
-        filesPhotos = arrayAuxPhotos;
+    if ((!photos.length || photos.length < 1) && !Array.isArray(photos)) {
+        let arrayAuxPhotos = [];
+        arrayAuxPhotos.push(photos);
+        photos = arrayAuxPhotos;
     }
 
     let newPhotos = [];
 
-    const product = await ProductModel.findByPk(id);
-
-    const JSONProductPhotos = JSON.parse(product.photos);
-
-    await JSONProductPhotos.forEach(async productPhoto => {
-        if (
-            bodyPhotos.filter(
-                b =>
-                    b.url === productPhoto.url &&
-                    b.public_id === productPhoto.public_id
-            ).length < 1
-        ) {
-            await cloudinary.uploader.destroy(productPhoto.public_id);
-        } else {
-            newPhotos.push(productPhoto);
-        }
-    });
-
     const uploadPath = __dirname + "/../public/img/product/";
-    for (const photo of filesPhotos) {
+    for (const photo of photos) {
         await new Promise(resolve => {
             const imageName = uuidv4() + path.extname(photo.name);
             const imagePath = uploadPath + imageName;
+
             photo.mv(imagePath, async error => {
                 if (error) throw error;
                 else {
@@ -224,13 +238,24 @@ exports.update = async (
                         url: cloudinaryResponse.secure_url,
                         public_id: cloudinaryResponse.public_id
                     });
+
+                    fs.unlinkSync(imagePath);
                 }
                 resolve(true);
             });
         });
     }
 
+    const product = await ProductModel.findByPk(id);
+
+    const JSONProductPhotos = JSON.parse(product.photos);
+
+    await JSONProductPhotos.forEach(async productPhoto => {
+        await cloudinary.uploader.destroy(productPhoto.public_id);
+    });
+
     const newProduct = await ProductModel.update({
+        active,
         name,
         description,
         slug,
@@ -248,10 +273,18 @@ exports.update = async (
             price: size.price,
         }, {
             where: {
-                id,
+                id: size.id,
             },
         });
     }));
+    await ProductSizeModel.destroy({
+        where: {
+            productId: product.id,
+            id: {
+                [Op.notIn]: sizes.map(s => s.id)
+            }
+        }
+    });
 
     const udpatedIngredientTypes = await Promise.all(ingredientTypes.map( async ingredientType => {
         return await ProductIngredientTypeModel.update({
@@ -261,10 +294,18 @@ exports.update = async (
             type: ingredientType.type,
         }, {
             where: {
-                id,
+                id: ingredientType.id,
             },
         });
     }));
+    await ProductIngredientTypeModel.destroy({
+        where: {
+            productId: product.id,
+            id: {
+                [Op.notIn]: ingredientTypes.map(s => s.id)
+            }
+        }
+    });
 
     const udpatedIngredients = await Promise.all(ingredients.map( async ingredient => {
         return await ProductIngredientModel.update({
@@ -274,10 +315,18 @@ exports.update = async (
             type: ingredient.type,
         }, {
             where: {
-                id,
+                id: ingredient.id,
             },
         });
     }));
+    await ProductIngredientModel.destroy({
+        where: {
+            productId: product.id,
+            id: {
+                [Op.notIn]: ingredients.map(s => s.id)
+            }
+        }
+    });
 
     return {
         ...newProduct.dataValues,

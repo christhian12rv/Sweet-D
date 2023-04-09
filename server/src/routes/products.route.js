@@ -6,8 +6,9 @@ const { verifyJWTAdmin } = require("../middlewares/jwtAdminVerify.middleware");
 
 const productsController = require("../controllers/products.controller");
 
-router.get("/:slug", productsController.findBySlug);
+router.get("/find-by-slug/:slug", productsController.findBySlug);
 router.get("/", productsController.findAll);
+router.get("/find-all-by-ids", productsValidator.findAllByIds, productsController.findAllByIds);
 router.post(
     "/",
     verifyJWTAdmin,
@@ -19,12 +20,6 @@ router.put(
     verifyJWTAdmin,
     productsValidator.update,
     productsController.update
-);
-router.put(
-    "/active",
-    verifyJWTAdmin,
-    productsValidator.updateActive,
-    productsController.updateActive
 );
 
 module.exports = router;

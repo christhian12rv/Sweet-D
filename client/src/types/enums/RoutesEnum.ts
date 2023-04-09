@@ -21,6 +21,7 @@ enum RoutesEnum {
 	ADMIN_ORDERS = '/admin/orders',
 	ADMIN_USERS = '/admin/users',
 
+	ERROR_404 = '/error/404',
 	ERROR_500 = '/error/500'
 }
 

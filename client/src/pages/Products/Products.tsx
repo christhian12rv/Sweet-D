@@ -1,60 +1,100 @@
 import { AccordionDetails, AccordionSummary, Divider, FormControl, Grid, MenuItem, Modal, Pagination, Slider, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MainButton } from '../../components/MainButton';
 import { ProductCard } from '../../components/ProductCard';
 import { BoxArea, BoxModal, CloseModalIcon, FormAccordionStyled, FormControlStyled, GridContainer } from './Products.styled';
 import { ExpandMoreRounded } from '@mui/icons-material';
 import { useTitle } from '../../utils/hooks/useTitle';
+import { enqueueSnackbar } from 'notistack';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import PaginationModelType from '../../types/PaginationModelType';
+import ProductType from '../../types/Product/ProductType';
+import { clearRequest as clearRequestAction, findAllProducts as findAllProductsAction } from '../../store/features/products/products.actions';
+import { BackdropLoading } from '../../components/BackdropLoading';
 
-const array = [1,2,3,4,5];
-
-const sortByArray = [
-	{
-		value: 'a',
-		label: 'Menor preço',
-	},
-	{
-		value: 'b',
-		label: 'Maior preço',
-	},
-	{
-		value: 'c',
-		label: 'Disponível',
-	}
-];
+// const sortByArray = [
+// 	{
+// 		value: 'a',
+// 		label: 'Menor preço',
+// 	},
+// 	{
+// 		value: 'b',
+// 		label: 'Maior preço',
+// 	},
+// 	{
+// 		value: 'c',
+// 		label: 'Disponível',
+// 	}
+// ];
 
 export const Products: React.FunctionComponent = () => {
-	const [page, setPage] = useState(1);
-	const [openFilterModal, setOpenFilterModal] = useState(false);
-	const [name, setName] = useState('');
-	const [price, setPrice] = useState<number[]>([5, 39]);
-	const [sortBy, setSortBy] = useState(sortByArray[0]);
+	// const [page, setPage] = useState(1);
+	// const [openFilterModal, setOpenFilterModal] = useState(false);
+	// const [name, setName] = useState('');
+	// const [price, setPrice] = useState<number[]>([5, 39]);
+	// const [sortBy, setSortBy] = useState(sortByArray[0]);
+
+	// const handleChangePage = (event: React.ChangeEvent<unknown>, value: number): void => {
+	// 	setPage(value);
+	// };
+
+	// const handleOpenFilterModal = (): void => {
+	// 	setOpenFilterModal(true);
+	// };
+
+	// const handleCloseFilterModal = (): void => {
+	// 	setOpenFilterModal(false);
+	// };
+
+	// const handleChangeName = (event): void => {
+	// 	setName(event.target.value);
+	// };
+
+	// const handleChangePrice = (event: Event, newValue: number | number[]): void => {
+	// 	setPrice(newValue as number[]);
+	// };
+
+	// const handleChangeSortBy = (event): void => {
+	// 	setSortBy(event.target.value);
+	// };
 
 	useTitle('Produtos');
 
-	const handleChangePage = (event: React.ChangeEvent<unknown>, value: number): void => {
-		setPage(value);
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const [loading, setLoading] = useState(false);
+	const [products, setProducts] = useState<ProductType[]>([]);
+
+	const [paginationModel, setPaginationModel] = useState<PaginationModelType>({
+		page: 0,
+		pageSize: 5,
+		sort: {
+			field: 'createdAt',
+			sort: 'desc',
+		},
+	});
+
+	const fetchProducts = async (): Promise<void> => {
+		setLoading(true);
+
+		const [response, json] = await findAllProductsAction(paginationModel);
+
+		if (response.status === 500) {
+			enqueueSnackbar(json.message, { variant: 'error', });
+			setLoading(false);
+			return;
+		}
+
+		if (json.products)
+			setProducts(json.products);
+
+		setLoading(false);
 	};
 
-	const handleOpenFilterModal = (): void => {
-		setOpenFilterModal(true);
-	};
-
-	const handleCloseFilterModal = (): void => {
-		setOpenFilterModal(false);
-	};
-
-	const handleChangeName = (event): void => {
-		setName(event.target.value);
-	};
-
-	const handleChangePrice = (event: Event, newValue: number | number[]): void => {
-		setPrice(newValue as number[]);
-	};
-
-	const handleChangeSortBy = (event): void => {
-		setSortBy(event.target.value);
-	};
+	useEffect(() => {
+		dispatch(clearRequestAction());
+		fetchProducts();
+	}, []);
 
 	return (
 		<>
@@ -62,9 +102,10 @@ export const Products: React.FunctionComponent = () => {
 				<GridContainer>
 					{/* <MainButton style={{ alignSelf: 'flex-start', }} onClick={handleOpenFilterModal}>Filtrar</MainButton> */}
 					<Typography variant="h4">Produtos</Typography>
-					<Grid display="flex" flexWrap="wrap" alignItems="center" justifyContent="center" gap={5} width="100%">
-						{array.map(a => (
-							<ProductCard key={a}/>
+					<Grid position="relative" display="flex" flexWrap="wrap" alignItems="center" justifyContent="center" gap={5} py="2em" width="100%" minHeight={400}>
+						<BackdropLoading open={loading} />
+						{products.map(p => (
+							<ProductCard product={p} key={p.id}/>
 						))}
 					</Grid>
 					

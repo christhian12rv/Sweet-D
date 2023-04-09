@@ -24,7 +24,7 @@ export const DateTimePicker: React.FunctionComponent<Props> = ({ orientation, ok
 	};
 
 	const handleAcceptDateTime = (dateTime: dayjs.Dayjs | null): void => {
-		console.log(dateTime?.get('hour'));
+		// console.log(dateTime?.get('hour'));
 	};
 
 	return (

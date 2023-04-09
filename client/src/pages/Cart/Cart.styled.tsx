@@ -2,6 +2,7 @@ import { Box, Grid, styled } from '@mui/material';
 
 
 export const BoxArea = styled(Box)(() => ({
+	position: 'relative',
 	width: '100%',
 	display: 'flex',
 	flexDirection: 'column',

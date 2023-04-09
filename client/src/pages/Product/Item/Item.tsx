@@ -8,104 +8,30 @@ import { MainButton } from '../../../components/MainButton';
 import { ShoppingCartRounded } from '@mui/icons-material';
 import { CloseDialogIcon } from './Item.styled';
 import ProductType from '../../../types/Product/ProductType';
-import ProductChoicesType from '../../../types/Product/ProductChoicesType';
 import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
+import ProductChoicesType from '../../../types/Product/ProductChoicesType';
+import { addToCart as addToCartAction } from '../../../store/features/cart/cart.actions';
+import { enqueueSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 
-const images = [
-	{
-		imgPath: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqS4EbhiRWPpik9K0oT7EvL1Z0qlbRMAzk2Rq9ydGTsM1ze_kgBXk3Go7sqb5O2g0AEsjx8o4VDSkhFN7jkn42khiNErDSlsnt-IC-LmHhqplB8hTWYXD3rOmf4fT1Qs6_5K4LnCg69pVtUgIL0YLdfFowLQcCDrZx9nVlNl9Iws2khcKY1BF5Zv_P/s1500/bolo-de-pote-0.jpg',
-	},
-	{
-		imgPath: 'https://bolosparavender.com.br/wp-content/uploads/2018/10/sabores-de-bolo-no-pote-mais-vendidos-1200x800.jpg',
-	},
-	{
-		imgPath: 'https://i0.wp.com/varandadobolo.com.br/wp-content/uploads/2021/08/chocolate-cake-pot-delivery-copy-space-edited.jpg?resize=800%2C451&ssl=1',
-	},
-	{
-		imgPath: 'https://minutocriadordigital.com.br/wordpress/wp-content/files/minutocriadordigital.com.br/2020/12/bolos-no-pote.jpeg',
-	}
-];
+type Props = {
+	product: ProductType;
+}
 
-export const Item: React.FunctionComponent = () => {
-	const nowDate = new Date();
-	
+export const Item: React.FunctionComponent<Props> = ({ product, }) => {
+	const navigate = useNavigate();
 	const [openBuyItemDialog, setOpenBuyItemDialog] = useState(false);
 	const [isBuyAction, setIsBuyAction] = useState(false);
-	const [product, setProduct] = useState<ProductType>({
-		id: 0,
-		name: '',
-		description: '',
-		photos: '',
-		price: 0,
-		sizes: ['250ml', '500ml'],
-		slug: '',
-		active: true,
-		createdAt: nowDate,
-		updatedAt: null,
-		ingredients: {
-			id: 0,
-			pastas: [
-				{
-					id: 1,
-					name: 'Chocolate',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 2,
-					name: 'Baunilha',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 3,
-					name: 'Misto',
-					price: 0,
-					createdAt: nowDate,
-					updatedAt: null,
-				}
-			],
-			pastasMinQuantity: 2,
-			pastasMaxQuantity: 2,
-			fillings: [
-				{
-					id: 1,
-					name: 'Abacaxi',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 2,
-					name: 'Ninho',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				},
-				{
-					id: 3,
-					name: 'Morango',
-					price: 2.30,
-					createdAt: nowDate,
-					updatedAt: null,
-				}
-			],
-			fillingsMinQuantity: 2,
-			fillingsMaxQuantity: 2,
-			createdAt: nowDate,
-			updatedAt: null,
-		},
-	});
+	
 	const [productChoices, setProductChoices] = useState<ProductChoicesType>({
-		pastas: [],
-		fillings: [],
+		id: product.id,
+		size: 0,
+		ingredients: product.ingredientTypes ? product.ingredientTypes.map(ingredientType => ({
+			type: ingredientType.type,
+			ingredients: [],
+		})) : [],
 		quantity: 1,
-		size: '',
 	});
-	const [openProductChoicesPastasSnackbar, setOpenProductChoicesPastasSnackbar] = useState(false);
-	const [openProductChoicesFillingsSnackbar, setOpenProductChoicesFillingsSnackbar] = useState(false);
 
 	const handleOpenBuyItemDialog = (): void => {
 		setOpenBuyItemDialog(true);
@@ -124,36 +50,56 @@ export const Item: React.FunctionComponent = () => {
 		handleOpenBuyItemDialog();
 	};
 
-	const handleChangeProductChoicesPastas = (event): void => {
-		if (product.ingredients?.pastas) {
-			const pastasMaxQuantity = product.ingredients?.pastasMaxQuantity ?? 0;
-			if (event.target.value.length > pastasMaxQuantity) {
-				handleChangeOpenProductChoicesPastasSnackbar(true);
-				return;
-			}
+	const handleBuyItemDialogFormSubmit = (event): void => {
+		event.preventDefault();
+		let hasError = false;
 
-			setProductChoices({ ...productChoices, pastas: event.target.value, });
+		if (!productChoices.quantity || productChoices.quantity < 0) {
+			enqueueSnackbar('Quantidade inválida', { variant: 'error', });
+			hasError = true;
+		}
+
+		if (!productChoices.size || !product.sizes?.find(s => productChoices.size === s.id)) {
+			enqueueSnackbar('Tamanho inválido', { variant: 'error', });
+			hasError = true;
+		}
+
+		productChoices.ingredients.forEach(ingredient => {
+			const ingredientType = product.ingredientTypes?.find(ingredientType => ingredientType.type === ingredient.type);
+			if (!ingredientType || ingredient.ingredients.length < ingredientType.min) {
+				enqueueSnackbar(`São necessário(a)s no mínimo ${ingredientType?.min} ${ingredientType?.type}s`, { variant: 'error', });
+				hasError = true;
+			}
+		});
+
+		if (hasError)
+			return;
+		
+		addToCartAction(productChoices);
+		
+		if (isBuyAction)
+			navigate(RoutesEnum.CART);
+		else {
+			enqueueSnackbar('Produto adicionado ao carrinho', { variant: 'success', });
+			handleCloseBuyItemDialog();
 		}
 	};
 
-	const handleChangeProductChoicesFillings = (event): void => {
-		if (product.ingredients?.fillings) {
-			const fillingsMaxQuantity = product.ingredients?.fillingsMaxQuantity ?? 0;
-			if (event.target.value.length > fillingsMaxQuantity) {
-				handleChangeOpenProductChoicesFillingsSnackbar(true);
-				return;
-			}
-
-			setProductChoices({ ...productChoices, fillings: event.target.value, });
+	const handleChangeProductChoicesIngredients = (event, type): void => {
+		const ingredientType = product.ingredientTypes?.find(ingredientType => ingredientType.type === type);
+		if (event.target.value.length > (ingredientType?.max ? ingredientType?.max : 0)) {
+			enqueueSnackbar(`Você pode escolher no máximo ${ingredientType?.max} ${ingredientType?.type}s`, { variant: 'error', });
+			return;
 		}
-	};
 
-	const handleChangeOpenProductChoicesPastasSnackbar = (value): void => {
-		setOpenProductChoicesPastasSnackbar(value);
-	};
+		const newIngredients = productChoices.ingredients.map(ingredient => {
+			if (ingredient.type === type)
+				ingredient.ingredients = event.target.value;
+			return ingredient;
+		}
+		);
 
-	const handleChangeOpenProductChoicesFillingsSnackbar = (value): void => {
-		setOpenProductChoicesFillingsSnackbar(value);
+		setProductChoices({ ...productChoices, ingredients: newIngredients, });
 	};
 
 	const handleChangeProductChoicesQuantity = (event): void => {
@@ -165,7 +111,7 @@ export const Item: React.FunctionComponent = () => {
 	};
 
 	return (
-		<Grid display="flex" flexWrap="wrap" justifyContent="space-around" gap={10} px={2} sx={{ width: '100%', }}>
+		<Grid display="flex" flexWrap="wrap" justifyContent="center" gap={10} px={2} sx={{ width: '100%', }}>
 			<Box sx={{ width: '500px', maxWidth: '90vw', height: '100%', mt: 2, }}>
 				<Carousel autoPlay={false} height="400px" sx={{
 					width: '100%',
@@ -177,27 +123,25 @@ export const Item: React.FunctionComponent = () => {
 					},
 					transition: 'all .5s',
 				}} indicators={false}>
-					{images.map((step, index) => (
-						<LinkUnstyled key={index} to={RoutesEnum.PRODUCT + 'teste'} style={{ height: '100%', }}>
-							<BoxImg component="div" sx={{
-								height: '100%',
-								backgroundImage: `url(${step.imgPath})`,
-							}}/>
-						</LinkUnstyled>
+					{JSON.parse(product.photos).map(photo => (
+						<BoxImg key={photo} component="div" sx={{
+							height: '100%',
+							backgroundImage: `url(${photo.url})`,
+						}}/>
 					))}
 				</Carousel>
 			</Box>
 
-			<Grid display="flex" flexDirection="column" gap={3} sx={{ maxWidth: '500px', }}>
-				<ItemName variant="h4">Bolo de Pote</ItemName>
+			<Grid display="flex" flexDirection="column" gap={3} sx={{ maxWidth: '500px', minWidth: '300px', }}>
+				<ItemName variant="h4">{product.name}</ItemName>
+
 				<ItemDescription variant="body1">
-					Nosso delicioso bolo de pote é a escolha perfeita para quem quer desfrutar de um saboroso doce de maneira prática e conveniente. Feito com ingredientes de alta qualidade, esse bolo é cuidadosamente preparado em camadas, com uma generosa porção de massa fofa intercalada com camadas cremosas e recheios saborosos.
-					<br/><br/>
-					Com um tamanho perfeito para ser transportado em qualquer lugar, cada pote é individualmente preparado e decorado à mão, garantindo uma apresentação elegante e um sabor irresistível em cada mordida.
-					<br/><br/>
-					Escolha entre nossas várias opções de sabores, desde clássicos como chocolate e baunilha até opções mais ousadas como frutas vermelhas. Compre agora e experimente a delícia que é nosso bolo de pote!
+					<div dangerouslySetInnerHTML={{ __html: product.description, }}></div>
 				</ItemDescription>
-				<ItemPrice variant="h5">R$ 12,90</ItemPrice>
+
+				<ItemPrice variant="h5">{brlCurrencyFormatter.format(product.sizes ?
+					product.sizes.reduce((prev, cur) => (cur.price < prev.price ? cur : prev)).price
+					: 0)}</ItemPrice>
 				<Grid display="flex" alignItems="center" justifyContent="center" gap={2}>
 					<MainButton style={{ flexGrow: 1, }} onClick={(): any => handleButtonBuyClick(true)}>Comprar</MainButton>
 					<MainButton onClick={(): any => handleButtonBuyClick(false)}><ShoppingCartRounded/></MainButton>
@@ -217,116 +161,73 @@ export const Item: React.FunctionComponent = () => {
 						<CloseDialogIcon onClick={handleCloseBuyItemDialog}/>
 					</Grid>
 
-					<FormControlStyled>
-						{product.ingredients?.pastas &&
-						<>
-							<Typography sx={{ mb: 1, }}>Massas</Typography>
-							<TextField
-								fullWidth
-								select
-								SelectProps={{
-									multiple: true,
-									value: productChoices.pastas,
-									onChange: handleChangeProductChoicesPastas,
-									renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.pastas?.find(p => p.id === s)?.name).join(', ') : '',
-								}}
-								label="Massas"
-							>
-								{product.ingredients.pastas.map((option) => (
-									<MenuItem key={option.id} value={option.id}>
-										<Checkbox sx={{ py: 0, }} checked={!!productChoices.pastas?.find(p => p === option.id)} />
-										<Box component="span" sx={{ flexGrow: 1, }}>
-											{option.name}
-										</Box>
-										<Box component="span">
-												+ {brlCurrencyFormatter.format(option.price)}
-										</Box>
-									</MenuItem>
-								))}
-							</TextField>
-							<Snackbar
-								open={openProductChoicesPastasSnackbar}
-								autoHideDuration={6000}
-								onClose={(): any => handleChangeOpenProductChoicesPastasSnackbar(false)}
-								anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-							>
-								<Alert onClose={(): any => handleChangeOpenProductChoicesPastasSnackbar(false)} severity="error" sx={{ width: '100%', }}>
-										Você só pode escolher no máximo {product.ingredients.pastasMaxQuantity} massas
-								</Alert>
-							</Snackbar>
-						</>
-						}
-
-						{product.ingredients?.fillings &&
-						<>
-							<Typography sx={{ mb: 1, mt: 2, }}>Recheios</Typography>
-							<TextField
-								fullWidth
-								select
-								SelectProps={{
-									multiple: true,
-									value: productChoices.fillings,
-									onChange: handleChangeProductChoicesFillings,
-									renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.fillings?.find(p => p.id === s)?.name).join(', ') : '',
-								}}
-								label="Recheios"
-							>
-								{product.ingredients.fillings.map((option) => (
-									<MenuItem key={option.id} value={option.id}>
-										<Checkbox sx={{ py: 0, }} checked={!!productChoices.fillings?.find(p => p === option.id)} />
-										<Box component="span" sx={{ flexGrow: 1, }}>
-											{option.name}
-										</Box>
-										<Box component="span">
-												+ {brlCurrencyFormatter.format(option.price)}
-										</Box>
-									</MenuItem>
-								))}
-							</TextField>
-							<Snackbar
-								open={openProductChoicesFillingsSnackbar}
-								autoHideDuration={6000}
-								onClose={(): any => handleChangeOpenProductChoicesFillingsSnackbar(false)}
-								anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
-							>
-								<Alert onClose={(): any => handleChangeOpenProductChoicesFillingsSnackbar(false)} severity="error" sx={{ width: '100%', }}>
-										Você só pode escolher no máximo {product.ingredients.fillingsMaxQuantity} recheios
-								</Alert>
-							</Snackbar>
-						</>
-						}
-							
-						<Divider sx={{ my: 2, }}/>
-
-						<Typography sx={{ mb: 1, }}>Quantidade</Typography>
-						<TextField
-							label="Quantidade"
-							type="number"
-							value={productChoices.quantity}
-							onChange={handleChangeProductChoicesQuantity}
-							InputProps={{ inputProps: { min: 1, }, }}/>
-
-						<Typography sx={{ mb: 1, mt: 2, }}>Tamanho</Typography>
-						<TextField
-							fullWidth
-							select
-							SelectProps={{
-								value: productChoices.size,
-								onChange: handleChangeProductChoicesSize,
-							}}
-							label="Tamanho"
-						>
-							{product.sizes.map((option) => (
-								<MenuItem key={option} value={option}>
-									<Box component="span" sx={{ flexGrow: 1, }}>
-										{option}
-									</Box>
-								</MenuItem>
+					<form onSubmit={handleBuyItemDialogFormSubmit}>
+						<FormControlStyled>
+							{product.ingredientTypes?.map((ingredientType, index) => (
+								<React.Fragment key={ingredientType.id}>
+									<Typography sx={{ mb: 1, }}>{ingredientType.type}</Typography>
+									<TextField
+										fullWidth
+										select
+										SelectProps={{
+											multiple: true,
+											value: productChoices.ingredients.find(ingredient => ingredient.type === ingredientType.type)?.ingredients || [],
+											onChange: (event): any => handleChangeProductChoicesIngredients(event, ingredientType.type),
+											renderValue: (selected: any): any => selected ? selected.map(s => product.ingredients?.find(i => i.id === s)?.name).join(', ') : '',
+										}}
+										label={ingredientType.type}
+									>
+										{product.ingredients?.filter(ingredient => ingredient.type === ingredientType.type).map((ingredient) => (
+											<MenuItem key={ingredient.id} value={ingredient.id}>
+												<Checkbox sx={{ py: 0, }} checked={!!productChoices.ingredients.find(ingredient => ingredient.type === ingredientType.type)?.ingredients.find(i => i === ingredient.id)} />
+												<Box component="span" sx={{ flexGrow: 1, }}>
+													{ingredient.name}
+												</Box>
+												<Box component="span">
+														+ {brlCurrencyFormatter.format(ingredient.price)}
+												</Box>
+											</MenuItem>
+										))}
+									</TextField>
+								</React.Fragment>
 							))}
-						</TextField>
+								
+							<Divider sx={{ my: 2, }}/>
 
-						<MainButton style={{ marginTop: '1em', }}>Concluir</MainButton>
-					</FormControlStyled>
+							<Typography sx={{ mb: 1, }}>Quantidade</Typography>
+							<TextField
+								label="Quantidade"
+								type="number"
+								value={productChoices.quantity}
+								onChange={handleChangeProductChoicesQuantity}
+								InputProps={{ inputProps: { min: 1, }, }}/>
+
+							<Typography sx={{ mb: 1, mt: 2, }}>Tamanho</Typography>
+							<TextField
+								fullWidth
+								select
+								SelectProps={{
+									value: productChoices.size,
+									onChange: handleChangeProductChoicesSize,
+									renderValue: (selected: any): any => selected ? product.sizes?.find(size => size.id === selected)?.name : '',
+								}}
+								label="Tamanho"
+							>
+								{product.sizes?.map((size) => (
+									<MenuItem key={size.id} value={size.id}>
+										<Box component="span" sx={{ flexGrow: 1, }}>
+											{size.name}
+										</Box>
+										<Box component="span">
+											{brlCurrencyFormatter.format(size.price)}
+										</Box>
+									</MenuItem>
+								))}
+							</TextField>
+
+							<MainButton type="submit" style={{ marginTop: '1em', }}>Concluir</MainButton>
+						</FormControlStyled>
+					</form>
 				</BoxDialog>
 			</Dialog>
 		</Grid>

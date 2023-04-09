@@ -27,6 +27,7 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
 import { ListProducts as AdminListProducts } from './pages/Admin/ListProducts';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
+import { UpdateProduct as AdminUpdateProduct } from './pages/Admin/UpdateProduct';
 import { SnackbarProviderCustom } from './components/SnackbarProvider';
 import { GetAuthUser } from './components/utils/GetAuthUser';
 import { VerifyAuth } from './components/utils/VerifyAuth';
@@ -66,6 +67,7 @@ export const App: React.FunctionComponent = () => {
 						<Route element={<AdminMainLayout />} >
 							<Route path={RoutesEnum.ADMIN_LIST_PRODUCTS} element={<AdminListProducts/>} />
 							<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
+							<Route path={`${RoutesEnum.ADMIN_PRODUCT}:slug`} element={<AdminUpdateProduct/>} />
 						</Route>
 					</Routes>
 				</BrowserRouter >

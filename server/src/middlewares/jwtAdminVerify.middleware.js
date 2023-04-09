@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { UserModel } = require("../models");
 
 exports.verifyJWTAdmin = async (req, res, next) => {
-    console.log(req.body);
     const { token } = req.body;
     if (!token)
         return res.json({

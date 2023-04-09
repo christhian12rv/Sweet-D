@@ -16,7 +16,7 @@ exports.findBySlug = async (req, res) => {
             const message = 'Não existe um produto com esse slug';
             logger.info(message);
 
-            return res.status(a).send({ errors: ['Não existe um produto com esse slug'], message });
+            return res.status(404).send({ errors: ['Não existe um produto com esse slug'], message });
         }
 
         const message = 'Produto buscado com sucesso';
@@ -81,6 +81,26 @@ exports.findAll = async (req, res) => {
     }
 };
 
+exports.findAllByIds = async (req, res) => {
+    logger.info(`Chamando findAllByIds de ${req.originalUrl}`);
+
+    try {
+        const { ids } = req.query;
+
+        const products = await productsService.findAllByIds(ids);
+
+        const message = 'Produtos buscados com sucesso';
+        logger.info(message);
+
+        res.status(200).send({ products, message });
+    } catch (error) {
+        const message = 'Ocorreram erros internos ao buscar produtos';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
+    }
+};
+
 exports.create = async (req, res) => {
     logger.info(`Chamando create de ${req.originalUrl}`);
 
@@ -101,6 +121,7 @@ exports.create = async (req, res) => {
 
     try {
         const { name, description, slug, sizes, ingredientTypes, ingredients } = req.body;
+        
         const product = await productsService.create(
             name,
             description,
@@ -134,40 +155,28 @@ exports.update = async (req, res) => {
         return res.status(400).send({ errors: formatErrors(errors.array()), message });
     }
 
-    if ((!req.files || Object.keys(req.files).length === 0) &&
-        (!req.body.bodyPhotos || !req.body.bodyPhotos.length)) {
-        const message = 'Ocorreram alguns erros ao atualizar produto';
+    if (!req.files || Object.keys(req.files).length === 0) {
+        const message = 'Ocorreram alguns erros ao criar produto';
         logger.info(message);
 
-        return res.status(400).send({ errors: createAndFormatError("O produto deve ter pelo menos 1 imagem", "photos"), message });
-    }
-
-    if (typeof req.body.bodyPhotos != "object")
-        req.body.bodyPhotos = [req.body.bodyPhotos];
-
-    const bodyPhotos = [];
-    if (req.body.bodyPhotos) {
-        req.body.bodyPhotos.forEach(b => {
-            if (b)
-                bodyPhotos.push(JSON.parse(b));
-        });
+        return res.status(400).send({ errors: createAndFormatError("O produto deve ter pelo menos 1 imagem", "photos"), message, });
     }
 
     try {
 
-        const { id, name, description, slug, sizes, ingredientTypes, ingredients } =
+        const { id, active, name, description, slug, sizes, ingredientTypes, ingredients } =
             req.body;
             
         const product = await productsService.update(
             id,
+            active,
             name,
             description,
             slug,
             sizes,
             ingredientTypes,
             ingredients,
-            bodyPhotos,
-            req.files && req.files.photos ? req.files.photos : []
+            req.files.photos
         );
 
         const message = 'Produto atualizado com sucesso';

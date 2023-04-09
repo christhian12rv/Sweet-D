@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Divider, FormControl, FormHelperText, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
+import { Divider, FormControl, FormControlLabel, FormGroup, FormHelperText, Grid, IconButton, MenuItem, Switch, TextField, Typography } from '@mui/material';
 import 'suneditor/dist/css/suneditor.min.css';
 import FileUpload from 'react-mui-fileuploader';
 import { RichTextEditor } from '../../../components/RichTextEditor';
-import { GridTextEditor } from './AddProduct.styled';
+import { GridTextEditor } from './UpdateProduct.styled';
 import { MainButton } from '../../../components/MainButton';
 import { DeleteRounded } from '@mui/icons-material';
 import CurrencyTextField from '@lupus-ai/mui-currency-textfield';
-import { clearRequest as clearRequestAction, createProduct as createProductAction } from '../../../store/features/products/products.actions';
+import { clearRequest as clearRequestAction, findBySlug as findBySlugAction, updateProduct as updateProductAction } from '../../../store/features/products/products.actions';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useTypedSelector } from '../../../store/utils/useTypedSelector';
 import { useRequestVerification } from '../../../utils/hooks/useRequestVerification';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
-import ProductCreateType from '../../../types/Product/Create/ProductCreateType';
 import { useTitle } from '../../../utils/hooks/useTitle';
-import ProductSizeCreateType from '../../../types/Product/Create/ProductSizeCreateType';
 import getRequestErrorByField from '../../../store/utils/getRequestErrorByField';
-import ProductIngredientCreateType from '../../../types/Product/Create/ProductIngredientCreateType';
-import ProductIngredientTypeCreateType from '../../../types/Product/Create/ProductIngredientTypeCreateType';
 import { ProductsActionsTypes } from '../../../store/features/products/products.types';
 import { BackdropLoading } from '../../../components/BackdropLoading';
+import ProductUpdateType from '../../../types/Product/Update/ProductUpdateType';
+import ProductSizeUpdateType from '../../../types/Product/Update/ProductSizeUpdateType';
+import ProductIngredientTypeUpdateType from '../../../types/Product/Update/ProductIngredientTypeUpdateType';
+import ProductIngredientUpdateType from '../../../types/Product/Update/ProductIngredientUpdateType';
+import { useNavigate, useParams } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
 import { FileUploader } from '../../../components/FileUploader';
+import createFileFromUrl from '../../../utils/createFileFromUrl';
 
-export const AddProduct: React.FunctionComponent = () => {
+export const UpdateProduct: React.FunctionComponent = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-	const { request, loading, previousType, } = useTypedSelector((state) => state.products);
+	const { request, loading :requestLoading, previousType, } = useTypedSelector((state) => state.products);
+	const [loading, setLoading] = useState(true);
+	const { slug, } = useParams();
 
-	const [product, setProduct] = useState<ProductCreateType>({
+	const [product, setProduct] = useState<ProductUpdateType>({
+		id: 0,
 		name: '',
 		description: '',
 		photos: [],
@@ -35,31 +42,54 @@ export const AddProduct: React.FunctionComponent = () => {
 		sizes: [],
 		ingredients: [],
 		ingredientTypes: [],
+		active: true,
 	});
 
-	useTitle('Admin - Adicionar produto');
+	useTitle(`Admin - Produto #${product.id}`);
+
+	const fetchProduct = async (): Promise<void> => {
+		setLoading(true);
+
+		const [response, json] = await findBySlugAction(slug || '');
+
+		if (response.status === 500) {
+			enqueueSnackbar(json.message, { variant: 'error', });
+			setLoading(false);
+			return;
+		} else if (response.status === 404) {
+			navigate(RoutesEnum.ERROR_404);
+			return;
+		}
+
+		const jsonProduct = json.product;
+		if (jsonProduct) {
+			jsonProduct.photos = await Promise.all(
+				JSON.parse(jsonProduct.photos).map( async (p, index) => await createFileFromUrl(p.url, `Imagem ${index + 1}`))
+			);
+			setProduct(jsonProduct);
+		}
+
+		setLoading(false);
+	};
 
 	useEffect(() => {
 		dispatch(clearRequestAction());
+		fetchProduct();
 	}, []);
 
 	useRequestVerification({
 		request,
-		successMessage: 'Produto criado com sucesso',
+		successMessage: 'Produto atualizado com sucesso',
 		successNavigate: RoutesEnum.ADMIN_LIST_PRODUCTS,
 		type: {
 			actualType: previousType,
-			expectedType: ProductsActionsTypes.CREATE_SUCCESS,
+			expectedType: ProductsActionsTypes.UPDATE_SUCCESS,
 		},
 	});
 
 	const handleFormSubmit = (event): void => {
 		event.preventDefault();
-		dispatch(createProductAction(product));
-	};
-
-	const handleFilesChange = (files): void => {
-		setProduct({ ...product, photos: [...files], });
+		dispatch(updateProductAction(product));
 	};
 
 	const handleChangeProduct = (property, value): void => {
@@ -72,9 +102,9 @@ export const AddProduct: React.FunctionComponent = () => {
 			id: newId,
 			name: '',
 			price: 0,
-		} as ProductSizeCreateType;
+		} as ProductSizeUpdateType;
 
-		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeCreateType[]), newSize], });
+		setProduct({ ...product , sizes: [...(product.sizes as ProductSizeUpdateType[]), newSize], });
 	} ;
 
 	const handleChangeProductSize = (id, property, value): void => {
@@ -100,9 +130,9 @@ export const AddProduct: React.FunctionComponent = () => {
 			min: 0,
 			max: 0,
 			type: '',
-		} as ProductIngredientTypeCreateType;
+		} as ProductIngredientTypeUpdateType;
 
-		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeCreateType[]), newIngredientType], });
+		setProduct({ ...product , ingredientTypes: [...(product.ingredientTypes as ProductIngredientTypeUpdateType[]), newIngredientType], });
 	} ;
 
 	const handleChangeProductIngredientType = (id, property, value): void => {
@@ -128,9 +158,9 @@ export const AddProduct: React.FunctionComponent = () => {
 			name: '',
 			price: 0,
 			type: '',
-		} as ProductIngredientCreateType;
+		} as ProductIngredientUpdateType;
 
-		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientCreateType[]), newIngredient], });
+		setProduct({ ...product , ingredients: [...(product.ingredients as ProductIngredientUpdateType[]), newIngredient], });
 	} ;
 
 	const handleChangeProductIngredient = (id, property, value): void => {
@@ -152,13 +182,19 @@ export const AddProduct: React.FunctionComponent = () => {
 
 	return (
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
-			<BackdropLoading open={loading}/>
+			<BackdropLoading open={loading || requestLoading}/>
 
-			<Typography variant="h4">Adicionar produto</Typography>
+			<Typography variant="h4">Atualizar Produto #{product.id}</Typography>
 
 			<form onSubmit={handleFormSubmit}>
 				<FormControl>
 					<Grid container spacing={2}>
+						<Grid item xs={12} md={6}>
+							<FormControlLabel control={<Switch checked={product.active} onChange={(): any => handleChangeProduct('active', !product.active)}/>} label="Ativo" />
+						</Grid>
+						<Grid item xs={12} md={6}>
+						</Grid>
+
 						<Grid item xs={12} md={6}>
 							<TextField
 								error={!!getRequestErrorByField(request, 'name')}
@@ -184,14 +220,17 @@ export const AddProduct: React.FunctionComponent = () => {
 						</Grid>
 
 						<Grid item xs={12} md={12}>
-							<RichTextEditor
-								error={!!getRequestErrorByField(request, 'description')}
-								placeholder="Descrição..."
-								defaultValue={product.description}
-								onChange={(event): any => handleChangeProduct('description', event)} />
-							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
-								{getRequestErrorByField(request, 'description')?.message}
-							</FormHelperText>
+							{product.description && <>
+								<RichTextEditor
+									error={!!getRequestErrorByField(request, 'description')}
+									placeholder="Descrição..."
+									defaultValue={product.description}
+									onChange={(event): any => handleChangeProduct('description', event)} />
+								<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
+									{getRequestErrorByField(request, 'description')?.message}
+								</FormHelperText>
+							</>
+							}
 						</Grid>
 
 						<GridTextEditor item xs={12} md={12} sx={(theme): object => ({
@@ -199,7 +238,7 @@ export const AddProduct: React.FunctionComponent = () => {
 								...(!!getRequestErrorByField(request, 'photos') && { borderColor: theme.palette.error.main, }),
 							},
 						})}>
-							<FileUploader files={product.photos} onChange={(value): any => handleChangeProduct('photos', value.map(v => v.file)) }/>
+							<FileUploader files={product.photos} onChange={(value): any => handleChangeProduct('photos', value.map(v => v.file))}/>
 							<FormHelperText sx={(theme): object => ({ color: theme.palette.error.main, })}>
 								{getRequestErrorByField(request, 'photos')?.message}
 							</FormHelperText>
@@ -278,7 +317,7 @@ export const AddProduct: React.FunctionComponent = () => {
 						</Grid>
 
 						{product.ingredientTypes?.map((ingredientType, index) => (
-							<>
+							<React.Fragment key={ingredientType.id}>
 								<Grid item xs={12} md={6}>
 									<TextField
 										error={!!getRequestErrorByField(request, `ingredientTypes[${index}].type`)}
@@ -328,7 +367,7 @@ export const AddProduct: React.FunctionComponent = () => {
 								<Grid item xs={12} md={12}>
 									<Divider/>
 								</Grid>
-							</>
+							</React.Fragment>
 						))}
 
 						<Grid item xs={12} md={12}>
@@ -344,7 +383,7 @@ export const AddProduct: React.FunctionComponent = () => {
 						</Grid>
 
 						{product.ingredients?.map((ingredient, index) => (
-							<>
+							<React.Fragment key={ingredient.id}>
 								<Grid item xs={12} md={6}>
 									<TextField
 										error={!!getRequestErrorByField(request, `ingredients[${index}].name`)}
@@ -405,7 +444,7 @@ export const AddProduct: React.FunctionComponent = () => {
 								<Grid item xs={12} md={12}>
 									<Divider/>
 								</Grid>
-							</>
+							</React.Fragment>
 						))}
 						
 						<Grid item xs={12} md={12}>

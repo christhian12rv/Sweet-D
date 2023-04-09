@@ -9,10 +9,10 @@ import { MainButton } from '../../../components/MainButton';
 import { useTitle } from '../../../utils/hooks/useTitle';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { useTypedSelector } from '../../../store/utils/useTypedSelector';
 import ProductType from '../../../types/Product/ProductType';
 import { clearRequest as clearRequestAction, findAllProducts as findAllProductsAction } from '../../../store/features/products/products.actions';
 import { enqueueSnackbar } from 'notistack';
+import PaginationModelType from '../../../types/PaginationModelType';
 
 const columns: GridColDef[] = [
 	{
@@ -26,6 +26,7 @@ const columns: GridColDef[] = [
 		headerName: '',
 		minWidth: 100,
 		flex: 1,
+		sortable: false,
 		renderCell: (params) => (
 			<Box component="div" sx={{
 				backgroundImage: `url(${params.row.photos[0].url})`,
@@ -56,7 +57,7 @@ const columns: GridColDef[] = [
 		sortable: false,
 		minWidth: 200,
 		flex: 1,
-		renderCell: (params) => params.row.sizes.map(s => s.price).join(', '),
+		renderCell: (params) => params.row.sizes.map(s => 'R$ ' + s.price).join(', '),
 	},
 	{
 		field: 'active',
@@ -101,21 +102,24 @@ const columns: GridColDef[] = [
 	}
 ];
 
-const rows = [
-	{ id: 1, name: 'Bolo de pote', slug: 'bolo-de-pote', prices: 'R$ 9,00 , R$ 11,00', active: true, createdAt: dayjs(new Date()).format('DD/MM/YYYY - HH:mm:ss').toString(), }
-];
-
 export const ListProducts: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const [loading, setLoading] = useState(false);
-	const { request, previousType, } = useTypedSelector((state) => state.products);
+
+	const [paginationModel, setPaginationModel] = useState<PaginationModelType>({
+		page: 0,
+		pageSize: 5,
+		sort: undefined,
+	});
 
 	const [rows, setRows] = useState<ProductType[]>([]);
+	const [responseJson, setResponseJson] = useState<any>({});
 
 	const fetchProducts = async (): Promise<void> => {
 		setLoading(true);
 
-		const [response, json] = await findAllProductsAction();
+		const [response, json] = await findAllProductsAction(paginationModel);
+		setResponseJson(json);
 
 		if (response.status === 500) {
 			enqueueSnackbar(json.message, { variant: 'error', });
@@ -131,19 +135,16 @@ export const ListProducts: React.FunctionComponent = () => {
 			setRows(json.products);
 		}
 
-		
 		setLoading(false);
 	};
 
 	useEffect(() => {
 		dispatch(clearRequestAction());
-		fetchProducts();
 	}, []);
 
 	useEffect(() => {
-
-		console.log(rows);
-	}, [rows]);
+		fetchProducts();
+	}, [paginationModel]);
 
 	useTitle('Admin - Produtos');
 
@@ -152,7 +153,7 @@ export const ListProducts: React.FunctionComponent = () => {
 			<Grid display="flex" flexWrap="wrap" alignItems="center" gap={2}> 
 				<Grid display="flex" flexDirection="column" justifyContent="center" flexGrow={1}>
 					<Typography variant="h4">Produtos</Typography>
-					<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[700], })}>38 produtos encontrados</Typography>
+					<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[700], })}>{responseJson.totalRows || 0} produtos encontrados</Typography>
 				</Grid>
 				<LinkUnstyled to={RoutesEnum.ADMIN_ADD_PRODUCT}>
 					<MainButton style={{ alignSelf: 'flex-start', width: 'fit-content', }}>Adicionar Produto</MainButton>
@@ -164,6 +165,7 @@ export const ListProducts: React.FunctionComponent = () => {
 					loading={loading}
 					rows={rows}
 					columns={columns}
+					rowCount={responseJson.totalRows}
 					rowHeight={110}
 					initialState={{
 						pagination: {
@@ -172,7 +174,15 @@ export const ListProducts: React.FunctionComponent = () => {
 							},
 						},
 					}}
-					pageSizeOptions={[5]}
+					pageSizeOptions={[5, 10, 25, 50]}
+					paginationMode="server"
+					paginationModel={paginationModel}
+					onPaginationModelChange={(model, details): void => {
+						setPaginationModel({ ...paginationModel, ...model, });
+					}}
+					onSortModelChange={(model, details): void => {
+						setPaginationModel({ ...paginationModel, sort: { ...model[0], }, });
+					}}
 					disableRowSelectionOnClick
 					disableColumnFilter
 					localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}

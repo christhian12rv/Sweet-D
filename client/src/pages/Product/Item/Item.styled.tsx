@@ -44,6 +44,7 @@ export const BoxDialog = styled(Box)(({ theme, }) => ({
 
 export const FormControlStyled = styled(FormControl)(({ theme, }) => ({
 	gap: 5,
+	width: '100%',
 }));
 
 export const CloseDialogIcon = styled(Close)(({ theme, }) => ({
