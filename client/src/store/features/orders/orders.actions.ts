@@ -43,6 +43,17 @@ export const findOrdersByLoggedUser = async (paginationModel: PaginationModelTyp
 	return [response, json];
 };
 
+export const findById = async (id: number): Promise<[Response, any] | void> => {
+	const response = await fetch(`/api/orders/${id}`, {
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8',
+		},
+	});
+	const json = await response.json();
+		
+	return [response, json];
+};
+
 export const createOrder = (dateTime: dayjs.Dayjs): (dispatch: Dispatch<OrdersAction>, getState: () => RootState) => Promise<void> => {
 	return async (dispatch: Dispatch<OrdersAction>, getState: () => RootState): Promise<void> => {
 		const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);

@@ -77,34 +77,24 @@ exports.findAll = async (
     };
 };
 
-exports.findByPk = async id => {
-    let order = await OrderModel.findByPk(id);
-
-    const user = await UserModel.findByPk(order.userId);
-    order.setDataValue("user", user);
-
-    const address = await OrderAddress.findOne({ where: { orderId: id } });
-    order.setDataValue("address", address);
-
-    let orderProducts = await OrderProductModel.findAll({
-        where: { orderId: id }
+exports.findByPk = async (id) => {
+    const order = await OrderModel.findOne({
+        where: {
+            id,
+        },
+        include: [
+            {
+                model: OrderProductModel,
+                as: 'orderProducts',
+                include: [
+                    {
+                        model: OrderProductIngredientModel,
+                        as: 'orderProductIngredients'
+                    },
+                ]
+            },
+        ],
     });
-
-    let quantityTotal = 0;
-
-    orderProducts = await Promise.all(
-        orderProducts.map(async op => {
-            const product = await ProductModel.findByPk(op.productId);
-            op.setDataValue("product", product);
-
-            quantityTotal += op.quantity;
-
-            return op;
-        })
-    );
-    order.setDataValue("quantityTotal", quantityTotal);
-
-    order.setDataValue("orderProducts", orderProducts);
 
     return order;
 };

@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 const bcrypt = require("bcrypt");
-
+const { Op } = require("sequelize");
 const { UserModel } = require("../../models");
 const { ChangePasswordTokenModel } = require("../../models");
 
@@ -124,6 +124,12 @@ exports.auth = [
 ]
 
 exports.update = [
+    body("id")
+        .notEmpty()
+        .withMessage("Pedido inválido")
+        .bail()
+        .isInt(),
+
     body("name")
         .optional()
         .trim()
@@ -158,8 +164,13 @@ exports.update = [
         .isEmail()
         .withMessage("O Email informado é inválido")
         .bail()
-        .custom(value => {
-            return UserModel.findOne({ where: { email: value } })
+        .custom((value, { req, }) => {
+            return UserModel.findOne({ where: {
+                [Op.and]: [
+                    { email: value },
+                    { [Op.not]: { id: req.body.id } }
+                ]
+            } })
                 .catch(erro => {
                     return Promise.reject("Ocorreu um erro interno");
                 })

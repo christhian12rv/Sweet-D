@@ -92,7 +92,6 @@ export const createProduct = (product: ProductCreateType): (dispatch: Dispatch<P
 
 export const updateProduct = (product: ProductUpdateType): (dispatch: Dispatch<ProductsAction>) => Promise<void> => {
 	return async (dispatch: Dispatch<ProductsAction>): Promise<void> => {
-		console.log(product);
 		const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
 		if (!token)
 			return;

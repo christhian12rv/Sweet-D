@@ -93,7 +93,6 @@ exports.findAll = async (
 };
 
 exports.findAllByIds = async (ids) => {
-    console.log(ids);
     const products = await ProductModel.findAll({
         where: {
             id: {

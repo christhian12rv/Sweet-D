@@ -85,10 +85,6 @@ const columns: GridColDef[] = [
 	}
 ];
 
-const rows = [
-	{ id: 1, total: brlCurrencyFormatter.format(24.90), products: 'Bolo de pote, Cookie de chocolate, Bolo de Cenoura', finished: true, totalQuantity: 35, createdAt: dayjs(new Date()).format('DD/MM/YYYY - HH:mm:ss').toString(), }
-];
-
 export const Orders: React.FunctionComponent = () => {
 	const [loading, setLoading] = useState(true);
 	
@@ -121,18 +117,20 @@ export const Orders: React.FunctionComponent = () => {
 		}
 
 		if (json.orders) {
-			const [response, json] = await findAllProductsByIdsAction(json.orders.flatMap(order => order.orderProducts.map(orderProduct => orderProduct.id)));
-
-			if (response.status === 500) {
-				enqueueSnackbar(json.message, { variant: 'error', });
+			console.log(json.orders);
+			const productsRequest = await findAllProductsByIdsAction(json.orders.flatMap(order => order.orderProducts.map(orderProduct => orderProduct.productId)));
+			
+			if (productsRequest[0].status === 500) {
+				enqueueSnackbar(productsRequest[1].message, { variant: 'error', });
 				setLoading(false);
 				return;
 			}
 
 			json.orders.map(order => {
 				order.createdAt = dayjs(order.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString();
-				order.products = products.find(p => p.)
+				order.products = order.orderProducts.map(orderProduct => productsRequest[1].products.find(p => p.id === orderProduct.productId).name);
 			}) as OrderType[];
+
 			setRows(json.orders);
 		}
 

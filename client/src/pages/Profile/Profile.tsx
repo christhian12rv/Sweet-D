@@ -23,6 +23,7 @@ export const Profile: React.FunctionComponent = () => {
 	
 	const [phoneFocus, setPhoneFocus] = useState(false);
 	const [profile, setProfile] = useState({
+		id: 0,
 		name: '',
 		email: '',
 		password: '12345678',
@@ -37,6 +38,7 @@ export const Profile: React.FunctionComponent = () => {
 
 	useEffect(() => {
 		setProfile({
+			id: loggedUser?.id || 0,
 			name: loggedUser?.name || '',
 			email: loggedUser?.email || '',
 			password: '12345678',
@@ -56,6 +58,7 @@ export const Profile: React.FunctionComponent = () => {
 
 	const handleUpdateButtonClick = (): void => {
 		dispatch(updateAction({
+			id: profile.id,
 			name: profile.name,
 			email: profile.email,
 			phone: profile.phone,
