@@ -10,19 +10,16 @@ type Props = {
 	orientation?: 'portrait' | 'landscape' | undefined;
 	okButtonLabel?: string | undefined;
 	onAccept?: (dateTime: dayjs.Dayjs | null) => void;
+	shouldDisableDate?: ((day: unknown) => boolean) | undefined;
+	minTime?: dayjs.Dayjs | undefined;
+	maxTime?: dayjs.Dayjs | undefined;
 };
 
-export const DateTimePicker: React.FunctionComponent<Props> = ({ orientation, okButtonLabel, onAccept, }) => {
+export const DateTimePicker: React.FunctionComponent<Props> = ({ orientation, okButtonLabel, onAccept, shouldDisableDate, minTime, maxTime, }) => {
 	const isMobile = useMediaQuery('(max-width: ' + ScreenSizeQuerysEnum.MOBILE + 'px');
 
 	const now = dayjs();
 	const maxDate = now.add(7, 'day');
-	const minTime = now.set('hour', 10);
-	const maxTime = now.set('hour', 18);
-
-	const disableWeekends = (date): boolean => {
-		return date.get('day') === 0 || date.get('day') === 6;
-	};
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={ptBr} localeText={{
@@ -33,12 +30,12 @@ export const DateTimePicker: React.FunctionComponent<Props> = ({ orientation, ok
 				orientation={orientation ? orientation : (isMobile ? 'portrait' : 'landscape')}
 				minDate={now}
 				maxDate={maxDate}
-				shouldDisableDate={disableWeekends}
-				minTime={minTime}
-				maxTime={maxTime}
-				onAccept={(dateTime): any => {
+				{...shouldDisableDate && { shouldDisableDate, }}
+				{...minTime && { minTime, }}
+				{...maxTime && { maxTime, }}
+				{...onAccept && { onAccept: (dateTime): any => {
 					onAccept && onAccept(dateTime);
-				}}
+				}, }}
 				localeText={{
 					cancelButtonLabel: 'Resetar',
 					okButtonLabel: okButtonLabel ? okButtonLabel : 'OK',

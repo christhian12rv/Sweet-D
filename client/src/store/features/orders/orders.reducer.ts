@@ -33,9 +33,20 @@ const ordersReducer = (state = initialState, action: OrdersAction): OrdersState 
 		return { ...state, ...action.payload, previousType: action.type, loading: false, };
 	}
 
+	case OrdersActionsTypes.FINISH_PENDING: {
+		return { ...state, ...action.payload, previousType: action.type, loading: true, };
+	}
+	case OrdersActionsTypes.FINISH_SUCCESS: {
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
+	}
+	case OrdersActionsTypes.FINISH_FAIL: {
+		return { ...state, ...action.payload, previousType: action.type, loading: false, };
+	}
+
 	case OrdersActionsTypes.CLEAR_REQUEST: {
 		return { ...state, request: null, loading: false, previousType: action.type, };
 	}
+	
 	default:
 		return state;
 	}

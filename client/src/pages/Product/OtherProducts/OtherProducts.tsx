@@ -11,7 +11,11 @@ import PaginationModelType from '../../../types/PaginationModelType';
 import ProductType from '../../../types/Product/ProductType';
 import { clearRequest as clearRequestAction, findAllProducts as findAllProductsAction } from '../../../store/features/products/products.actions';
 
-export const OtherProducts: React.FunctionComponent = () => {
+type Props = {
+	product: ProductType;
+}
+
+export const OtherProducts: React.FunctionComponent<Props> = ({ product, }) => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const [loading, setLoading] = useState(false);
 	const [products, setProducts] = useState<ProductType[]>([]);
@@ -23,6 +27,7 @@ export const OtherProducts: React.FunctionComponent = () => {
 			field: 'createdAt',
 			sort: 'desc',
 		},
+		slugNotFilter: product.slug,
 	});
 
 	const fetchProducts = async (): Promise<void> => {

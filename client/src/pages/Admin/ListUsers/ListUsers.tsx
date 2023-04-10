@@ -1,16 +1,15 @@
 import { Box, Grid, Checkbox, Typography } from '@mui/material';
-import { EditRounded, ExitToAppRounded } from '@mui/icons-material';
+import { ExitToAppRounded, WhatsApp } from '@mui/icons-material';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
-import { MainButton } from '../../../components/MainButton';
 import { useTitle } from '../../../utils/hooks/useTitle';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ProductType from '../../../types/Product/ProductType';
-import { clearRequest as clearRequestAction, findAllProducts as findAllProductsAction } from '../../../store/features/products/products.actions';
+import { clearRequest as clearRequestAction, findAllUsers as findAllUsersAction } from '../../../store/features/users/users.actions';
 import { enqueueSnackbar } from 'notistack';
 import PaginationModelType from '../../../types/PaginationModelType';
 
@@ -18,93 +17,67 @@ const columns: GridColDef[] = [
 	{
 		field: 'id',
 		headerName: 'ID',
-		width: 90,
+		width: 40,
 		flex: 1,
-	},
-	{
-		field: 'photos',
-		headerName: '',
-		minWidth: 100,
-		flex: 1,
-		sortable: false,
-		renderCell: (params) => (
-			<Box component="div" sx={{
-				backgroundImage: `url(${params.row.photos[0].url})`,
-				backgroundSize: 'cover',
-				backgroundPosition: 'center',
-				borderRadius: '8px',
-				width: '90px',
-				height: '90px',
-			}}/>
-		),
 	},
 	{
 		field: 'name',
 		headerName: 'Nome',
-		minWidth: 120,
+		minWidth: 250,
 		flex: 1,
 	},
 	{
-		field: 'slug',
-		headerName: 'Slug',
-		minWidth: 120,
+		field: 'email',
+		headerName: 'Email',
+		minWidth: 300,
 		flex: 1,
 	},
 	{
-		field: 'prices',
-		headerName: 'Preços',
-		description: 'Preço de cada tamanho',
-		sortable: false,
-		minWidth: 200,
+		field: 'phone',
+		headerName: 'Telefone',
+		maxWidth: 180,
 		flex: 1,
-		renderCell: (params) => params.row.sizes.map(s => 'R$ ' + s.price).join(', '),
+		renderCell: (params) => (
+			<React.Fragment>
+				{params.row.phone}
+				<LinkUnstyled to={`https://wa.me/55${
+					params.row.phone
+						.replaceAll(' ', '')
+						.replaceAll('(', '')
+						.replaceAll(')', '')
+						.replaceAll('-', '')
+				}`} target="_blank" sx={{
+					ml: 'auto',
+					color: '#128C7E !important',
+					'&:hover': {
+						color: '#075E54 !important',
+					},
+					transition: 'all .25s',
+				}}>
+					<WhatsApp/>
+				</LinkUnstyled>
+			</React.Fragment>
+		),
 	},
 	{
-		field: 'active',
-		headerName: 'Ativo',
-		width: 140,
+		field: 'isAdmin',
+		headerName: 'Administrador',
+		minWidth: 130,
+		headerAlign: 'center',
+		align: 'center',
 		flex: 1,
-		renderCell: (params) => <Checkbox disabled checked={params.row.active} sx={(theme): object => ({ color: theme.palette.primary.dark + ' !important', })}/>,
+		renderCell: (params) => <Checkbox disabled checked={params.row.isAdmin} sx={(theme): object => ({ color: theme.palette.primary.dark + ' !important', })}/>,
 	},
 	{
 		field: 'createdAt',
-		headerName: 'Criado em',
-		minWidth: 200,
+		headerName: 'Data de registro',
+		minWidth: 180,
 		flex: 1,
-	},
-	{
-		field: 'Ações',
-		headerName: '',
-		width: 90,
-		sortable: false,
-		filterable: false,
-		renderCell: (params) => (
-			<Grid display="flex" alignItems="center" justifyContent="center" gap="12px" width="100%" sx={{ overflowX: 'hidden', }}>
-				<LinkUnstyled to={RoutesEnum.ADMIN_PRODUCT + params.row.slug}>
-					<EditRounded className="action-icon" sx={(theme): object => ({
-						'&:hover': {
-							color: theme.palette.primary.dark,
-						},
-						transition: 'all .25s',
-					})}/>
-				</LinkUnstyled>
-
-				{params.row.active && (
-					<LinkUnstyled to={RoutesEnum.PRODUCT + params.row.slug}>
-						<ExitToAppRounded className="action-icon" sx={(theme): object => ({
-							'&:hover': {
-								color: theme.palette.primary.dark,
-							},
-							transition: 'all .25s',
-						})}/>
-					</LinkUnstyled>
-				)}
-			</Grid>
-		),
+		renderCell: (params) => dayjs(params.row.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString(),
 	}
 ];
 
-export const ListProducts: React.FunctionComponent = () => {
+export const ListUsers: React.FunctionComponent = () => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const [loading, setLoading] = useState(false);
 
@@ -117,10 +90,11 @@ export const ListProducts: React.FunctionComponent = () => {
 	const [rows, setRows] = useState<ProductType[]>([]);
 	const [responseJson, setResponseJson] = useState<any>({});
 
-	const fetchProducts = async (): Promise<void> => {
+	const fetchUsers = async (): Promise<void> => {
 		setLoading(true);
 
-		const [response, json] = await findAllProductsAction(paginationModel);
+		const [response, json] = await findAllUsersAction(paginationModel);
+
 		setResponseJson(json);
 
 		if (response.status === 500) {
@@ -129,13 +103,8 @@ export const ListProducts: React.FunctionComponent = () => {
 			return;
 		}
 
-		if (json.products) {
-			json.products.map(product => {
-				product.createdAt = dayjs(product.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString();
-				product.photos = JSON.parse(product.photos);
-			}) as ProductType[];
-			setRows(json.products);
-		}
+		if (json.users)
+			setRows(json.users);
 
 		setLoading(false);
 	};
@@ -145,21 +114,18 @@ export const ListProducts: React.FunctionComponent = () => {
 	}, []);
 
 	useEffect(() => {
-		fetchProducts();
+		fetchUsers();
 	}, [paginationModel]);
 
-	useTitle('Admin - Produtos');
+	useTitle('Admin - Usuários');
 
 	return (
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
 			<Grid display="flex" flexWrap="wrap" alignItems="center" gap={2}> 
 				<Grid display="flex" flexDirection="column" justifyContent="center" flexGrow={1}>
-					<Typography variant="h4">Produtos</Typography>
-					<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[700], })}>{responseJson.totalRows || 0} produtos encontrados</Typography>
+					<Typography variant="h4">Usuários</Typography>
+					<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[700], })}>{responseJson.totalRows || 0} usuários encontrados</Typography>
 				</Grid>
-				<LinkUnstyled to={RoutesEnum.ADMIN_ADD_PRODUCT}>
-					<MainButton style={{ alignSelf: 'flex-start', width: 'fit-content', }}>Adicionar Produto</MainButton>
-				</LinkUnstyled>
 			</Grid>
 
 			<Box sx={{ flexGrow: 1, overflowX: 'auto', width: '100%', }}>
@@ -196,7 +162,7 @@ export const ListProducts: React.FunctionComponent = () => {
 						'& *': {
 							overflowX: 'hidden !important',
 						},
-						minWidth: '950px',
+						minWidth: '1100px',
 						transition: 'all 0s',
 					}}
 				/>

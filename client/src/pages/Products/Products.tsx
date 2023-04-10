@@ -72,6 +72,7 @@ export const Products: React.FunctionComponent = () => {
 			field: 'createdAt',
 			sort: 'desc',
 		},
+		filterActives: 'y',
 	});
 
 	const fetchProducts = async (): Promise<void> => {

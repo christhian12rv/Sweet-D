@@ -1,5 +1,5 @@
 import { CookieRounded, DashboardRounded, FaceRounded, FullscreenRounded, MenuRounded, PeopleRounded, PowerSettingsNewRounded, ReceiptRounded, SettingsRounded } from '@mui/icons-material';
-import { CssBaseline, Toolbar, IconButton, Typography, List, ListItemButton, ListItemIcon, ListItemText, Box, Drawer, useMediaQuery, AppBar, Container, Slide, useScrollTrigger, Divider, Avatar, Grid } from '@mui/material';
+import { CssBaseline, Toolbar, IconButton, Typography, List, ListItemButton, ListItemIcon, ListItemText, Box, useMediaQuery, Slide, useScrollTrigger, Divider, Avatar, Grid } from '@mui/material';
 import React, { useState } from 'react';
 import { LinkUnstyled } from '../../../../components/LinkUnstyled';
 import { LogoImg, LogoTitle } from '../../../layout/MainLayout/Footer/Footer.styled';
@@ -9,6 +9,7 @@ import RoutesEnum from '../../../../types/enums/RoutesEnum';
 import { Outlet, useLocation } from 'react-router-dom';
 import ScreenSizeQuerysEnum from '../../../../types/enums/ScreenSizeQuerysEnum';
 import LocalStorageEnum from '../../../../types/enums/LocalStorageEnum';
+import { useTypedSelector } from '../../../../store/utils/useTypedSelector';
 
 type Props = {
   window?: () => Window;
@@ -19,6 +20,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 	const isMobile = useMediaQuery('(max-width: ' + ScreenSizeQuerysEnum.MOBILE + 'px');
 	const [openSidebar, setOpenSidebar] = useState(!isMobile ? localStorage.getItem(LocalStorageEnum.ADMIN_SIDEBAR_OPEN) === 'true' : false);
 	const [fullscreen, setFullscreen] = useState(false);
+	const { user: loggedUser, } = useTypedSelector((state) => state.auth);
 
 	const container = window !== undefined ? (): any => window().document.body : undefined;
 
@@ -101,8 +103,8 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 					</SidebarListItemStyled>
 				</LinkUnstyled>
 
-				<LinkUnstyled to={RoutesEnum.ADMIN_ORDERS}>
-					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_ORDERS} open={openSidebar}>
+				<LinkUnstyled to={RoutesEnum.ADMIN_LIST_ORDERS}>
+					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_LIST_ORDERS} open={openSidebar}>
 						<ListItemButton
 							sx={{
 								minHeight: 48,
@@ -116,15 +118,15 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 									justifyContent: 'center',
 								}}
 							>
-								<ReceiptRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_ORDERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
+								<ReceiptRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_LIST_ORDERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
 							</ListItemIcon>
 							<ListItemText primary="Pedidos" sx={{ opacity: openSidebar ? 1 : 0, }} />
 						</ListItemButton>
 					</SidebarListItemStyled>
 				</LinkUnstyled>
 
-				<LinkUnstyled to={RoutesEnum.ADMIN_USERS}>
-					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_USERS} open={openSidebar}>
+				<LinkUnstyled to={RoutesEnum.ADMIN_LIST_USERS}>
+					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_LIST_USERS} open={openSidebar}>
 						<ListItemButton
 							sx={{
 								minHeight: 48,
@@ -138,7 +140,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 									justifyContent: 'center',
 								}}
 							>
-								<PeopleRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_USERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
+								<PeopleRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_LIST_USERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
 							</ListItemIcon>
 							<ListItemText primary="Usuários" sx={{ opacity: openSidebar ? 1 : 0, }} />
 						</ListItemButton>
@@ -147,30 +149,28 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 
 				<Divider sx={{ marginTop: 'auto', }}/>
 
-				<LinkUnstyled to={RoutesEnum.ADMIN_USERS}>
-					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_USERS} open={openSidebar}>
-						<ListItemButton
+				<SidebarListItemStyled disablePadding active={false} open={openSidebar}>
+					<ListItemButton
+						sx={{
+							minHeight: 48,
+							justifyContent: openSidebar ? 'initial' : 'center',
+						}}
+					>
+						<ListItemIcon
 							sx={{
-								minHeight: 48,
-								justifyContent: openSidebar ? 'initial' : 'center',
+								minWidth: 0,
+								mr: openSidebar ? 3 : 'auto',
+								justifyContent: 'center',
 							}}
 						>
-							<ListItemIcon
-								sx={{
-									minWidth: 0,
-									mr: openSidebar ? 3 : 'auto',
-									justifyContent: 'center',
-								}}
-							>
-								<SettingsRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_USERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
-							</ListItemIcon>
-							<ListItemText primary="Configurações" sx={{ opacity: openSidebar ? 1 : 0, }} />
-						</ListItemButton>
-					</SidebarListItemStyled>
-				</LinkUnstyled>
+							<SettingsRounded sx={(theme): object => ({ color: theme.palette.grey[800], })} />
+						</ListItemIcon>
+						<ListItemText primary="Configurações" sx={{ opacity: openSidebar ? 1 : 0, }} />
+					</ListItemButton>
+				</SidebarListItemStyled>
 
-				<LinkUnstyled to={RoutesEnum.ADMIN_USERS}>
-					<SidebarListItemStyled disablePadding active={location.pathname === RoutesEnum.ADMIN_USERS} open={openSidebar}>
+				<LinkUnstyled to={RoutesEnum.ADMIN_LIST_USERS}>
+					<SidebarListItemStyled disablePadding active={false} open={openSidebar}>
 						<ListItemButton
 							sx={{
 								minHeight: 48,
@@ -184,7 +184,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 									justifyContent: 'center',
 								}}
 							>
-								<PowerSettingsNewRounded sx={(theme): object => ({ color: location.pathname === RoutesEnum.ADMIN_USERS ? theme.palette.primary.dark : theme.palette.grey[800], })} />
+								<PowerSettingsNewRounded sx={(theme): object => ({ color: theme.palette.grey[800], })} />
 							</ListItemIcon>
 							<ListItemText primary="Logout" sx={{ opacity: openSidebar ? 1 : 0, }} />
 						</ListItemButton>
@@ -227,7 +227,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 				})}>
 					<FaceRounded className="user-icon" sx={(theme): object => ({ fontSize: '2em', color: theme.palette.grey[900], transition: 'all .15s', })} />
 					<Grid display="flex" flexDirection="column"  justifyContent="center">
-						<Typography className="user-name" variant="h6" sx={(theme): object => ({ fontSize: '.95em', fontWeight: 'bold', color: theme.palette.grey[900], ml: 2, lineHeight: 1, transition: 'all .15s', })}>Christhian</Typography>
+						<Typography className="user-name" variant="h6" sx={(theme): object => ({ fontSize: '.95em', fontWeight: 'bold', color: theme.palette.grey[900], ml: 2, lineHeight: 1, transition: 'all .15s', })}>{loggedUser?.name}</Typography>
 						<Typography className="admin-text" variant="body1" sx={{ fontSize: '.8em', ml: 2, transition: 'all .25s', }}>Admin</Typography>
 					</Grid>
 				</Grid>

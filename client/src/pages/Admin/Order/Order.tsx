@@ -1,15 +1,24 @@
 import { ExitToAppRounded, KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@mui/icons-material';
-import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Collapse } from '@mui/material';
+import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Collapse, FormControlLabel, Switch } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { LinkUnstyled } from '../../components/LinkUnstyled';
-import RoutesEnum from '../../types/enums/RoutesEnum';
-import brlCurrencyFormatter from '../../utils/brlCurrencyFormatter';
-import { findById as findOrderByIdAction } from '../../store/features/orders/orders.actions';
-import { findAllByIds as findAllProductsByIdsAction } from '../../store/features/products/products.actions';
-import { useTitle } from '../../utils/hooks/useTitle';
+import { LinkUnstyled } from '../../../components/LinkUnstyled';
+import RoutesEnum from '../../../types/enums/RoutesEnum';
+import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
+import { findById as findOrderByIdAction, finishOrder as finishOrderAction, clearRequest as ordersClearRequestAction } from '../../../store/features/orders/orders.actions';
+import { findAllByIds as findAllProductsByIdsAction } from '../../../store/features/products/products.actions';
+import { useTitle } from '../../../utils/hooks/useTitle';
 import dayjs from 'dayjs';
 import { enqueueSnackbar } from 'notistack';
 import { useParams } from 'react-router-dom';
+import { MainButton } from '../../../components/MainButton';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import UserType from '../../../types/User/UserType';
+import { useTypedSelector } from '../../../store/utils/useTypedSelector';
+import { OrdersActionsTypes } from '../../../store/features/orders/orders.types';
+import { useRequestVerification } from '../../../utils/hooks/useRequestVerification';
+import { useNonInitialEffect } from '../../../utils/hooks/useNonInitialEffect';
+import { BackdropLoading } from '../../../components/BackdropLoading';
 
 type IngredientsType = {
 	type: string;
@@ -119,6 +128,8 @@ const CustomTableRow: React.FunctionComponent<CustomTableRowProps> = ({ row, }) 
 
 export const Order: React.FunctionComponent = () => {
 	const { id, } = useParams();
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const { request, loading: ordersLoading, previousType, } = useTypedSelector((state) => state.orders);
 
 	if (!id)
 		return <></>;
@@ -130,6 +141,7 @@ export const Order: React.FunctionComponent = () => {
 		totalQuantity: number;
 		date: string;
 		finished: boolean;
+		user: UserType;
 		createdAt: string;
 	} | null>(null);
 
@@ -207,6 +219,7 @@ export const Order: React.FunctionComponent = () => {
 				totalQuantity,
 				date: json.order.date,
 				finished: json.order.finished,
+				user: json.order.user,
 				createdAt: json.order.createdAt,
 			});
 			setRows(orderProducts);
@@ -216,52 +229,91 @@ export const Order: React.FunctionComponent = () => {
 	};
 
 	useEffect(() => {
+		dispatch(ordersClearRequestAction());
 		fetchOrder();
 	}, []);
 
+	useNonInitialEffect(() => {
+		if (previousType === OrdersActionsTypes.FINISH_SUCCESS)
+			fetchOrder();
+	}, [request]);
+
+	const finishOrder = (): void => {
+		dispatch(finishOrderAction(order?.id || 0));
+	};
+
+	useRequestVerification({
+		request,
+		successMessage: 'Pedido atualizado com sucesso',
+		type: {
+			actualType: previousType,
+			expectedType: OrdersActionsTypes.FINISH_SUCCESS,
+		},
+	});
+
 	return (
 		<Grid display="flex" flexDirection="column">
-			<Typography variant="h4">Detalhes do Pedido</Typography>
-			<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.1em', color: theme.palette.grey[600], })}>Número do pedido: #{order?.id}</Typography>
-			<Grid display="flex" alignItems="center">
-				<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Total:</Typography>
-				<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>
-				&nbsp;{order?.totalPrice}
-				</Typography>
-			</Grid>
-			<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Quantidade de produtos: {order?.totalQuantity}</Typography>
-			<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Data: {order ? dayjs(order?.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString() : ''}</Typography>
-			<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>Data de entrega:
-				&nbsp;{order ? dayjs(order.date).format('DD/MM/YYYY - HH:mm:ss').toString() : ''}
-			</Typography>
-			<Typography variant="body1" sx={{ mb: 5, fontSize: '1.2em', }}>Status:
-				<Box component="span" sx={{ color: order?.finished ? '#00C853' : '#FFA000', }}>
-				&nbsp;{order ? (order.finished ? 'Finalizado' : 'Em andamento') : ''}
-				</Box>
-			</Typography>
+			<BackdropLoading open={loading || ordersLoading}/>
 
-			<TableContainer sx={{ border: '1px solid rgba(224, 224, 224, 1)', borderRadius: '4px', }} >
-				<Table sx={{ minWidth: 650, }} aria-label="simple table">
-					<TableHead>
-						<TableRow>
-							<TableCell/>
-							<TableCell>ID</TableCell>
-							<TableCell align="center"></TableCell>
-							<TableCell align="left">Nome</TableCell>
-							<TableCell align="center">Quantidade</TableCell>
-							<TableCell align="center">Preço</TableCell>
-							<TableCell align="center">Tamanho</TableCell>
-							<TableCell align="center">Total</TableCell>
-							<TableCell align="center"></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{rows.map((row) => (
-							<CustomTableRow key={row.id} row={row} />
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			{!loading && !ordersLoading && (
+				<React.Fragment>
+					<Typography variant="h4">Detalhes do Pedido</Typography>
+					<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.1em', color: theme.palette.grey[600], })}>Número do pedido: #{order?.id}</Typography>
+					
+					<Grid display="flex" alignItems="center">
+						<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Usuário:</Typography>
+						<LinkUnstyled to={RoutesEnum.ADMIN_USER + order?.user.id}>
+							<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>
+								&nbsp;{order?.user.name}
+							</Typography>
+						</LinkUnstyled>
+					</Grid>
+					<Grid display="flex" alignItems="center">
+						<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Total:</Typography>
+						<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>
+						&nbsp;{order?.totalPrice}
+						</Typography>
+					</Grid>
+					<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Quantidade de produtos: {order?.totalQuantity}</Typography>
+					<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Data: {order ? dayjs(order?.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString() : ''}</Typography>
+					<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>Data de entrega:
+						&nbsp;{order ? dayjs(order.date).format('DD/MM/YYYY - HH:mm:ss').toString() : ''}
+					</Typography>
+					<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Status:
+						<Box component="span" sx={{ color: order?.finished ? '#00C853' : '#FFA000', }}>
+						&nbsp;{order ? (order.finished ? 'Finalizado' : 'Em andamento') : ''}
+						</Box>
+					</Typography>
+					
+					{!order?.finished && (
+						<MainButton onClick={finishOrder} style={{ alignSelf: 'flex-start', marginTop: '.75em', }}>Finalizar</MainButton>
+					)}
+
+					<TableContainer sx={{ border: '1px solid rgba(224, 224, 224, 1)', borderRadius: '4px', mt: 5, }} >
+						<Table sx={{ minWidth: 650, }} aria-label="simple table">
+							<TableHead>
+								<TableRow>
+									<TableCell/>
+									<TableCell>ID</TableCell>
+									<TableCell align="center"></TableCell>
+									<TableCell align="left">Nome</TableCell>
+									<TableCell align="center">Quantidade</TableCell>
+									<TableCell align="center">Preço</TableCell>
+									<TableCell align="center">Tamanho</TableCell>
+									<TableCell align="center">Total</TableCell>
+									<TableCell align="center"></TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{rows.map((row) => (
+									<CustomTableRow key={row.id} row={row} />
+								))}
+							</TableBody>
+						</Table>
+					</TableContainer>
+
+				</React.Fragment>
+			)}
 		</Grid>
 	);
 };

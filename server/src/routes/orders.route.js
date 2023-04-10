@@ -12,7 +12,7 @@ router.get("/:id", ordersController.findByPk);
 router.post("/user", verifyJWT, ordersController.findAllByUser);
 router.post("/", verifyJWT, ordersValidator.create, ordersController.create);
 router.put(
-    "/",
+    "/finish",
     verifyJWTAdmin,
     ordersValidator.updateFinish,
     ordersController.updateFinish

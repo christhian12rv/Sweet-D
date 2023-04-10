@@ -12,68 +12,70 @@ exports.findAll = async (
     search = ""
 ) => {
     const options = {
-        ...(columnSort &&
-            directionSort &&
-            columnSort != "products" && {
-                order: [[columnSort, directionSort]]
-            }),
+        order: [[(columnSort === "total" || columnSort === "totalQuantity" || columnSort === "user") ? "id" : columnSort, directionSort]],
         limit,
         offset: limit * (page - 1),
-        where: {
-            id: {
-                [Op.like]: "%" + search + "%"
-            }
-        }
+        include: [
+            {
+                model: OrderProductModel,
+                as: 'orderProducts',
+                include: [
+                    {
+                        model: OrderProductIngredientModel,
+                        as: 'orderProductIngredients'
+                    },
+                ]
+            },
+            {
+                model: UserModel,
+                as: 'user',
+            },
+        ]
     };
 
-    const result = await OrderModel.findAndCountAll(options);
+    let orders = await OrderModel.findAll(options);
 
-    result.rows = await Promise.all(
-        result.rows.map(async r => {
-            const user = await UserModel.findByPk(r.userId);
-            r.setDataValue("user", user);
-            let orderProducts = await OrderProductModel.findAll({
-                where: { orderId: r.id }
-            });
-            orderProducts = await Promise.all(
-                orderProducts.map(async op => {
-                    const product = await ProductModel.findByPk(op.productId);
-                    op.setDataValue("product", product);
-                    return op;
-                })
-            );
-            r.setDataValue("orderProducts", orderProducts);
+    if (columnSort === "total") {
+        orders = orders.sort((a, b) => {
+            const totalA = a.orderProducts.reduce((total, orderProduct) => {
+                const ingredientsPrices = orderProduct.orderProductIngredients.reduce((sum, ingredient) => {
+                    return sum + ingredient.price;
+                }, 0);
+                return total + ((orderProduct.sizePrice + ingredientsPrices) * orderProduct.quantity);
+            }, 0);
 
-            return r;
-        })
-    );
+            const totalB = b.orderProducts.reduce((total, orderProduct) => {
+                const ingredientsPrices = orderProduct.orderProductIngredients.reduce((sum, ingredient) => {
+                    return sum + ingredient.price;
+                }, 0);
+                return total + ((orderProduct.sizePrice + ingredientsPrices) * orderProduct.quantity);
+            }, 0)
 
-    if (columnSort == "products") {
-        result.rows.sort((a, b) => {
-            a = JSON.stringify(a);
-            a = JSON.parse(a);
-            b = JSON.stringify(b);
-            b = JSON.parse(b);
-            if (
-                a.orderProducts[0].product == b.orderProducts[0].product.name &&
-                a.orderProducts[1] &&
-                b.orderProducts[1]
-            )
-                return a.orderProducts[1].product.name.localeCompare(
-                    b.orderProducts[1].product.name
-                );
+            if (directionSort === "asc")
+                return totalA - totalB;
 
-            return a.orderProducts[0].product.name.localeCompare(
-                b.orderProducts[0].product.name
-            );
+            return totalB - totalA;
         });
+    } else if (columnSort === "totalQuantity") {
+        orders = orders.sort((a, b) => {
+            const totalQuantityA = a.orderProducts.reduce((totalQuantity, orderProduct) => totalQuantity + orderProduct.quantity, 0);
+            const totalQuantityB = b.orderProducts.reduce((totalQuantity, orderProduct) => totalQuantity + orderProduct.quantity, 0);
+            
+            if (directionSort === "asc")
+                return totalQuantityA - totalQuantityB;
 
-        if (directionSort == "desc") result.rows = result.rows.reverse();
+            return totalQuantityB - totalQuantityA;
+        })
+    } else if (columnSort === "user") {
+        orders = orders.sort((a, b) => {
+            return a.user.name.localeCompare(b.user.name);
+        })
     }
 
+    const totalRows = await OrderModel.count();
     return {
-        totalRows: result.count,
-        orders: result.rows
+        totalRows,
+        orders,
     };
 };
 
@@ -93,6 +95,10 @@ exports.findByPk = async (id) => {
                     },
                 ]
             },
+            {
+                model: UserModel,
+                as: 'user',
+            },
         ],
     });
 
@@ -107,7 +113,7 @@ exports.findAllByUser = async (
     directionSort = "asc",
 ) => {
     const options = {
-        order: [[columnSort === "total" || columnSort === "totalQuantity" ? "id" : columnSort, directionSort]],
+        order: [[(columnSort === "total" || columnSort === "totalQuantity") ? "id" : columnSort, directionSort]],
         limit,
         offset: limit * (page - 1),
         where: {

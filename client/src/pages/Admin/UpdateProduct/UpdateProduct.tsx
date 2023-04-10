@@ -45,7 +45,7 @@ export const UpdateProduct: React.FunctionComponent = () => {
 		active: true,
 	});
 
-	useTitle(`Admin - Produto #${product.id}`);
+	const [title, setTitle] = useTitle('Admin - Produto #0');
 
 	const fetchProduct = async (): Promise<void> => {
 		setLoading(true);
@@ -78,6 +78,8 @@ export const UpdateProduct: React.FunctionComponent = () => {
 				it.new = false;
 				return it;
 			});
+
+			setTitle(`Admin - Produto #${jsonProduct.id}`);
 			setProduct(jsonProduct);
 		}
 

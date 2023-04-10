@@ -1,20 +1,23 @@
-import { ExitToAppRounded } from '@mui/icons-material';
-import { Box, Checkbox, Grid, Typography } from '@mui/material';
+import { Box, Grid, Checkbox, Typography } from '@mui/material';
+import { EditRounded, ExitToAppRounded } from '@mui/icons-material';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
-import dayjs from 'dayjs';
-import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
-import { LinkUnstyled } from '../../components/LinkUnstyled';
-import { findOrdersByLoggedUser as findOrdersByLoggedUserAction } from '../../store/features/orders/orders.actions';
-import { findAllByIds as findAllProductsByIdsAction } from '../../store/features/products/products.actions';
-import RoutesEnum from '../../types/enums/RoutesEnum';
-import ScreenSizeQuerysEnum from '../../types/enums/ScreenSizeQuerysEnum';
-import OrderType from '../../types/Order/OrderType';
-import PaginationModelType from '../../types/PaginationModelType';
-import brlCurrencyFormatter from '../../utils/brlCurrencyFormatter';
-import getTotalPriceOfOrder from '../../utils/getTotalPriceOfOrder';
-import getTotalQuantityOfOrder from '../../utils/getTotalQuantityOfOrder';
-import { useTitle } from '../../utils/hooks/useTitle';
+import dayjs from 'dayjs';
+import { LinkUnstyled } from '../../../components/LinkUnstyled';
+import RoutesEnum from '../../../types/enums/RoutesEnum';
+import { MainButton } from '../../../components/MainButton';
+import { useTitle } from '../../../utils/hooks/useTitle';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import ProductType from '../../../types/Product/ProductType';
+import { clearRequest as clearRequestAction, findAllOrders as findAllOrdersAction } from '../../../store/features/orders/orders.actions';
+import { findAllByIds as findAllProductsByIdsAction } from '../../../store/features/products/products.actions';
+import { enqueueSnackbar } from 'notistack';
+import PaginationModelType from '../../../types/PaginationModelType';
+import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
+import getTotalPriceOfOrder from '../../../utils/getTotalPriceOfOrder';
+import getTotalQuantityOfOrder from '../../../utils/getTotalQuantityOfOrder';
+import OrderType from '../../../types/Order/OrderType';
 
 const columns: GridColDef[] = [
 	{
@@ -22,6 +25,22 @@ const columns: GridColDef[] = [
 		headerName: 'ID',
 		width: 40,
 		flex: 1,
+	},
+	{
+		field: 'user',
+		headerName: 'Usuário',
+		width: 100,
+		flex: 1,
+		renderCell: (params) => (
+			<LinkUnstyled to={RoutesEnum.ADMIN_USER + params.row.user.id} sx={(theme): object => ({
+				color: theme.palette.primary.darker + ' !important',
+				'&:hover': {
+					color: theme.palette.secondary.main + ' !important',
+				},
+			})}>
+				{params.row.user.name}
+			</LinkUnstyled>
+		),
 	},
 	{
 		field: 'total',
@@ -73,7 +92,7 @@ const columns: GridColDef[] = [
 		sortable: false,
 		filterable: false,
 		renderCell: (params) => (
-			<LinkUnstyled to={RoutesEnum.ORDER + params.row.id}>
+			<LinkUnstyled to={RoutesEnum.ADMIN_ORDER + params.row.id}>
 				<ExitToAppRounded sx={(theme): object => ({
 					'&:hover': {
 						color: theme.palette.primary.dark,
@@ -85,24 +104,23 @@ const columns: GridColDef[] = [
 	}
 ];
 
-export const Orders: React.FunctionComponent = () => {
-	const [loading, setLoading] = useState(true);
-	
+export const ListOrders: React.FunctionComponent = () => {
+	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+	const [loading, setLoading] = useState(false);
+
 	const [paginationModel, setPaginationModel] = useState<PaginationModelType>({
 		page: 0,
 		pageSize: 5,
 		sort: undefined,
 	});
-	
-	const [rows, setRows] = useState<OrderType[]>([]);
+
+	const [rows, setRows] = useState<ProductType[]>([]);
 	const [responseJson, setResponseJson] = useState<any>({});
-	
-	useTitle('Meus Pedidos');
 
 	const fetchOrders = async (): Promise<void> => {
 		setLoading(true);
 
-		const actionResponse = await findOrdersByLoggedUserAction(paginationModel);
+		const actionResponse = await findAllOrdersAction(paginationModel);
 		if (!actionResponse)
 			return;
 
@@ -137,19 +155,32 @@ export const Orders: React.FunctionComponent = () => {
 	};
 
 	useEffect(() => {
+		dispatch(clearRequestAction());
+	}, []);
+
+	useEffect(() => {
 		fetchOrders();
 	}, [paginationModel]);
 
-	return (
-		<Grid display="flex" flexDirection="column" sx={{ maxWidth: ScreenSizeQuerysEnum.MOBILE, }}>
-			<Typography variant="h4" mb={3}>Meus pedidos</Typography>
+	useTitle('Admin - Pedidos');
 
-			<Box sx={{ overflowX: 'auto', }}>
+	return (
+		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
+			<Grid display="flex" flexWrap="wrap" alignItems="center" gap={2}> 
+				<Grid display="flex" flexDirection="column" justifyContent="center" flexGrow={1}>
+					<Typography variant="h4">Pedidos</Typography>
+					<Typography variant="body1" sx={(theme): object => ({ color: theme.palette.grey[700], })}>{responseJson.totalRows || 0} pedidos encontrados</Typography>
+				</Grid>
+			</Grid>
+
+			<Box sx={{ flexGrow: 1, overflowX: 'auto', width: '100%', }}>
 				<DataGrid
+					autoHeight
 					loading={loading}
 					rows={rows}
 					columns={columns}
 					rowCount={responseJson.totalRows}
+					rowHeight={110}
 					initialState={{
 						pagination: {
 							paginationModel: {
@@ -173,13 +204,14 @@ export const Orders: React.FunctionComponent = () => {
 						'& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-columnHeader': {
 							outline: 'none !important',
 						},
-						minHeight: '500px',
-						minWidth: '850px',
+						'& *': {
+							overflowX: 'hidden !important',
+						},
+						minWidth: '950px',
 						transition: 'all 0s',
 					}}
 				/>
 			</Box>
-			
 		</Grid>
 	);
 };

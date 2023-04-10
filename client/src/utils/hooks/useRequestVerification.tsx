@@ -18,6 +18,7 @@ export const useRequestVerification = ({ request, type, successMessage, successN
 	const navigate = useNavigate();
 
 	useNonInitialEffect(() => {
+		console.log(request, type);
 		closeSnackbar();
 
 		const typeVerified = type ? type.expectedType === type.actualType : null;

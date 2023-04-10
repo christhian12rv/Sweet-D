@@ -1,10 +1,10 @@
 enum SocialNetworksLinksEnum {
-	INSTAGRAM = 'google.com',
-	WHATSAPP = 'google.com',
-	INSTAGRAM_RAFAEL = 'google.com',
-	WHATSAPP_RAFAEL = 'google.com',
-	INSTAGRAM_FELLYPE = 'google.com',
-	WHATSAPP_FELLYPE = 'google.com',
+	INSTAGRAM = 'https://www.instagram.com/fellpzzzz/',
+	WHATSAPP = 'https://wa.me/553899689339',
+	INSTAGRAM_RAFAEL = 'https://www.instagram.com/rafael.godoii/',
+	WHATSAPP_RAFAEL = 'https://wa.me/553499177677',
+	INSTAGRAM_FELLYPE = 'https://www.instagram.com/fellpzzzz/',
+	WHATSAPP_FELLYPE = 'https://wa.me/553899689339',
 }
 
 export default SocialNetworksLinksEnum;

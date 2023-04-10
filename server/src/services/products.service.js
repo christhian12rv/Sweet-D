@@ -39,7 +39,8 @@ exports.findAll = async (
     directionSort = "asc",
     search = "",
     priceFilter,
-    productNotFilterSlug
+    slugNotFilter,
+    filterActives = "n"
 ) => {
     const options = {
         ...((columnSort && directionSort) && {
@@ -58,11 +59,14 @@ exports.findAll = async (
             //         [Op.between]: [priceFilter[0] - 0.01, priceFilter[1]]
             //     }
             // }),
-            // ...(productNotFilterSlug && {
-            //     slug: {
-            //         [Op.not]: productNotFilterSlug
-            //     }
-            // })
+            ...(slugNotFilter && {
+                slug: {
+                    [Op.not]: slugNotFilter
+                }
+            }),
+            ...((filterActives && filterActives === 'y') && {
+                active: true,
+            })
         },
         include: [
             {

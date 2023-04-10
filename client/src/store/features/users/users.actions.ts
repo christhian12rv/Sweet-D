@@ -1,8 +1,25 @@
 import { Dispatch } from 'redux';
 import LocalStorageEnum from '../../../types/enums/LocalStorageEnum';
+import PaginationModelType from '../../../types/PaginationModelType';
 import UserRegisterType from '../../../types/User/Register/UserRegisterType';
 import UserUpdateType from '../../../types/User/Update/UserUpdateType';
 import { UsersAction, UsersActionsTypes } from './users.types';
+
+export const findAllUsers = async (paginationModel: PaginationModelType): Promise<[Response, any]> => {
+	let urlQueries = `?limit=${paginationModel.pageSize}&page=${paginationModel.page + 1}`;
+
+	if (paginationModel.sort)
+		urlQueries += `&columnSort=${paginationModel.sort.field}&directionSort=${paginationModel.sort.sort}`;
+
+	const response = await fetch(`/api/users${urlQueries}`, {
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8',
+		},
+	});
+	const json = await response.json();
+	
+	return [response, json];
+};
 
 export const register = (user: UserRegisterType): (dispatch: Dispatch<UsersAction>) => Promise<void> => {
 	return async (dispatch: Dispatch<UsersAction>): Promise<void> => {

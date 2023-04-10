@@ -42,7 +42,8 @@ exports.findAll = async (req, res) => {
             directionSort,
             search,
             priceFilter,
-            productNotFilterSlug
+            slugNotFilter,
+            filterActives,
         } = req.query;
 
         priceFilter =
@@ -58,6 +59,9 @@ exports.findAll = async (req, res) => {
                 ? undefined
                 : directionSort;
 
+        if (filterActives && (filterActives.toLowerCase() !== 'y' && filterActives.toLowerCase() !== 'n'))
+            filterActives = 'n';
+
         const { totalRows, products, minPrice, maxPrice } =
             await productsService.findAll(
                 parseInt(limit),
@@ -66,7 +70,8 @@ exports.findAll = async (req, res) => {
                 directionSort,
                 search,
                 priceFilter ? JSON.parse(priceFilter) : priceFilter,
-                productNotFilterSlug
+                slugNotFilter,
+                filterActives
             );
 
         const message = 'Produtos buscados com sucesso';

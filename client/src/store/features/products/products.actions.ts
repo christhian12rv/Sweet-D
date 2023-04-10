@@ -23,6 +23,12 @@ export const findAllProducts = async (paginationModel: PaginationModelType): Pro
 	if (paginationModel.sort)
 		urlQueries += `&columnSort=${paginationModel.sort.field}&directionSort=${paginationModel.sort.sort}`;
 
+	if (paginationModel.slugNotFilter)
+		urlQueries += `&slugNotFilter=${paginationModel.slugNotFilter}`;
+
+	if (paginationModel.filterActives)
+		urlQueries += `&filterActives=${paginationModel.filterActives}`;
+
 	const response = await fetch(`/api/products${urlQueries}`, {
 		headers: {
 			'Content-type': 'application/json; charset=UTF-8',

@@ -18,8 +18,10 @@ enum RoutesEnum {
 	ADMIN_LIST_PRODUCTS = '/admin/products',
 	ADMIN_PRODUCT = '/admin/product/',
 	ADMIN_ADD_PRODUCT = '/admin/add-product',
-	ADMIN_ORDERS = '/admin/orders',
-	ADMIN_USERS = '/admin/users',
+	ADMIN_LIST_ORDERS = '/admin/orders',
+	ADMIN_ORDER = '/admin/order/',
+	ADMIN_LIST_USERS = '/admin/users',
+	ADMIN_USER = '/admin/user/',
 
 	ERROR_404 = '/error/404',
 	ERROR_500 = '/error/500'

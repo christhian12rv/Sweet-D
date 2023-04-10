@@ -64,7 +64,6 @@ export const createOrder = (dateTime: dayjs.Dayjs): (dispatch: Dispatch<OrdersAc
 
 		dispatch({ type: OrdersActionsTypes.CREATE_PENDING, });
 
-
 		const response = await fetch('/api/orders', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -95,6 +94,55 @@ export const createOrder = (dateTime: dayjs.Dayjs): (dispatch: Dispatch<OrdersAc
 
 		dispatch({
 			type: OrdersActionsTypes.CREATE_FAIL,
+			payload: {
+				request: {
+					success: true,
+					status: response.status,
+					message: json.message,
+					errors: json.errors ?? null,
+				},
+			},
+		});
+	};
+};
+
+export const finishOrder = (id: number): (dispatch: Dispatch<OrdersAction>, getState: () => RootState) => Promise<void> => {
+	return async (dispatch: Dispatch<OrdersAction>, getState: () => RootState): Promise<void> => {
+		const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
+		if (!token || id <= 0)
+			return;
+
+		dispatch({ type: OrdersActionsTypes.FINISH_PENDING, });
+
+		const response = await fetch('/api/orders/finish', {
+			method: 'PUT',
+			body: JSON.stringify({
+				id,
+				token,
+			}),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		});
+		const json = await response.json();
+
+		if (response.status === 200) {
+			dispatch({
+				type: OrdersActionsTypes.FINISH_SUCCESS,
+				payload: {
+					request: {
+						success: true,
+						status: response.status,
+						message: json.message,
+						errors: null,
+					},
+				},
+			});
+			return;
+		}
+
+		dispatch({
+			type: OrdersActionsTypes.FINISH_FAIL,
 			payload: {
 				request: {
 					success: true,

@@ -49,11 +49,16 @@ export const Product: React.FunctionComponent = () => {
 
 		const jsonProduct = json.product;
 		if (jsonProduct) {
+			if (!jsonProduct.active) {
+				navigate(RoutesEnum.ERROR_404);
+				return;
+			}
+
 			setProduct(jsonProduct);
 			setTitle(jsonProduct.name);
-		}
 
-		setLoading(false);
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -67,7 +72,7 @@ export const Product: React.FunctionComponent = () => {
 			{!loading && (
 				<GridContainer>
 					<Item product={product}/>
-					<OtherProducts/>
+					<OtherProducts product={product}/>
 				</GridContainer>
 			)}
 		</BoxArea>

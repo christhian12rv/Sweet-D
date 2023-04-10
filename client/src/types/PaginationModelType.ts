@@ -7,6 +7,8 @@ interface PaginationModelType {
 	page: number;
 	pageSize: number;
 	sort?: SortType;
+	slugNotFilter?: string;
+	filterActives?: 'y' | 'n';
 }
 
 export default PaginationModelType;

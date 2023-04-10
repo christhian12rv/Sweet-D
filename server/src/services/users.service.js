@@ -20,7 +20,7 @@ exports.findAll = async (
     directionSort = "asc",
     search = ""
 ) => {
-    const result = await UserModel.findAndCountAll({
+    const users = await UserModel.findAll({
         limit,
         offset: limit * (page - 1),
         order: [[columnSort, directionSort]],
@@ -31,9 +31,12 @@ exports.findAll = async (
         }
     });
 
-    const users = result.rows;
+    const totalRows = await UserModel.count();
 
-    return { totalRows: result.count, users };
+    return {
+        totalRows,
+        users
+    };
 };
 
 exports.create = async (name, email, password, phone) => {
