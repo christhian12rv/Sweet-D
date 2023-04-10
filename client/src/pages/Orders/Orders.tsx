@@ -1,12 +1,19 @@
 import { ExitToAppRounded } from '@mui/icons-material';
 import { Box, Checkbox, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams, ptBR } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
-import React from 'react';
+import { enqueueSnackbar } from 'notistack';
+import React, { useEffect, useState } from 'react';
 import { LinkUnstyled } from '../../components/LinkUnstyled';
+import { findOrdersByLoggedUser as findOrdersByLoggedUserAction } from '../../store/features/orders/orders.actions';
+import { findAllByIds as findAllProductsByIdsAction } from '../../store/features/products/products.actions';
 import RoutesEnum from '../../types/enums/RoutesEnum';
 import ScreenSizeQuerysEnum from '../../types/enums/ScreenSizeQuerysEnum';
+import OrderType from '../../types/Order/OrderType';
+import PaginationModelType from '../../types/PaginationModelType';
 import brlCurrencyFormatter from '../../utils/brlCurrencyFormatter';
+import getTotalPriceOfOrder from '../../utils/getTotalPriceOfOrder';
+import getTotalQuantityOfOrder from '../../utils/getTotalQuantityOfOrder';
 import { useTitle } from '../../utils/hooks/useTitle';
 
 const columns: GridColDef[] = [
@@ -23,6 +30,7 @@ const columns: GridColDef[] = [
 		align: 'center',
 		headerAlign: 'center',
 		flex: 1,
+		renderCell: (params) => brlCurrencyFormatter.format(getTotalPriceOfOrder(params.row.orderProducts)),
 	},
 	{
 		field: 'products',
@@ -39,6 +47,7 @@ const columns: GridColDef[] = [
 		align: 'center',
 		headerAlign: 'center',
 		flex: 1,
+		renderCell: (params) => getTotalQuantityOfOrder(params.row.orderProducts),
 	},
 	{
 		field: 'finished',
@@ -81,8 +90,58 @@ const rows = [
 ];
 
 export const Orders: React.FunctionComponent = () => {
-
+	const [loading, setLoading] = useState(true);
+	
+	const [paginationModel, setPaginationModel] = useState<PaginationModelType>({
+		page: 0,
+		pageSize: 5,
+		sort: undefined,
+	});
+	
+	const [rows, setRows] = useState<OrderType[]>([]);
+	const [responseJson, setResponseJson] = useState<any>({});
+	
 	useTitle('Meus Pedidos');
+
+	const fetchOrders = async (): Promise<void> => {
+		setLoading(true);
+
+		const actionResponse = await findOrdersByLoggedUserAction(paginationModel);
+		if (!actionResponse)
+			return;
+
+		const [response, json] = actionResponse;
+
+		setResponseJson(json);
+
+		if (response.status === 500) {
+			enqueueSnackbar(json.message, { variant: 'error', });
+			setLoading(false);
+			return;
+		}
+
+		if (json.orders) {
+			const [response, json] = await findAllProductsByIdsAction(json.orders.flatMap(order => order.orderProducts.map(orderProduct => orderProduct.id)));
+
+			if (response.status === 500) {
+				enqueueSnackbar(json.message, { variant: 'error', });
+				setLoading(false);
+				return;
+			}
+
+			json.orders.map(order => {
+				order.createdAt = dayjs(order.createdAt).format('DD/MM/YYYY - HH:mm:ss').toString();
+				order.products = products.find(p => p.)
+			}) as OrderType[];
+			setRows(json.orders);
+		}
+
+		setLoading(false);
+	};
+
+	useEffect(() => {
+		fetchOrders();
+	}, [paginationModel]);
 
 	return (
 		<Grid display="flex" flexDirection="column" sx={{ maxWidth: ScreenSizeQuerysEnum.MOBILE, }}>
@@ -90,8 +149,10 @@ export const Orders: React.FunctionComponent = () => {
 
 			<Box sx={{ overflowX: 'auto', }}>
 				<DataGrid
+					loading={loading}
 					rows={rows}
 					columns={columns}
+					rowCount={responseJson.totalRows}
 					initialState={{
 						pagination: {
 							paginationModel: {
@@ -99,7 +160,15 @@ export const Orders: React.FunctionComponent = () => {
 							},
 						},
 					}}
-					pageSizeOptions={[5]}
+					pageSizeOptions={[5, 10, 25, 50]}
+					paginationMode="server"
+					paginationModel={paginationModel}
+					onPaginationModelChange={(model): void => {
+						setPaginationModel({ ...paginationModel, ...model, });
+					}}
+					onSortModelChange={(model): void => {
+						setPaginationModel({ ...paginationModel, sort: { ...model[0], }, });
+					}}
 					disableRowSelectionOnClick
 					disableColumnFilter
 					localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}

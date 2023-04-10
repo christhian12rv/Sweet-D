@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { Dispatch } from 'redux';
 import LocalStorageEnum from '../../../types/enums/LocalStorageEnum';
 import PaginationModelType from '../../../types/PaginationModelType';
-import ProductChoicesType from '../../../types/Product/ProductChoicesType';
 import { RootState } from '../../root.reducer';
 import { OrdersAction, OrdersActionsTypes } from './orders.types';
 
@@ -19,6 +18,28 @@ export const findAllOrders = async (paginationModel: PaginationModelType): Promi
 	});
 	const json = await response.json();
 	
+	return [response, json];
+};
+
+export const findOrdersByLoggedUser = async (paginationModel: PaginationModelType): Promise<[Response, any] | void> => {
+	const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
+	if (!token)
+		return;
+
+	let urlQueries = `?limit=${paginationModel.pageSize}&page=${paginationModel.page + 1}`;
+
+	if (paginationModel.sort)
+		urlQueries += `&columnSort=${paginationModel.sort.field}&directionSort=${paginationModel.sort.sort}`;
+
+	const response = await fetch(`/api/orders/user${urlQueries}`, {
+		method: 'POST',
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8',
+		},
+		body: JSON.stringify({ token, }),
+	});
+	const json = await response.json();
+		
 	return [response, json];
 };
 

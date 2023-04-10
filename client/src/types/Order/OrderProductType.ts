@@ -5,7 +5,7 @@ interface OrderProductType {
 	orderId: number;
 	productId: number;
 	sizeName: string;
-	sizePrice: string;
+	sizePrice: number;
 	quantity: number;
 	createdAt: Date;
 	updatedAt: Date | null;

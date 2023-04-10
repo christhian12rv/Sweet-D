@@ -109,40 +109,73 @@ exports.findByPk = async id => {
     return order;
 };
 
-exports.findAllByUser = async userId => {
-    const result = await OrderModel.findAndCountAll({
-        order: [["createdAt", "desc"]],
-        where: { userId }
-    });
+exports.findAllByUser = async (
+    userId,
+    limit = -1,
+    page = 1,
+    columnSort = "id",
+    directionSort = "asc",
+) => {
+    const options = {
+        order: [[columnSort === "total" || columnSort === "totalQuantity" ? "id" : columnSort, directionSort]],
+        limit,
+        offset: limit * (page - 1),
+        where: {
+            userId,
+        },
+        include: [
+            {
+                model: OrderProductModel,
+                as: 'orderProducts',
+                include: [
+                    {
+                        model: OrderProductIngredientModel,
+                        as: 'orderProductIngredients'
+                    },
+                ]
+            },
+        ]
+    };
 
-    result.rows = await Promise.all(
-        result.rows.map(async r => {
-            let orderProducts = await OrderProductModel.findAll({
-                where: { orderId: r.id }
-            });
+    let orders = await OrderModel.findAll(options);
 
-            let quantityTotal = 0;
+    if (columnSort === "total") {
+        orders = orders.sort((a, b) => {
+            const totalA = a.orderProducts.reduce((total, orderProduct) => {
+                const ingredientsPrices = orderProduct.orderProductIngredients.reduce((sum, ingredient) => {
+                    return sum + ingredient.price;
+                }, 0);
+                return total + ((orderProduct.sizePrice + ingredientsPrices) * orderProduct.quantity);
+            }, 0);
 
-            orderProducts = await Promise.all(
-                orderProducts.map(async op => {
-                    const product = await ProductModel.findByPk(op.productId);
-                    op.setDataValue("product", product);
+            const totalB = b.orderProducts.reduce((total, orderProduct) => {
+                const ingredientsPrices = orderProduct.orderProductIngredients.reduce((sum, ingredient) => {
+                    return sum + ingredient.price;
+                }, 0);
+                return total + ((orderProduct.sizePrice + ingredientsPrices) * orderProduct.quantity);
+            }, 0)
 
-                    quantityTotal += op.quantity;
-                    return op;
-                })
-            );
-            r.setDataValue("orderProducts", orderProducts);
+            if (directionSort === "asc")
+                return totalA - totalB;
 
-            r.setDataValue("quantityTotal", quantityTotal);
+            return totalB - totalA;
+        });
+    } else if (columnSort === "totalQuantity") {
+        orders = orders.sort((a, b) => {
+            const totalQuantityA = a.orderProducts.reduce((totalQuantity, orderProduct) => totalQuantity + orderProduct.quantity, 0);
+            const totalQuantityB = b.orderProducts.reduce((totalQuantity, orderProduct) => totalQuantity + orderProduct.quantity, 0);
+            
+            if (directionSort === "asc")
+                return totalQuantityA - totalQuantityB;
 
-            return r;
+            return totalQuantityB - totalQuantityA;
         })
-    );
+    }
 
+    const totalRows = await OrderModel.count();
     return {
-        totalRows: result.count,
-        orders: result.rows
+        totalRows,
+        orders,
     };
 };
 
@@ -180,18 +213,21 @@ exports.create = async (userId, productsChoices, date) => {
         });
 
         await Promise.all(pc.ingredients.map(async (ingredient) => {
-            const productIngredient = product.ingredients.find(i => i.id === ingredient);
+            await Promise.all(ingredient.ingredients.map(async (i) => {
+                
+                const productIngredient = product.ingredients.find(pi => pi.id === i);
 
-            await OrderProductIngredientModel.create({
-                orderProductId: orderProduct.id,
-                name: productIngredient.name,
-                price: productIngredient.price,
-                type: productIngredient.type,
-            });
+                await OrderProductIngredientModel.create({
+                    orderProductId: orderProduct.id,
+                    name: productIngredient.name,
+                    price: productIngredient.price,
+                    type: productIngredient.type,
+                });
+            }))
         }))
     }))
 
-    return await OrderModel.find({
+    return await OrderModel.findOne({
         where: {
             id: order.id,
         },
@@ -202,7 +238,7 @@ exports.create = async (userId, productsChoices, date) => {
                 include: [
                     {
                         model: OrderProductIngredientModel,
-                        as: 'orderProductINgredients'
+                        as: 'orderProductIngredients'
                     }
                 ]
             },

@@ -19,6 +19,7 @@ type Props = {
 export const CartProducts: React.FunctionComponent<Props> = ({ fetchProductsLoading, products, }) => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 	const { productsChoices, } = useTypedSelector((state) => state.cart);
+	const { loading: ordersLoading, } = useTypedSelector((state) => state.orders);
 
 	useTitle('Carrinho');
 
@@ -29,19 +30,21 @@ export const CartProducts: React.FunctionComponent<Props> = ({ fetchProductsLoad
 
 	return (
 		<Grid position="relative" display="flex" flexDirection="column" flexGrow={1} m={0}>
-			{fetchProductsLoading ? <BackdropLoading open /> :
-				<React.Fragment>
-					<MainButton onClick={handleClearCart} style={{ marginLeft: 'auto', }}>Limpar</MainButton>
-					<GridContainer flexDirection="column" gap={3}>
-						{productsChoices.map(p => (
-							<React.Fragment key={p.id}>
-								<Item productChoices={p} product={products.find(product => product.id === p.id)} key={p.id}/>
-								<Divider/>
-							</React.Fragment>
-						)
-						)}
-					</GridContainer>
-				</React.Fragment>
+			<BackdropLoading open={fetchProductsLoading || ordersLoading} />
+
+			{!fetchProductsLoading &&
+			<React.Fragment>
+				<MainButton onClick={handleClearCart} style={{ marginLeft: 'auto', }}>Limpar</MainButton>
+				<GridContainer flexDirection="column" gap={3}>
+					{productsChoices.map(p => (
+						<React.Fragment key={p.id}>
+							<Item productChoices={p} product={products.find(product => product.id === p.id)} key={p.id}/>
+							<Divider/>
+						</React.Fragment>
+					)
+					)}
+				</GridContainer>
+			</React.Fragment>
 			}
 		</Grid>
 	);

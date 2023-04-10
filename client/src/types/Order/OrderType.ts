@@ -1,6 +1,6 @@
 import OrderProductType from './OrderProductType';
 
-interface Order {
+interface OrderType {
 	id: number;
 	userId: number;
 	finished: boolean;
@@ -10,4 +10,4 @@ interface Order {
 	orderProducts: OrderProductType[];
 }
 
-export default Order;
+export default OrderType;

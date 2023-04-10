@@ -62,8 +62,24 @@ exports.findAllByUser = async (req, res) => {
 
     try {
         const user = req.user;
+        let { limit, page, columnSort, directionSort } = req.query;
+        columnSort =
+            columnSort == "undefined" || columnSort == "null"
+                ? undefined
+                : columnSort;
+        directionSort =
+            directionSort == "undefined" || directionSort == "null"
+                ? undefined
+                : directionSort;
 
-        const { orders, totalRows } = await ordersService.findAllByUser(user.id);
+
+        const { orders, totalRows } = await ordersService.findAllByUser(
+            user.id,
+            parseInt(limit),
+            parseInt(page),
+            columnSort,
+            directionSort
+        );
 
         const message = 'Pedido buscado com sucesso';
         logger.info(message);

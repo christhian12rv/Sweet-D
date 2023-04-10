@@ -177,10 +177,10 @@ export const ListProducts: React.FunctionComponent = () => {
 					pageSizeOptions={[5, 10, 25, 50]}
 					paginationMode="server"
 					paginationModel={paginationModel}
-					onPaginationModelChange={(model, details): void => {
+					onPaginationModelChange={(model): void => {
 						setPaginationModel({ ...paginationModel, ...model, });
 					}}
-					onSortModelChange={(model, details): void => {
+					onSortModelChange={(model): void => {
 						setPaginationModel({ ...paginationModel, sort: { ...model[0], }, });
 					}}
 					disableRowSelectionOnClick

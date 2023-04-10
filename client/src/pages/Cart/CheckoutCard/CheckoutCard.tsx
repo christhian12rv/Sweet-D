@@ -1,17 +1,19 @@
 import { Grid, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { enqueueSnackbar } from 'notistack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { BackdropLoading } from '../../../components/BackdropLoading';
 import { DateTimePicker } from '../../../components/DateTimePicker/DateTimePicker';
-import { createOrder as createOrderAction } from '../../../store/features/orders/orders.actions';
+import { createOrder as createOrderAction, clearRequest as clearRequestAction } from '../../../store/features/orders/orders.actions';
+import { OrdersActionsTypes } from '../../../store/features/orders/orders.types';
 import { useTypedSelector } from '../../../store/utils/useTypedSelector';
 import ProductChoicesType from '../../../types/Product/ProductChoicesType';
 import ProductType from '../../../types/Product/ProductType';
 import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
 import getTotalPriceOfProduct from '../../../utils/getTotalPriceOfProduct';
+import { useRequestVerification } from '../../../utils/hooks/useRequestVerification';
 import { MainCard } from './CheckoutCard.styled';
 
 type Props = {
@@ -22,7 +24,7 @@ type Props = {
 
 export const CheckoutCard: React.FunctionComponent<Props> = ({ fetchProductsLoading, products, productsChoices, }) => {
 	const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-	const { request, loading, previousType, } = useTypedSelector((state) => state.auth);
+	const { request, previousType, loading, } = useTypedSelector((state) => state.orders);
 
 	const onCheckoutClick = (dateTime: dayjs.Dayjs | null): void => {
 		const now = dayjs();
@@ -37,9 +39,23 @@ export const CheckoutCard: React.FunctionComponent<Props> = ({ fetchProductsLoad
 		dispatch(createOrderAction(dateTime));
 	};
 
+	useEffect(() => {
+		dispatch(clearRequestAction());
+	}, []);
+
+	useRequestVerification({
+		request,
+		successMessage: 'Pedido feito com sucesso',
+		successNavigate: '/',
+		type: {
+			actualType: previousType,
+			expectedType: OrdersActionsTypes.CREATE_SUCCESS,
+		},
+	});
+
 	return (
 		<MainCard sx={{ py: 2, }}>
-			<BackdropLoading open={fetchProductsLoading} />
+			<BackdropLoading open={fetchProductsLoading || loading} />
 
 			<Grid display="flex" flexDirection="column" gap={3} maxWidth="384px" sx={{ overflowX: 'auto', }}>
 				<Typography variant="h6" sx={{ px: 1, }}>
