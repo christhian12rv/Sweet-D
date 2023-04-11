@@ -35,6 +35,7 @@ import { Order as AdminOrder } from './pages/Admin/Order';
 import { SnackbarProviderCustom } from './components/SnackbarProvider';
 import { GetAuthUser } from './components/utils/GetAuthUser';
 import { VerifyAuth } from './components/utils/VerifyAuth';
+import { VerifyAdminAuth } from './components/utils/VerifyAdminAuth/VerifyAdminAuth';
 
 export const App: React.FunctionComponent = () => {
 	return (
@@ -68,14 +69,16 @@ export const App: React.FunctionComponent = () => {
 							<Route path="*" element={<Error404 />} />
 						</Route>
 
-						<Route element={<AdminMainLayout />} >
-							<Route path={RoutesEnum.ADMIN_DASHBOARD} element={<AdminDashboard/>} />
-							<Route path={RoutesEnum.ADMIN_LIST_PRODUCTS} element={<AdminListProducts/>} />
-							<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
-							<Route path={`${RoutesEnum.ADMIN_PRODUCT}:slug`} element={<AdminUpdateProduct/>} />
-							<Route path={RoutesEnum.ADMIN_LIST_ORDERS} element={<AdminListOrders/>} />
-							<Route path={`${RoutesEnum.ADMIN_ORDER}:id`} element={<AdminOrder/>} />
-							<Route path={RoutesEnum.ADMIN_LIST_USERS} element={<AdminListUsers/>} />
+						<Route element={<VerifyAdminAuth/>} >
+							<Route element={<AdminMainLayout />} >
+								<Route path={RoutesEnum.ADMIN_DASHBOARD} element={<AdminDashboard/>} />
+								<Route path={RoutesEnum.ADMIN_LIST_PRODUCTS} element={<AdminListProducts/>} />
+								<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
+								<Route path={`${RoutesEnum.ADMIN_PRODUCT}:slug`} element={<AdminUpdateProduct/>} />
+								<Route path={RoutesEnum.ADMIN_LIST_ORDERS} element={<AdminListOrders/>} />
+								<Route path={`${RoutesEnum.ADMIN_ORDER}:id`} element={<AdminOrder/>} />
+								<Route path={RoutesEnum.ADMIN_LIST_USERS} element={<AdminListUsers/>} />
+							</Route>
 						</Route>
 					</Routes>
 				</BrowserRouter >

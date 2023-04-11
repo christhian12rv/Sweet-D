@@ -12,6 +12,7 @@ exports.getDashboard = async (req, res) => {
             totalPriceOrders,
             ordersPerYear,
             usersPerYear,
+            topSellingProducts,
         } = await indexService.getDashboard();
 
         const message = 'Dados buscados com sucesso';
@@ -24,6 +25,7 @@ exports.getDashboard = async (req, res) => {
             totalPriceOrders,
             ordersPerYear,
             usersPerYear,
+            topSellingProducts,
             message,
         });
     } catch (error) {

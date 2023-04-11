@@ -1,5 +1,5 @@
-import { CookieRounded, PeopleAltRounded, ReceiptLongRounded } from '@mui/icons-material';
-import { Box, Grid,  Typography } from '@mui/material';
+import { AttachMoneyRounded, CookieRounded, PeopleAltRounded, ReceiptLongRounded } from '@mui/icons-material';
+import { Box, Grid,  Paper,  Table,  TableBody,  TableCell,  TableContainer,  TableHead,  TableRow,  Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Area, Tooltip } from 'recharts';
 import { TotalQuantityCard } from './TotalQuantityCard';
@@ -11,10 +11,57 @@ import { TotalQuantityOfOrdersPerYearChart } from './TotalQuantityOfOrdersPerYea
 import { TotalPricesOfOrdersPerMonthChart } from './TotalPricesOfOrdersPerMonthChart';
 import dayjs from 'dayjs';
 import daysOfEachMonthArray from '../../../utils/daysOfEachMonthArray';
+import { useNonInitialEffect } from '../../../utils/hooks/useNonInitialEffect';
+import { TotalQuantityOfOrdersPerMonthChart } from './TotalQuantityOfOrdersPerMonthChart';
+import brlCurrencyFormatter from '../../../utils/brlCurrencyFormatter';
+import { LinkUnstyled } from '../../../components/LinkUnstyled';
+import RoutesEnum from '../../../types/enums/RoutesEnum';
 
+type TopSellingProduct = {
+	id: number;
+	name: string;
+	photo: {
+		public_id: string;
+		url: string;
+	};
+	slug: string;
+	quantitySold: number;
+}
+
+type DashboardResult = {
+	totalPriceOrders: number;
+	totalQuantityOrders: number;
+	totalQuantityProducts: number;
+	totalQuantityUsers: number;
+	topSellingProducts: TopSellingProduct[];
+}
+
+type DataTotalPricePerMonth = {
+	name: number;
+	totalPrice: number;
+};
+
+type DataQuantityPerMonth = {
+	name: number;
+	quantity: number;
+};
+
+type OrdersPerMonthReturn = {
+	dataTotalPricePerMonth: DataTotalPricePerMonth[];
+	dataQuantityPerMonth: DataQuantityPerMonth[];
+}
 
 export const Dashboard: React.FunctionComponent = () => {
 	const [loading, setLoading] = useState(true);
+
+	const [dashboard, setDashboard] = useState<DashboardResult>({
+		totalPriceOrders: 0,
+		totalQuantityOrders: 0,
+		totalQuantityProducts: 0,
+		totalQuantityUsers: 0,
+		topSellingProducts: [],
+	});
+
 	const [ordersQuantityPerYearData, setOrdersQuantiyPerYearData] = useState<{
 		name: string;
 		quantity: number;
@@ -23,29 +70,24 @@ export const Dashboard: React.FunctionComponent = () => {
 		name: string;
 		totalPrice: number;
 	}[]>([]);
-	const [dateChoiceOfOrdersTotalPricePerMonthData, setDateChoiceOfOrdersTotalPricePerMonthData] = useState(dayjs());
-	const [ordersTotalPricePerMonthData, setOrdersTotalPricePerMonthData] = useState<{
-		name: number;
-		totalPrice: number;
-	}[]>([]);
-	const [isFetchOrdersTotalPricePerMonthData, setIsFetchOrdersTotalPricePerMonthData] = useState(false);
 	
-	const fetchOrdersTotalPricePerMonthDate = async (): Promise<void> => {
-		const findAllOrdersByYearAndMonthActionResponse = await findAllOrdersByYearAndMonthAction(
-			dateChoiceOfOrdersTotalPricePerMonthData.get('year'), dateChoiceOfOrdersTotalPricePerMonthData.get('month')
-		);
+	const [dateChoiceOfOrdersTotalPricePerMonthData, setDateChoiceOfOrdersTotalPricePerMonthData] = useState(dayjs());
+	const [ordersTotalPricePerMonthData, setOrdersTotalPricePerMonthData] = useState<DataTotalPricePerMonth[]>([]);
+	const [isFetchOrdersTotalPricePerMonthData, setIsFetchOrdersTotalPricePerMonthData] = useState(false);
 
-		const findAllOrdersByYearAndMonthActionOrders = findAllOrdersByYearAndMonthActionResponse[1].orders;
-
-		const data: {
-			name: number;
-			totalPrice: number;
-		}[] = [];
+	const [dateChoiceOfOrdersQuantityPerMonthData, setDateChoiceOfOrdersQuantityPerMonthData] = useState(dayjs());
+	const [ordersQuantityPerMonthData, setOrdersQuantityPerMonthData] = useState<DataQuantityPerMonth[]>([]);
+	const [isFetchOrdersQuantityPerMonthData, setIsFetchOrdersQuantityPerMonthData] = useState(false);
+	
+	const getDashboardChartsData = async (orders): Promise<OrdersPerMonthReturn> => {
+		const dataTotalPricePerMonth: DataTotalPricePerMonth[] = [];
+		const dataQuantityPerMonth: DataQuantityPerMonth[] = [];
 
 		for (let i = 1; i <= daysOfEachMonthArray[dateChoiceOfOrdersTotalPricePerMonthData.get('month')]; i++) {
 			let totalPriceOfDay = 0;
+			let quantityOfDay = 0;
 
-			findAllOrdersByYearAndMonthActionOrders.filter(o => dayjs(o.createdAt).get('date') === i)
+			orders.filter(o => dayjs(o.createdAt).get('date') === i)
 				.forEach(o => {
 					o.orderProducts.forEach((orderProduct) => {
 						let totalPriceOfProduct = orderProduct.sizePrice;
@@ -57,15 +99,45 @@ export const Dashboard: React.FunctionComponent = () => {
 						totalPriceOfProduct *= orderProduct.quantity;
 						totalPriceOfDay += totalPriceOfProduct;
 					});
+
+					quantityOfDay++;
 				}),
 
-			data.push({
+			dataTotalPricePerMonth.push({
 				name: i,
 				totalPrice: totalPriceOfDay,
 			});
+
+			dataQuantityPerMonth.push({
+				name: i,
+				quantity: quantityOfDay,
+			});
 		}
 		
-		setOrdersTotalPricePerMonthData(data);
+		return {
+			dataTotalPricePerMonth,
+			dataQuantityPerMonth,
+		};
+	};
+
+	const fetchTotalPriceOrdersPerMonth = async (): Promise<void> => {
+		const findAllOrdersByYearAndMonthActionResponse = await findAllOrdersByYearAndMonthAction(
+			dateChoiceOfOrdersTotalPricePerMonthData.get('year'), dateChoiceOfOrdersTotalPricePerMonthData.get('month')
+		);
+
+		const { dataTotalPricePerMonth, } = await getDashboardChartsData(findAllOrdersByYearAndMonthActionResponse[1].orders);
+
+		setOrdersTotalPricePerMonthData(dataTotalPricePerMonth);
+	};
+
+	const fetchQuantityOrdersPerMonth = async (): Promise<void> => {
+		const findAllOrdersByYearAndMonthActionResponse = await findAllOrdersByYearAndMonthAction(
+			dateChoiceOfOrdersQuantityPerMonthData.get('year'), dateChoiceOfOrdersQuantityPerMonthData.get('month')
+		);
+
+		const { dataQuantityPerMonth, } = await getDashboardChartsData(findAllOrdersByYearAndMonthActionResponse[1].orders);
+		
+		setOrdersQuantityPerMonthData(dataQuantityPerMonth);
 	};
 
 	const fetchDashboard = async (): Promise<void> => {
@@ -105,7 +177,16 @@ export const Dashboard: React.FunctionComponent = () => {
 			};
 		}));
 
-		await fetchOrdersTotalPricePerMonthDate();
+		setDashboard({
+			totalPriceOrders: json.totalPriceOrders,
+			totalQuantityOrders: json.totalQuantityOrders,
+			totalQuantityProducts: json.totalQuantityProducts,
+			totalQuantityUsers: json.totalQuantityUsers,
+			topSellingProducts: json.topSellingProducts,
+		});
+
+		fetchTotalPriceOrdersPerMonth();
+		fetchQuantityOrdersPerMonth();
 
 		setLoading(false);
 	};
@@ -114,40 +195,61 @@ export const Dashboard: React.FunctionComponent = () => {
 		fetchDashboard();
 	}, []);
 
-	useEffect(() => {
+	useNonInitialEffect(() => {
+		if (!isFetchOrdersTotalPricePerMonthData)
+			return;
+
 		setIsFetchOrdersTotalPricePerMonthData(false);
-		fetchOrdersTotalPricePerMonthDate();
+		fetchTotalPriceOrdersPerMonth();
 	}, [isFetchOrdersTotalPricePerMonthData]);
+
+	useNonInitialEffect(() => {
+		if (!isFetchOrdersQuantityPerMonthData)
+			return;
+
+		setIsFetchOrdersQuantityPerMonthData(false);
+		fetchQuantityOrdersPerMonth();
+	}, [isFetchOrdersQuantityPerMonthData]);
 
 	return (
 		<Grid display="flex" flexDirection="column" justifyContent="center" gap={4} sx={{ maxWidth: '100%', }}>
 			<Typography variant="h4">Dashboard</Typography>
 
 			<Grid container spacing={2}>
-				<Grid item xs={12} md={4}>
+				<Grid item xs={12} md={3}>
 					<TotalQuantityCard
-						title="Pedidos"
-						quantity={230}
+						title="Total de Pedidos"
+						value={dashboard.totalQuantityOrders}
 						iconColor="#536dfe"
 					>
 						<ReceiptLongRounded/>
 					</TotalQuantityCard>
 				</Grid>
 
-				<Grid item xs={12} md={4}>
+				<Grid item xs={12} md={3}>
+					<TotalQuantityCard
+						title="Renda Total"
+						value={brlCurrencyFormatter.format(dashboard.totalPriceOrders)}
+						iconColor="#536dfe"
+					>
+						<AttachMoneyRounded/>
+					</TotalQuantityCard>
+				</Grid>
+
+				<Grid item xs={12} md={3}>
 					<TotalQuantityCard
 						title="Produtos"
-						quantity={11}
+						value={dashboard.totalQuantityProducts}
 						iconColor="#ffa000"
 					>
 						<CookieRounded/>
 					</TotalQuantityCard>
 				</Grid>
 
-				<Grid item xs={12} md={4}>
+				<Grid item xs={12} md={3}>
 					<TotalQuantityCard
 						title="Usuários"
-						quantity={39}
+						value={dashboard.totalQuantityUsers}
 						iconColor="#0097a7"
 					>
 						<PeopleAltRounded/>
@@ -175,55 +277,69 @@ export const Dashboard: React.FunctionComponent = () => {
 					/>
 				</Grid>
 				
-				<Grid item xs={12} md={6}>
+				<Grid item xs={12} lg={6}>
+					<TotalQuantityOfOrdersPerMonthChart
+						ordersQuantityPerMonthData={ordersQuantityPerMonthData}
+						dateChoice={dateChoiceOfOrdersQuantityPerMonthData}
+						setDateChoice={setDateChoiceOfOrdersQuantityPerMonthData}
+						setIsFetchOrders={setIsFetchOrdersQuantityPerMonthData}
+					/>
+				</Grid>
+			</Grid>
+
+			<Grid container spacing={2}>
+				<Grid item xs={12} lg={6}>
 					<Box sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'center',
-						gap: 2,
-						height: '350px',
-						minHeight: '350px',
 						boxShadow: 'rgba(17, 17, 26, 0.1) 0px 0px 16px',
-						borderRadius: '4px',
+						border: 'none',
 						p: 3,
 					}}>
-						<Typography variant="h6" sx={{ mb: 1, }}>Quantidade total de pedidos por mês</Typography>
-						<ResponsiveContainer width="100%" height="100%">
-							<AreaChart
-								data={ordersQuantityPerYearData}
-							>
-								<defs>
-									<linearGradient id="totalQuantityOfOrdersGradient" x1="1" y1="1" x2="0" y2="0">
-										<stop offset="40%" stopColor="#FFFFFF" stopOpacity={1} />
-										<stop offset="95%" stopColor="#82b1ff" stopOpacity={1} />
-									</linearGradient>
-								</defs>
-								<CartesianGrid vertical={false} stroke="#eeeeee" />
-								<XAxis dataKey="name" tickLine={false}/>
-								<YAxis tickLine={false}/>
-								<Tooltip content={({ payload, label, active, }): any => {
-									if (active) {
-										return (
-											<Box sx={(theme): object => ({
-												backgroundColor: theme.palette.common.white,
-												p: 1,
-												borderRadius: '4px',
-												boxShadow: 'rgba(17, 17, 26, 0.1) 0px 0px 16px',
-												border: 'none',
-												outline: 'none',
-											})}>
-												<Typography variant="body1">{label}</Typography>
-												<Typography variant="body1">Pedidos: {payload ? payload[0].value : 0}</Typography>
-											</Box>
-										);
-									}
-
-									return null;
-								}}/>
-
-								<Area type="monotone" dataKey="quantity" stroke="#5c6bc0" strokeWidth={2} fillOpacity={1} fill="url(#totalQuantityOfOrdersGradient)" />
-							</AreaChart>
-						</ResponsiveContainer>
+						<Typography variant="h6" sx={{ mb: 1, }}>Produtos mais vendidos</Typography>
+						<TableContainer >
+							<Table aria-label="simple table">
+								<TableHead>
+									<TableRow>
+										<TableCell>Id</TableCell>
+										<TableCell>Produto</TableCell>
+										<TableCell>Vendas</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{dashboard.topSellingProducts.map((topSellingProduct) => (
+										<TableRow
+											key={topSellingProduct.id}
+											sx={{ '&:last-child td, &:last-child th': { border: 0, }, }}
+										>
+											<TableCell component="th" scope="row">
+												{topSellingProduct.id}
+											</TableCell>
+											<TableCell>
+												<LinkUnstyled to={RoutesEnum.ADMIN_PRODUCT + topSellingProduct.slug} sx={(theme): object => ({
+													'&:hover': {
+														color: theme.palette.primary.darker + '!important',
+													},
+													transition: 'all .25s',
+												})}>
+													<Grid display="flex" alignItems="center" gap={2}>
+														<Box component="div" sx={{
+															backgroundImage: `url(${topSellingProduct.photo.url})`,
+															backgroundSize: 'cover',
+															backgroundPosition: 'center',
+															borderRadius: '8px',
+															minWidth: '60px',
+															width: '60px',
+															height: '60px',
+														}}/>
+														{topSellingProduct.name}
+													</Grid>
+												</LinkUnstyled>
+											</TableCell>
+											<TableCell>{topSellingProduct.quantitySold}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</TableContainer>
 					</Box>
 				</Grid>
 			</Grid>

@@ -227,7 +227,7 @@ export const MainLayout: React.FunctionComponent<Props> = ({ window, }) => {
 				})}>
 					<FaceRounded className="user-icon" sx={(theme): object => ({ fontSize: '2em', color: theme.palette.grey[900], transition: 'all .15s', })} />
 					<Grid display="flex" flexDirection="column"  justifyContent="center">
-						<Typography className="user-name" variant="h6" sx={(theme): object => ({ fontSize: '.95em', fontWeight: 'bold', color: theme.palette.grey[900], ml: 2, lineHeight: 1, transition: 'all .15s', })}>{loggedUser?.name}</Typography>
+						<Typography className="user-name" variant="h6" sx={(theme): object => ({ fontSize: '.95em', fontWeight: 'bold', color: theme.palette.grey[900], ml: 2, lineHeight: 1, transition: 'all .15s', })}>{loggedUser?.name.split(' ')[0]}</Typography>
 						<Typography className="admin-text" variant="body1" sx={{ fontSize: '.8em', ml: 2, transition: 'all .25s', }}>Admin</Typography>
 					</Grid>
 				</Grid>

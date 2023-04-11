@@ -8,7 +8,7 @@ import RoutesEnum from '../../../../types/enums/RoutesEnum';
 import ScreenSizeQuerysEnum from '../../../../types/enums/ScreenSizeQuerysEnum';
 import { LinkUnstyled } from '../../../../components/LinkUnstyled';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaceRounded, LogoutRounded, ReceiptRounded, ExpandMoreRounded, AccountCircleRounded, AdminPanelSettingsRounded, PowerSettingsNewRounded } from '@mui/icons-material';
+import { FaceRounded, ReceiptRounded, ExpandMoreRounded, AccountCircleRounded, AdminPanelSettingsRounded, PowerSettingsNewRounded } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { useTypedSelector } from '../../../../store/utils/useTypedSelector';
@@ -199,18 +199,22 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 					</MenuItem>
 				</LinkUnstyled>
 				<Divider />
-				<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD}>
-					<MenuItem onClick={handleClose} sx={(theme): object => ({
-						'&:hover': {
-							color: theme.palette.primary.dark + ' !important',
-						},
-						'&:hover .receiptReceiptIcon': {
-							color: theme.palette.primary.dark + ' !important',
-						},
-					})}>
-						<AdminPanelSettingsRounded className="receiptReceiptIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '31px', ml: '1px', mr: '7px', })} /> Admin Panel
-					</MenuItem>
-				</LinkUnstyled>
+
+				{loggedUser?.isAdmin &&
+					<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD}>
+						<MenuItem onClick={handleClose} sx={(theme): object => ({
+							'&:hover': {
+								color: theme.palette.primary.dark + ' !important',
+							},
+							'&:hover .receiptReceiptIcon': {
+								color: theme.palette.primary.dark + ' !important',
+							},
+						})}>
+							<AdminPanelSettingsRounded className="receiptReceiptIcon" sx={(theme): object => ({ color: theme.palette.grey[400], fontSize: '31px', ml: '1px', mr: '7px', })} /> Painel Admin
+						</MenuItem>
+					</LinkUnstyled>
+				}
+
 				<MenuItem onClick={handleLogout} sx={(theme): object => ({
 					'&:hover': {
 						color: theme.palette.primary.dark + ' !important',
@@ -289,21 +293,23 @@ export const Navbar: React.FunctionComponent<Props> = (props) => {
 						</ListItem>
 					</LinkUnstyled>
 
-					<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD} onClick={handleDrawerToggle}>
-						<ListItem disablePadding sx={(theme): object => ({
-							'&:hover, &:hover .accordionAdminPannelIcon': {
-								color: theme.palette.primary.dark,
-							},
-							transition: 'color .25s !important',
-						})}>
-							<ListItemButton>
-								<ListItemIcon sx={{ minWidth: '40px', }}>
-									<AdminPanelSettingsRounded className="accordionAdminPannelIcon" sx={{ transition: 'color .25s !important', }}/>
-								</ListItemIcon>
-								<ListItemText primary="Admin Panel" />
-							</ListItemButton>
-						</ListItem>
-					</LinkUnstyled>
+					{loggedUser?.isAdmin &&
+						<LinkUnstyled to={RoutesEnum.ADMIN_DASHBOARD} onClick={handleDrawerToggle}>
+							<ListItem disablePadding sx={(theme): object => ({
+								'&:hover, &:hover .accordionAdminPannelIcon': {
+									color: theme.palette.primary.dark,
+								},
+								transition: 'color .25s !important',
+							})}>
+								<ListItemButton>
+									<ListItemIcon sx={{ minWidth: '40px', }}>
+										<AdminPanelSettingsRounded className="accordionAdminPannelIcon" sx={{ transition: 'color .25s !important', }}/>
+									</ListItemIcon>
+									<ListItemText primary="Painel Admin" />
+								</ListItemButton>
+							</ListItem>
+						</LinkUnstyled>
+					}
 
 					<ListItem disablePadding onClick={handleLogout} sx={(theme): object => ({
 						'&:hover, &:hover .accordionLogoutIcon': {

@@ -1,15 +1,14 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Card, CardContent, Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 type Props = {
 	children: any;
 	title: string;
-	quantity: number;
+	value: string | number;
 	iconColor: string;
 }
 
-export const TotalQuantityCard: React.FunctionComponent<Props> = ({ children, title, quantity, iconColor, }) => {
+export const TotalQuantityCard: React.FunctionComponent<Props> = ({ children, title, value, iconColor, }) => {
 	return (
 		<Card sx={{
 			width: '100%',
@@ -17,20 +16,25 @@ export const TotalQuantityCard: React.FunctionComponent<Props> = ({ children, ti
 		}}>
 			<CardContent>
 				<Grid display="flex" alignItems="center">
-					<Box component="span" sx={{
+					<Grid sx={(theme): object => ({
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
+						color: theme.palette.primary.dark,
 						mr: 1,
 						'& .MuiSvgIcon-root': {
-							fontSize: '2em !important',
-							color: iconColor,
+							fontSize: '3em !important',
 						},
-					}}>
+					})}>
 						{children}
-					</Box>
-					<Typography variant="h6" sx={{ flexGrow: 1, }}>{title}</Typography>
-					<Typography variant="h6">{quantity}</Typography>
+					</Grid>
+
+					<Grid display="flex" justifyContent="center" flexGrow={1}>
+						<Grid display="flex" flexDirection="column"  justifyContent="center">
+							<Typography variant="h6">{title}</Typography>
+							<Typography variant="h6" sx={(theme): object => ({ color: theme.palette.primary.dark, })}>{value}</Typography>
+						</Grid>
+					</Grid>
 				</Grid>
 			</CardContent>
 		</Card>
