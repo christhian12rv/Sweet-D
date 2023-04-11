@@ -1,5 +1,5 @@
 import ProductChoicesType from '../../../types/Product/ProductChoicesType';
-import { GlobalActionType, GlobalStateType, RequestType } from '../../types/global.store.types';
+import { GlobalActionType, GlobalStateType } from '../../types/global.store.types';
 
 export enum CartActionsTypes {
 	FETCH_CART_PENDING = 'CART_FETCH_CART_PENDING',

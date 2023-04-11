@@ -105,6 +105,36 @@ exports.findByPk = async (id) => {
     return order;
 };
 
+exports.findAllByYearAndMonth = async (year, month) => {
+    const orders = await OrderModel.findAll({
+        where: {
+            [Op.and] : [
+               Sequelize.fn('EXTRACT(MONTH from "order"."createdAt") =', month),
+               Sequelize.fn('EXTRACT(YEAR from "order"."createdAt") =', year),
+            ]
+          },
+        
+        include: [
+            {
+                model: OrderProductModel,
+                as: 'orderProducts',
+                include: [
+                    {
+                        model: OrderProductIngredientModel,
+                        as: 'orderProductIngredients'
+                    },
+                ]
+            },
+            {
+                model: UserModel,
+                as: 'user',
+            },
+        ],
+    });
+
+    return orders;
+};
+
 exports.findAllByUser = async (
     userId,
     limit = -1,

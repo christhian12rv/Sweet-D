@@ -57,6 +57,26 @@ exports.findByPk = async (req, res) => {
     }
 };
 
+exports.findAllByYearAndMonth = async (req, res) => {
+    logger.info(`Chamando findAllByYearAndMonth de ${req.originalUrl}`);
+
+    try {
+        const { year, month } = req.params;
+
+        const orders = await ordersService.findAllByYearAndMonth(year, month);
+
+        const message = 'Pedidos buscados com sucesso';
+        logger.info(message);
+
+        res.status(200).json({ orders, message });
+    } catch (error) {
+        const message = 'Ocorreram erros internos ao buscar pedidos';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
+    }
+};
+
 exports.findAllByUser = async (req, res) => {
     logger.info(`Chamando findAllByUser de ${req.originalUrl}`);
 

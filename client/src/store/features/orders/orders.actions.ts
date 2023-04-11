@@ -21,6 +21,17 @@ export const findAllOrders = async (paginationModel: PaginationModelType): Promi
 	return [response, json];
 };
 
+export const findAllByYearAndMonth = async (year: number, month: number): Promise<[Response, any]> => {
+	const response = await fetch(`/api/orders/find-by-year-and-month/${year}/${month + 1}`, {
+		headers: {
+			'Content-type': 'application/json; charset=UTF-8',
+		},
+	});
+	const json = await response.json();
+	
+	return [response, json];
+};
+
 export const findOrdersByLoggedUser = async (paginationModel: PaginationModelType): Promise<[Response, any] | void> => {
 	const token = localStorage.getItem(LocalStorageEnum.AUTH_TOKEN);
 	if (!token)

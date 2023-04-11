@@ -1,40 +1,35 @@
+const logger = require('../configs/logger');
 const indexService = require("../services/index.service");
 
-exports.getTotal = async (req, res) => {
+exports.getDashboard = async (req, res) => {
+    logger.info(`Chamando getDashboard de ${req.originalUrl}`);
+
     try {
         const {
-            totalProducts,
-            totalUsers,
-            totalOrders,
-            totalOrdersToday,
+            totalQuantityOrders,
+            totalQuantityProducts,
+            totalQuantityUsers,
             totalPriceOrders,
-            totalPriceOrdersToday,
-            ordersTotalPerMonth,
-            ordersTotalCurrentMonth,
-            ordersTotalPricePerMonth,
-            ordersTotalPriceCurrentMonth
-        } = await indexService.getTotal();
+            ordersPerYear,
+            usersPerYear,
+        } = await indexService.getDashboard();
 
-        res.json({
-            status: 200,
-            total: {
-                products: totalProducts,
-                users: totalUsers,
-                orders: totalOrders,
-                ordersToday: totalOrdersToday,
-                totalPriceOrders,
-                totalPriceOrdersToday,
-                ordersTotalPerMonth,
-                ordersTotalCurrentMonth,
-                ordersTotalPricePerMonth,
-                ordersTotalPriceCurrentMonth
-            },
-            msg: "Total buscado com sucesso"
+        const message = 'Dados buscados com sucesso';
+        logger.info(message);
+
+        res.status(200).json({
+            totalQuantityOrders,
+            totalQuantityProducts,
+            totalQuantityUsers,
+            totalPriceOrders,
+            ordersPerYear,
+            usersPerYear,
+            message,
         });
     } catch (error) {
-        res.json({
-            status: 500,
-            msg: "Houve um erro interno ao procurar total"
-        });
+        const message = 'Ocorreram erros internos ao buscar dados';
+        logger.error(`${message}: ${error}`);
+
+        res.status(500).send({ message, });
     }
 };

@@ -25,6 +25,7 @@ import { ProfileLayout } from './pages/layout/ProfileLayout';
 import { Order } from './pages/Order';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { MainLayout as AdminMainLayout } from './pages/Admin/layout/MainLayout';
+import { Dashboard as AdminDashboard } from './pages/Admin/Dashboard';
 import { ListProducts as AdminListProducts } from './pages/Admin/ListProducts';
 import { AddProduct as AdminAddProduct } from './pages/Admin/AddProduct';
 import { UpdateProduct as AdminUpdateProduct } from './pages/Admin/UpdateProduct';
@@ -68,6 +69,7 @@ export const App: React.FunctionComponent = () => {
 						</Route>
 
 						<Route element={<AdminMainLayout />} >
+							<Route path={RoutesEnum.ADMIN_DASHBOARD} element={<AdminDashboard/>} />
 							<Route path={RoutesEnum.ADMIN_LIST_PRODUCTS} element={<AdminListProducts/>} />
 							<Route path={RoutesEnum.ADMIN_ADD_PRODUCT} element={<AdminAddProduct/>} />
 							<Route path={`${RoutesEnum.ADMIN_PRODUCT}:slug`} element={<AdminUpdateProduct/>} />

@@ -9,6 +9,7 @@ const ordersController = require("../controllers/orders.controller");
 
 router.get("/", ordersController.findAll);
 router.get("/:id", ordersController.findByPk);
+router.get("/find-by-year-and-month/:year/:month", ordersController.findAllByYearAndMonth);
 router.post("/user", verifyJWT, ordersController.findAllByUser);
 router.post("/", verifyJWT, ordersValidator.create, ordersController.create);
 router.put(

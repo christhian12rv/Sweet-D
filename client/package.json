@@ -34,6 +34,7 @@
     "react-mui-fileuploader": "^0.5.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
+    "recharts": "^2.5.0",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "suneditor": "^2.44.3",
