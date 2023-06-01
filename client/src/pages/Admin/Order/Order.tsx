@@ -1,5 +1,5 @@
-import { ExitToAppRounded, KeyboardArrowDownRounded, KeyboardArrowUpRounded } from '@mui/icons-material';
-import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Collapse, FormControlLabel, Switch } from '@mui/material';
+import { ExitToAppRounded, KeyboardArrowDownRounded, KeyboardArrowUpRounded, WhatsApp } from '@mui/icons-material';
+import { Box, Grid, Typography, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Collapse, FormControlLabel, Switch, Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { LinkUnstyled } from '../../../components/LinkUnstyled';
 import RoutesEnum from '../../../types/enums/RoutesEnum';
@@ -262,12 +262,24 @@ export const Order: React.FunctionComponent = () => {
 					
 					<Grid display="flex" alignItems="center">
 						<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Usuário:</Typography>
-						<LinkUnstyled to={RoutesEnum.ADMIN_USER + order?.user.id}>
-							<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>
-								&nbsp;{order?.user.name}
-							</Typography>
+						<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>
+							&nbsp;{order?.user.name}
+						</Typography>
+					</Grid>
+					<Grid display="flex" alignItems="center" gap={2}>
+						<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Telefone:  {order?.user.phone}</Typography>
+						<LinkUnstyled to={`https://wa.me/55${order?.user.phone
+							.replaceAll(' ', '')
+							.replaceAll('(', '')
+							.replaceAll(')', '')
+							.replaceAll('-', '')
+						}`} target="_blank">
+							<WhatsApp sx={{ color: '#128C7E', '&:hover': { color: '#075E54', }, transition: 'all .25s', }}/>
 						</LinkUnstyled>
 					</Grid>
+
+					<Divider sx={{ my: 2, }}/>
+
 					<Grid display="flex" alignItems="center">
 						<Typography variant="body1" sx={{ fontSize: '1.2em', }}>Total:</Typography>
 						<Typography variant="body1" sx={(theme): object => ({ fontSize: '1.2em', color: theme.palette.primary.darker, })}>

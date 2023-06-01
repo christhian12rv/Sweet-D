@@ -1,5 +1,9 @@
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const path = require("path");
+const config = require("../configs/config");
+const { transporter, nodemailerEmail } = require("../configs/nodemailer");
+const newOrder = require("../templates/newOrder");
 
 const { UserModel, OrderModel, OrderProductModel, OrderProductIngredientModel, ProductModel, ProductSizeModel,
     ProductIngredientModel, ProductIngredientTypeModel, } = require("../models");
@@ -251,9 +255,9 @@ exports.create = async (userId, productsChoices, date) => {
                 });
             }))
         }))
-    }))
+    }));
 
-    return await OrderModel.findOne({
+    const orderFounded = await OrderModel.findOne({
         where: {
             id: order.id,
         },
@@ -269,7 +273,30 @@ exports.create = async (userId, productsChoices, date) => {
                 ]
             },
         ],
-    })
+    });
+
+    let totalPrice = 0;
+    orderFounded.orderProducts.forEach((orderProduct) => {
+        let totalPriceOfProduct = orderProduct.sizePrice;
+        
+        orderProduct.orderProductIngredients.forEach((orderProductIngredients) => {
+            totalPriceOfProduct += orderProductIngredients.price;
+        })
+
+        totalPriceOfProduct *= orderProduct.quantity;
+        totalPrice += totalPriceOfProduct;
+    });
+
+    const user = await UserModel.findByPk(userId);
+
+    await transporter.sendMail({
+        from: '"Sweet D" <' + nodemailerEmail + ">",
+        to: nodemailerEmail,
+        subject: "SweetD - Novo pedido",
+        html: newOrder(config.clientUrl, orderFounded, totalPrice , user),
+    });    
+
+    return orderFounded;
 };
 
 exports.update = async (orderId, finished) => {
